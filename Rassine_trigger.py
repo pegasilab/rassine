@@ -89,10 +89,7 @@ try:
 except:
     output_dir =  dir_spec_timeseries
 
-file_ver = ''
-if os.getcwd()=='/Users/cretignier/Documents/Python':
-    file_ver = '3.8'
-    print('Switch for the version multiprocessing 3.8')
+file_ver = '' # TODO: remove this later, as we require min. Python 3.8
 
 if preprocessed:
     print(' [STEP INFO] Preprocessing...')

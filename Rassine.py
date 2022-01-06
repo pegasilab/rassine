@@ -48,11 +48,7 @@ config = {}
 #  IMPORT CONFIG FILE
 # =============================================================================
 
-if python_version=='3':
-    exec(open('Rassine_config.py').read())
-elif python_version=='2':
-    execfile('Rassine_config.py')
-
+exec(open('Rassine_config.py').read())
 
 spectrum_name = config['spectrum_name']
 output_dir = config['output_dir']

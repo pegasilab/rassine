@@ -59,13 +59,8 @@ else:
 
 
 
-if sys_python == '3':
-    def my_input(text):
-        return input(text)
-else:
-    def my_input(text):
-        return raw_input(text)
-
+def my_input(text):
+   return input(text)
 
 # =============================================================================
 # FUNCTIONS (alphabetic ordered)

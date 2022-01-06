@@ -11,12 +11,7 @@ from __future__ import print_function
 import matplotlib
 import platform 
 
-if platform.system()=='Linux':
-    matplotlib.use('Agg',force=True)
-else:
-    matplotlib.use('Qt5Agg',force=True)
-
-import numpy as np 
+import numpy as np
 from scipy.signal import savgol_filter
 from scipy.stats import norm
 from scipy.interpolate import interp1d

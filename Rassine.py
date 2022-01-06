@@ -22,8 +22,6 @@ from __future__ import print_function
 import matplotlib
 import platform
 
-matplotlib.use('Qt5Agg',force=True)
-
 import numpy as np
 import pandas as pd
 import matplotlib.pylab as plt
@@ -38,6 +36,8 @@ from scipy.special import erf
 from scipy.optimize import curve_fit
 from matplotlib.ticker import MultipleLocator
 import Rassine_functions as ras
+
+matplotlib.use('Qt5Agg', force=True)
 
 #get_ipython().run_line_magic('matplotlib','qt5')
 

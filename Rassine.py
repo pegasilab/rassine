@@ -20,14 +20,11 @@ Created on Thu Feb  7 16:34:29 2019
 
 from __future__ import print_function
 import matplotlib
-import platform 
+import platform
 
-if platform.system()=='Linux':
-    matplotlib.use('Agg',force=True)
-else:
-    matplotlib.use('Qt5Agg',force=True)
+matplotlib.use('Qt5Agg',force=True)
 
-import numpy as np 
+import numpy as np
 import pandas as pd
 import matplotlib.pylab as plt
 from scipy.interpolate import interp1d
@@ -193,6 +190,8 @@ if anchor_file!='':
     par_Rmax = anchor_file['parameters']['max_radius'] 
     par_reg_nu = anchor_file['parameters']['model_penality_radius']
     count_cut_lim = anchor_file['parameters']['number of cut']
+
+spectrei_err = None
 
 if spectrum_name.split('.')[-1]=='fits': # to load a fits file 
     header = fits.getheader(spectrum_name) # load the fits header

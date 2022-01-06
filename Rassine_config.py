@@ -72,10 +72,11 @@ plot_end = True        # display the final product in the graphic
 save_last_plot = False  # save the last graphical output (final output)
 
 
-outputs_interpolation_saved = 'all' # to only save a specific continuum (output files are lighter), either 'linear','cubic' or 'all'
+outputs_interpolation_saved = 'linear' # to only save a specific continuum (output files are lighter), either 'linear','cubic' or 'all'
 outputs_denoising_saved = 'undenoised'        # to only save a specific continuum (output files are lighter), either 'denoised','undenoised' or 'all'
 
 light_version = True    # to save only the vital output
+speedup = 1             # to improve the speed of the rolling processes (not yet fully tested)
 
 
 config = {'spectrum_name':spectrum_name,
@@ -92,8 +93,8 @@ config = {'spectrum_name':spectrum_name,
           'CCF_mask':CCF_mask,
           'RV_sys':RV_sys,
           'mask_telluric':mask_telluric,
-          'min_radius':par_R,
-          'max_radius':par_Rmax,
+          'min_radius':par_Rmax,
+          'max_radius':par_R,
           'model_penality_radius':par_reg_nu,
           'denoising_dist':denoising_dist,
           'interpol':interpolation,
@@ -107,4 +108,4 @@ config = {'spectrum_name':spectrum_name,
           'outputs_interpolation_save':outputs_interpolation_saved,
           'outputs_denoising_save':outputs_denoising_saved,
           'light_file':light_version,
-          'speedup':1} 
+          'speedup':speedup} 

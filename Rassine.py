@@ -20,7 +20,13 @@ Created on Thu Feb  7 16:34:29 2019
 
 from __future__ import print_function
 import matplotlib
-matplotlib.use('Qt5Agg',force=True)
+import platform 
+
+if platform.system()=='Linux':
+    matplotlib.use('Agg',force=True)
+else:
+    matplotlib.use('Qt5Agg',force=True)
+
 import numpy as np 
 import pandas as pd
 import matplotlib.pylab as plt
@@ -96,8 +102,8 @@ plt.close('all')
 if speedup < 1:
     speedup = 1
 
-#column_wave = 'wave'
-#column_flux = 'flux'  
+column_wave = 'wave'
+column_flux = 'flux'  
 
 if len(sys.argv)>1:
     optlist,args =  getopt.getopt(sys.argv[1:],'f:s:o:r:R:a:w:l:p:P:e:S:')
@@ -116,13 +122,13 @@ if len(sys.argv)>1:
             anchor_file = j[1]
         if j[0] == '-r': #Radius minimum
             par_R = j[1]
-            par_R = np.float(par_R)
+            par_R = float(par_R)
         if j[0] == '-R': #Radius maximum
             par_Rmax = j[1]
-            par_Rmax = np.float(par_Rmax)
+            par_Rmax = float(par_Rmax)
         if j[0] == '-p': #par_stretching
             par_stretching = j[1]
-            par_stretching = np.float(par_stretching)
+            par_stretching = float(par_stretching)
         if j[0] == '-a': #feedback
             if j[1]!='unspecified':
                 feedback = j[1]
@@ -201,6 +207,11 @@ else: # to load a pickle dictionnary, csv file or txt file
     elif spectrum_name.split('.')[-1]=='p':
         data = ras.open_pickle(spectrum_name) # load the pickle dictionnary
         spectrei = np.array(data[column_flux])  # the flux of your spectrum
+        try:
+            spectrei_err = np.array(data[column_flux+'_err'])      # the error flux of your spectrum
+        except:
+            spectrei_err = None
+
         try:
             grid = np.array(data[column_wave])      # the grid of wavelength of your spectrum
         except:
@@ -313,7 +324,7 @@ if np.isnan(SNR_0):
 if not only_print_end:
     print(' Spectrum SNR at 5500 : %.0f'%(SNR_0))
 
-normalisation = np.float(len_y)/np.float(len_x) # stretch the y axis to scale the x and y axis 
+normalisation = float(len_y)/float(len_x) # stretch the y axis to scale the x and y axis 
 spectre = spectrei/normalisation
 
 if synthetic_spectrum:
@@ -423,7 +434,7 @@ if (feedback)&(par_smoothing_box != 'auto'):
     plt.xlabel(r'Wavelength [$\AA$]',fontsize=14)
     plt.ylabel('Flux [arb. unit]',fontsize=14)
     l1, = plt.plot(grid, ras.smooth(spectre,int(par_smoothing_box),shape = par_smoothing_kernel), color='k',label='smoothed spectrum')
-    plt.legend()
+    plt.legend(loc=1)
     axcolor = 'whitesmoke'
     axsmoothing = plt.axes([0.14, 0.1, 0.40, 0.02], facecolor = axcolor)
     ssmoothing = Slider(axsmoothing, 'Kernel length', 1, 10, valinit = int(par_smoothing_box), valstep=1)
@@ -577,13 +588,13 @@ if not only_print_end:
     print(' Suggestion of a streching parameter to try : %.0f +/- %.0f'%(calib_low + (calib_high-calib_low)*0.5,(calib_high-calib_low)*0.25))
 
 out_of_calibration = False
-if par_fwhm/conversion_fwhm_sig>30: 
+if par_fwhm/conversion_fwhm_sig>30:
     out_of_calibration = True
     print(' [WARNING] Star out of the FWHM calibration range')
 
 if type(par_stretching) == str:
     if not out_of_calibration:
-        par_stretching = calib_low + (calib_high-calib_low) * np.float(par_stretching.split('_')[1])
+        par_stretching = calib_low + (calib_high-calib_low) * float(par_stretching.split('_')[1])
         #par_stretching = 20*computed_parameters #old calibration
         if not only_print_end:
             print(' [AUTO] par_stretching fixed : %.2f'%(par_stretching))
@@ -646,7 +657,6 @@ if par_R=='auto':
 if out_of_calibration:
     windows = 2. #2 typical line width scale (small window for the first continuum)
     big_windows = 20.  #20typical line width scale (large window for the second continuum)
-
 
 law_chromatic = wave/minx
 
@@ -764,7 +774,10 @@ if (par_Rmax!=par_R)|(par_Rmax=='auto'):
     
             par_Rmax = 2*np.round(largest_radius*minx/cluster_length[largest_cluster,5]/cluster_length[largest_cluster,3],0)
         else:
-            par_Rmax=par_R
+            if out_of_calibration:
+                par_Rmax = 5*par_R
+            else:
+                par_Rmax = par_R
         if not (only_print_end)|(threshold<0.2):
             print(' [AUTO] Rmax found around %.0f AA and fixed : %.0f'%(cluster_length[largest_cluster,5],par_Rmax))
         if par_Rmax > 150:
@@ -777,14 +790,14 @@ if (par_Rmax!=par_R)|(par_Rmax=='auto'):
     
     if feedback:
         t = np.linspace(0,1,100)
-        radius = grid/minx * ( par_R + (par_Rmax - par_R) * penalite_step ** (np.float(reg.split('_')[-1])))
-        law = par_R + (par_Rmax - par_R) * t ** np.float(reg.split('_')[-1])
+        radius = grid/minx * ( par_R + (par_Rmax - par_R) * penalite_step ** (float(reg.split('_')[-1])))
+        law = par_R + (par_Rmax - par_R) * t ** float(reg.split('_')[-1])
         if reg.split('_')[0] == 'poly':
             alpha1 = 1 ; alpha2 = 0 ; actif = 0 ; ini = 0.5
         elif reg.split('_')[0] == 'sigmoid':
-            alpha1 = 0 ; alpha2 = 1 ; actif = 1  ; ini = np.float(reg.split('_')[-2])         
-        radius2 = grid/minx * (par_R + (par_Rmax - par_R) * (1+np.exp(-10*np.float(reg.split('_')[-1]) * (penalite_step - ini))) ** -1)
-        law2 = par_R + (par_Rmax - par_R) * (1+np.exp(-10*np.float(reg.split('_')[-1]) * (t-ini))) ** -1
+            alpha1 = 0 ; alpha2 = 1 ; actif = 1  ; ini = float(reg.split('_')[-2])         
+        radius2 = grid/minx * (par_R + (par_Rmax - par_R) * (1+np.exp(-10*float(reg.split('_')[-1]) * (penalite_step - ini))) ** -1)
+        law2 = par_R + (par_Rmax - par_R) * (1+np.exp(-10*float(reg.split('_')[-1]) * (t-ini))) ** -1
         
         fig = plt.figure(figsize=(12,6))
         plt.subplot(3,2,1)
@@ -794,7 +807,7 @@ if (par_Rmax!=par_R)|(par_Rmax=='auto'):
         plt.scatter(wave,flux,color='blue',s=1,zorder=2,label='local maxima')
         plt.xlabel(r'Wavelength [$\AA$]',fontsize=13) ; plt.ylabel('Flux [arb. unit]',fontsize=13) ; ax = plt.gca()  
         plt.tick_params(direction='in',top=True,right=True)
-        plt.legend(loc=2)
+        plt.legend(loc=4)
         
         plt.subplot(3,2,3,sharex=ax)
         plt.plot(grid, penalite0,color='k',alpha=0.5, label='penalty computed')
@@ -802,13 +815,13 @@ if (par_Rmax!=par_R)|(par_Rmax=='auto'):
         plt.xlabel('Wave',fontsize=13)
         plt.ylabel('Penalty',fontsize=13)
         plt.tick_params(direction='in',top=True,right=True)
-        plt.legend()
+        plt.legend(loc=1)
         
         plt.subplot(3,2,5,sharex=ax)
         l1, = plt.plot(grid, radius, color='k',lw=2,alpha=alpha1)
         l3, = plt.plot(grid, radius2, color='k',lw=2,alpha=alpha2)
         plt.plot(grid,grid/minx * par_R,color='r',ls=':',label='chromatic law')
-        plt.legend()
+        plt.legend(loc=1)
         ax = plt.gca()
         plt.xlabel(r'Wavelength [$\AA$]',fontsize=13)
         plt.ylabel(r'Radius [$\AA$]',fontsize=13) 
@@ -816,7 +829,7 @@ if (par_Rmax!=par_R)|(par_Rmax=='auto'):
 
         axcolor = 'whitesmoke'
         axexponent = plt.axes([0.55, 0.25, 0.35, 0.03], facecolor = axcolor)
-        sexponent = Slider(axexponent, 'Nu', 0.1, 5.0, valinit=np.float(reg.split('_')[-1]), valstep=0.05)
+        sexponent = Slider(axexponent, 'Nu', 0.1, 5.0, valinit=float(reg.split('_')[-1]), valstep=0.05)
         axexponent2 = plt.axes([0.55, 0.20, 0.35, 0.03], facecolor = axcolor)
         sexponent2 = Slider(axexponent2, 'Mu', 0, 1, valinit=ini, valstep=0.05)
         axrmin = plt.axes([0.55, 0.3, 0.35, 0.03], facecolor = axcolor)
@@ -902,12 +915,12 @@ if (par_Rmax!=par_R)|(par_Rmax=='auto'):
         plt.close()
     else:
         if reg.split('_')[0] == 'poly':
-           expo = np.float(reg.split('_')[-1])
+           expo = float(reg.split('_')[-1])
            radius = law_chromatic * (par_R + (par_Rmax-par_R) * penalite_graph ** (expo))
            par_model = reg
         elif reg.split('_')[0] == 'sigmoid':
-           center = np.float(reg.split('_')[-2])
-           width = np.float(reg.split('_')[-1])
+           center = float(reg.split('_')[-2])
+           width = float(reg.split('_')[-1])
            radius = law_chromatic * (par_R + (par_Rmax-par_R) * (1+np.exp(-width*(penalite_graph-center))) ** -1)
            par_model = reg
         else:
@@ -944,7 +957,7 @@ while loop == 'y':
     R_old = par_R
     
     while (len(wave)-j>3):
-        par_R = np.float(radius[j]) #take the radius from the penality law
+        par_R = float(radius[j]) #take the radius from the penality law
         mask = (distance[j,:]>0)&(distance[j,:]<2.*par_R) #recompute the points closer than the diameter if Radius changed with the penality      
         while np.sum(mask)==0:
             par_R *=1.5
@@ -976,7 +989,7 @@ while loop == 'y':
         continuum = Interpol(grid)
         plt.plot(grid, continuum,label='intermediate continuum')
         plt.scatter(wave,flux,color='k',label='anchor points')
-        plt.legend()
+        plt.legend(loc=1)
         plt.title('Visualisation of intermediate continuum',fontsize=14)
         plt.ylim(spectre.min(), spectre.max())
         #ax = plt.axes([0.20,0.5,0.3,0.3])
@@ -994,9 +1007,9 @@ while loop == 'y':
         if loop=='n':
             break
         if (loop != 'y')&(loop != 'n'):
-            par_R = np.float(loop)*R_old
-            radius = np.float(loop)*radius
-            k_factor.append(np.float(loop))
+            par_R = float(loop)*R_old
+            radius = float(loop)*radius
+            k_factor.append(float(loop))
             loop = 'y'
         elif loop == 'y':
             par_R = 1.5*R_old
@@ -1041,7 +1054,7 @@ if feedback:
     l2, = plt.plot(grid, continuum, label='intermediate continuum')
     plt.xlim(None, minx+len_x/10.)
     plt.ylim(None,spectre[0:int(len(grid)/10.)].max())
-    plt.legend()
+    plt.legend(loc=2)
 
     plt.subplot(2,1,2)
     plt.plot(grid, spectre)
@@ -1117,6 +1130,16 @@ if not only_print_end:
     print(' Time of the step : %.2f'%(loc_cutting_time-loc_rolling_time))
 
 # =============================================================================
+# CAII MASKING
+# =============================================================================
+
+mask_caii = ((wave>3929)&(wave<3937))|((wave>3964)&(wave<3972))  
+
+wave = wave[~mask_caii]
+flux = flux[~mask_caii]
+index = index[~mask_caii]
+
+# =============================================================================
 # OUTLIERS REMOVING
 # =============================================================================
 
@@ -1154,7 +1177,7 @@ if feedback:
     continuum = Interpol(grid)
     continuum = ras.troncated(continuum,spectre)
     l4, = plt.plot(grid, continuum, alpha = 1)
-    plt.legend()
+    plt.legend(loc=4)
 
     Interpol = interp1d(wave[~mask_out], flux[~mask_out], kind = interpol, bounds_error = False, fill_value = 'extrapolate')
     continuum = Interpol(grid)
@@ -1190,7 +1213,7 @@ if feedback:
     continuum = Interpol(grid)
     continuum = ras.troncated(continuum,spectre)
     l9, = plt.plot(grid, continuum, color='k',ls=':',alpha = 1,label='updated continuum')            
-    plt.legend()
+    plt.legend(loc=1)
     plt.show(block=False)
     
     class Index(object):
@@ -1447,7 +1470,7 @@ for j in range(5):
         
         mask_out_idx = [] 
         for j in cluster_idx:
-            which = np.argmin(flux[j])
+            which = np.argmin(flux[j.astype('int')])
             mask_out_idx.append(j[which])
     mask_out_idx = np.array(mask_out_idx)
     mask_out_idx = list(mask_out_idx[(mask_out_idx>3)&(mask_out_idx<(len(wave)-3))])
@@ -1508,7 +1531,7 @@ if feedback:
     l2, = plt.plot(wave,flux,'ko',label='anchor points',zorder=4)
     plt.xlabel(r'Wavelength [$\AA$]',fontsize=14)
     plt.ylabel('Flux [arb. unit]',fontsize=14)
-    plt.legend()
+    plt.legend(loc=1)
     plt.show(block=False)
 
     class Index():
@@ -1608,7 +1631,7 @@ if (feedback)|(plot_end)|(save_last_plot):
     plt.plot(grid[::jump_point], conti[::jump_point], label='continuum',zorder=101,color='r')
     plt.xlabel('Wavelength',fontsize=14)
     plt.ylabel('Flux',fontsize=14)
-    plt.legend()
+    plt.legend(loc=4)
     plt.title('Final products of RASSINE',fontsize=14)
     ax = plt.gca()
     ax.xaxis.set_minor_locator(MultipleLocator(50))
@@ -1774,11 +1797,13 @@ else:
 
 
 if light_version:
-    output = {'wave':grid,'flux':spectrei, 'flux_used':flux_used, 'output':basic, 'parameters':parameters}    
+    output = {'wave':grid,'flux':spectrei, 'flux_used':flux_used, 'output':basic, 'parameters':parameters}   
 else:
     output = {'wave':grid, 'flux':spectrei, 'flux_used':flux_used, 'output':basic,
           'penality_map':penalite_step, 'penality':penalite0, 'parameters':parameters}
     
+if spectrei_err is not None: 
+    output['flux_err'] = spectrei_err
 
 output['parameters']['filename'] = 'RASSINE_'+new_file+'.p'
 

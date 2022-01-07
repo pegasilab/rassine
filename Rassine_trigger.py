@@ -10,36 +10,29 @@ from __future__ import print_function
 import matplotlib
 import platform 
 
-if platform.system()=='Linux':
-    matplotlib.use('Agg',force=True)
-else:
-    matplotlib.use('Qt5Agg',force=True)
-
-import glob as glob 
-import Rassine_functions as ras      
-import numpy as np 
+import glob as glob
+import rassine as ras
 import matplotlib.pylab as plt
 import os
 import sys
-import pandas as pd
 import getopt
 
 cwd = os.getcwd()
-root = '/'.join(cwd.split('/')[:-1])
+root = cwd
 
 # =============================================================================
 # parameters
 # =============================================================================
 
 instrument = 'HARPN'                                                     # instrument (either HARPS, HARPN, CORALIE or ESPRESSO for the moment)
-dir_spec_timeseries = root+'/Yarara/HD4628/data/s1d/HARPN/'   # directory containing the s1d spectra timeseries
+dir_spec_timeseries = root+'/spectra_library/HD4628/data/s1d/HARPN/'   # directory containing the s1d spectra timeseries
 
 nthreads_preprocess = 6               # number of threads in parallel for the preprocessing
 nthreads_matching = 2                 # number of threads in parallel for the matching (more than 2 is not efficient for some reasons...) 
 nthreads_rassine = 4                  # number of threads in parallel for the normalisation (BE CAREFUL RASSINE NEED A LOT OF RAM DEPENDING ON SPECTRUM LENGTH)
 nthreads_intersect = 6                # number of threads in parallel for the post-continuum fit 
 
-rv_timeseries = root+'/Yarara/HD4628/data/s1d/HARPN/DACE_TABLE/Dace_extracted_table.csv'      # RV time-series to remove in kms, (only if binaries with ~kms RV amplitudes) stored in a pickle dictionnary inside 'model' keyword 
+rv_timeseries = root+'/spectra_library/HD4628/data/s1d/HARPN/DACE_TABLE/Dace_extracted_table.csv'      # RV time-series to remove in kms, (only if binaries with ~kms RV amplitudes) stored in a pickle dictionnary inside 'model' keyword
 
 dlambda = None                     # wavelength grid step of the equidistant grid, only if unevenly wavelength grid on lack of homogeneity in spectra time-series
 bin_length_stack = 1               # length of the binning for the stacking in days
@@ -81,8 +74,8 @@ if len(sys.argv)>1:
         if j[0] == '-o': 
             output_dir = j[1]
 
-    dir_spec_timeseries = root+'/Yarara/'+star+'/data/s1d/'+directory+'/'   
-    rv_timeseries = root+'/Yarara/'+star+'/data/s1d/'+directory+'/DACE_TABLE/Dace_extracted_table.csv'
+    dir_spec_timeseries = root+'/spectra_library/'+star+'/data/s1d/'+directory+'/'
+    rv_timeseries = root+'/spectra_library/'+star+'/data/s1d/'+directory+'/DACE_TABLE/Dace_extracted_table.csv'
 
 try:
     print(' Output directory is :', output_dir)

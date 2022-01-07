@@ -15,12 +15,7 @@ import pandas as pd
 import getopt
 import sys
 import glob as glob
-from Rassine_functions import make_sound
-from Rassine_functions import preprocess_fits
-from Rassine_functions import preprocess_prematch_stellar_frame
-from Rassine_functions import preprocess_match_stellar_frame
-from Rassine_functions import intersect_all_continuum
-from Rassine_functions import matching_diff_continuum
+from rassine import make_sound, preprocess_fits, preprocess_prematch_stellar_frame, preprocess_match_stellar_frame, intersect_all_continuum, matching_diff_continuum
 
 
 """COMMMENT OF DEVELOPPERS : WE ADMISE THE USER TO USE THE RASSINE_TRIGGER.PY RATHER THAN TO INTERACT DIRECTLY WITH THE MULTIPROCESSED FILE HERE"""

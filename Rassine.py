@@ -20,7 +20,6 @@ Created on Thu Feb  7 16:34:29 2019
 
 from __future__ import print_function
 import matplotlib
-import platform
 
 import numpy as np
 import pandas as pd
@@ -35,7 +34,7 @@ from matplotlib.widgets import Slider, Button, RadioButtons
 from scipy.special import erf
 from scipy.optimize import curve_fit
 from matplotlib.ticker import MultipleLocator
-import Rassine_functions as ras
+import rassine as ras
 
 matplotlib.use('Qt5Agg', force=True)
 

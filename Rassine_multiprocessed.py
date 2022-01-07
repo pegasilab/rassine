@@ -90,21 +90,16 @@ if output_dir=='':
     output_dir = os.path.dirname(rassine_files_to_reduce[0])+'/'
 
 def init(lock):
-    global starting
-    starting = lock
+    pass
 
 def run_preprocessing(file_liste):
-    starting.acquire() # no other process can get it until it is released
-    threading.Timer(6.0, starting.release).start() # release in 6 seconds
-    preprocess_fits(file_liste, instrument=instrument, plx_mas=plx_mas, final_sound=False, output_dir=output_dir) 
+    preprocess_fits(file_liste, instrument=instrument, plx_mas=plx_mas, final_sound=False, output_dir=output_dir)
 
 def run_matching_wrapper(args):
     return preprocess_match_stellar_frame(args[0], args = args[1],final_sound=False) 
 
 
 def run_rassine(file_liste):
-    starting.acquire() # no other process can get it until it is released
-    threading.Timer(6.0, starting.release).start() # release in 6 seconds
     if anchor_file=='':
         for n in file_liste:
             os.system('python Rassine.py -s '+n+' -o '+output_dir+' -a '+str(feedback)+' -P '+str(only_print_end)+' -e '+str(plot_end))
@@ -113,19 +108,13 @@ def run_rassine(file_liste):
             os.system('python Rassine.py -s '+n+' -o '+output_dir+' -a '+str(feedback)+' -P '+str(only_print_end)+' -l '+anchor_file+' -e '+str(plot_end))            
 
 def run_matching_diff(file_liste):
-    starting.acquire() # no other process can get it until it is released
-    threading.Timer(6.0, starting.release).start() # release in 6 seconds
-    matching_diff_continuum(file_liste, sub_dico = 'matching_anchors', master=anchor_file, savgol_window = savgol_window, zero_point=False) 
+    matching_diff_continuum(file_liste, sub_dico = 'matching_anchors', master=anchor_file, savgol_window = savgol_window, zero_point=False)
 
 def run_matching_diff(file_liste):
-    starting.acquire() # no other process can get it until it is released
-    threading.Timer(6.0, starting.release).start() # release in 6 seconds
-    matching_diff_continuum(file_liste, sub_dico = 'matching_anchors', master=anchor_file, savgol_window = savgol_window, zero_point=False) 
+    matching_diff_continuum(file_liste, sub_dico = 'matching_anchors', master=anchor_file, savgol_window = savgol_window, zero_point=False)
 
 def run_intersect_continuum(file_liste):
-    starting.acquire() # no other process can get it until it is released
-    threading.Timer(6.0, starting.release).start() # release in 6 seconds
-    intersect_all_continuum(file_liste, add_new=True) 
+    intersect_all_continuum(file_liste, add_new=True)
 
 
 if process=='RASSINE':

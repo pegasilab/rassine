@@ -35,19 +35,192 @@ from scipy.special import erf
 from scipy.optimize import curve_fit
 from matplotlib.ticker import MultipleLocator
 import rassine as ras
+import argparse
+
+from typing import Union, Literal
 
 matplotlib.use('Qt5Agg', force=True)
 
 #get_ipython().run_line_magic('matplotlib','qt5')
 
+
 python_version = sys.version[0]
 config = {}
 
+def nonneg_int_or_auto(str: str) -> Union[Literal['auto'], int]:
+    '''
+    Parses a string argument that contains either a non-negative integer or the 'auto' string
+    
+    Args:
+       str: String argument to parse
+
+    Returns:
+       The parsed value
+    '''
+    if str == 'auto'
+        return 'auto'
+    elif str.isdigit():
+        return int(str)
+    else
+        raise argparse.ArgumentTypeError("'{}' is not a valid non-negative integer or 'auto'".format(str))
+
+def float_or_auto(str: str) -> Union[Literal['auto'], float]:
+    '''
+    Parses a string argument that contains either a floating-point number or the 'auto' string
+
+    Args:
+        str: String argument to parse
+
+    Returns:
+        The parsed value
+    '''
+    if str == 'auto'
+        return 'auto'
+    else
+        try:
+            return float(str)
+        except ValueError:
+            raise argparse.ArgumentTypeError("'{}' is not a valid floating-point number or 'auto'".format(str))
+
+    # types taken from rassine_config.py
+
+parser = argparse.ArgumentParser(description='RASSINE tool')
+parameters = parser.add_argument_group(title = 'Algorithm parameters')
+
+parser.add_argument('-s', '--spectrum_name', type=str, default=cwd + '/spectra_library/spectrum_cenB.csv',
+                    help='Full path of your spectrum pickle/csv file')
+
+parser.add_argument('-o', '--output_dir', type=str, default=cwd + '/output/',
+                    help='Directory where output files are written')
+
+parser.add_argument('--synthetic_spectrum', type=bool, default=False,
+                    help='True if working with a noisy-free synthetic spectra')
+
+parser.add_argument('--anchor_file', type=str, default='',
+                    help='Put a RASSINE output file that will fix the value of the 7 parameters to the same value than in the anchor file')
+
+parser.add_argument('--column_wave', type=str, default='wave')
+parser.add_argument('--column_flux', type=str, default='flux')
+
+parser.add_argument('--float_precision', type=str, default='float32',
+                    help='Float precision for the output products wavelength grid')
+
+parameters.add_argument('--par_stretching', type=str,
+                    default='auto_0.5',
+                    help="Stretch the x and y axes ratio ('auto' available)")
+
+parser.add_argument('--par_vicinity', type=int, default=7,
+                    help='Half-window to find a local maxima')
+
+parameters.add_argument('--par_smoothing_box', type=nonneg_int_or_auto, default=6,
+                        help="Half-window of the box used to smooth (1 => no smoothing, 'auto' available)")
+
+# TODO: use mutually exclusive argument groups here
+# par_smoothing_box = 'auto' implies either 'erf', 'hat_exp'
+parser.add_argument('--par_smoothing_kernel', type=str, default='savgol',
+                    choices=['rectangular', 'gaussian', 'savgol', 'erf', 'hat_exp'],
+                    help ="If par_smoothing_box is an integer, valid options are rectangular, gaussian, savgol. If par_smoothing_box is auto, valid options are erf and hat_exp")
+
+parameters.add_argument('--par_fwhm', type=float_or_auto, default='auto',
+                        help ="FWHM of the CCF in km/s ('auto' available)")
+
+parser.add_argument('--CCF_mask', type='str')
 # =============================================================================
 #  IMPORT CONFIG FILE
 # =============================================================================
 
-exec(open('Rassine_config.py').read())
+import os
+
+cwd = os.getcwd()
+
+# =============================================================================
+#  ENTRIES
+# =============================================================================
+
+spectrum_name =  # full path of your spectrum pickle/csv file
+output_dir  =                              # directory where output files are written
+
+synthetic_spectrum = False   # True if working with a noisy-free synthetic spectra
+anchor_file = ''             # Put a RASSINE output file that will fix the value of the 7 parameters to the same value than in the anchor file
+
+column_wave = 'wave'
+column_flux = 'flux'
+
+float_precision = 'float32' # float precision for the output products wavelength grid
+
+#general initial parameters
+
+par_stretching = 'auto_0.5'     # stretch the x and y axes ratio ('auto' available)                            <--- PARAMETER 1
+par_vicinity = 7                # half-window to find a local maxima
+
+par_smoothing_box = 6           # half-window of the box used to smooth (1 => no smoothing, 'auto' available)  <--- PARAMETER 2
+par_smoothing_kernel = 'savgol' # 'rectangular','gaussian','savgol' if a value is specified in smoothig_kernel
+# 'erf','hat_exp' if 'auto' is given in smoothing box
+
+par_fwhm = 'auto'               # FWHM of the CCF in km/s ('auto' available)                                   <--- PARAMETER 3
+CCF_mask = 'master'             # only needed if par_fwhm is in 'auto'
+RV_sys = 0                      # RV systemic in kms, only needed if par_fwhm is in 'auto' and CCF different of 'master'
+mask_telluric = [[6275,6330],   # a list of left and right borders to eliminate from the mask of the CCF
+                 [6470,6577],   # only if CCF = 'master' and par_fwhm = 'auto'
+                 [6866,8000]]
+
+par_R = 'auto'             # minimum radius of the rolling pin in angstrom ('auto' available)                  <--- PARAMETER 4
+par_Rmax = 'auto'          # maximum radius of the rolling pin in angstrom ('auto' available)                  <--- PARAMETER 5
+par_reg_nu = 'poly_1.0'    # penality-radius law                                                               <--- PARAMETER 6
+# poly_d (d the degree of the polynome x**d)
+# or sigmoid_c_s where c is the center and s the steepness
+
+denoising_dist = 5      # half window of the area used to average the number of point around the local max for the continuum
+count_cut_lim = 3       # number of border cut in automatic mode (put at least 3 if Automatic mode)
+count_out_lim = 1       # number of outliers clipping in automatic mode (put at least 1 if Automatic mode)
+
+
+interpolation = 'cubic' # define the interpolation for the continuum displayed in the subproducts
+# note that at the end a cubic and linear interpolation are saved in 'output' regardless this value
+
+feedback = True        # run the code without graphical feedback and interactions with the sphinx (only wishable if lot of spectra)
+only_print_end = False  # only print in the console the confirmation of RASSINE ending
+plot_end = True        # display the final product in the graphic
+save_last_plot = False  # save the last graphical output (final output)
+
+
+outputs_interpolation_saved = 'linear' # to only save a specific continuum (output files are lighter), either 'linear','cubic' or 'all'
+outputs_denoising_saved = 'undenoised'        # to only save a specific continuum (output files are lighter), either 'denoised','undenoised' or 'all'
+
+light_version = True    # to save only the vital output
+speedup = 1             # to improve the speed of the rolling processes (not yet fully tested)
+
+
+config = {'spectrum_name':spectrum_name,
+          'synthetic_spectrum':synthetic_spectrum,
+          'output_dir':output_dir,
+          'anchor_file':anchor_file,
+          'column_wave':column_wave,
+          'column_flux':column_flux,
+          'axes_stretching':par_stretching,
+          'vicinity_local_max':par_vicinity,
+          'smoothing_box':par_smoothing_box,
+          'smoothing_kernel':par_smoothing_kernel,
+          'fwhm_ccf':par_fwhm,
+          'CCF_mask':CCF_mask,
+          'RV_sys':RV_sys,
+          'mask_telluric':mask_telluric,
+          'min_radius':par_Rmax,
+          'max_radius':par_R,
+          'model_penality_radius':par_reg_nu,
+          'denoising_dist':denoising_dist,
+          'interpol':interpolation,
+          'number_of_cut':count_cut_lim,
+          'number_of_cut_outliers':count_out_lim,
+          'float_precision':float_precision,
+          'feedback':feedback,
+          'only_print_end':only_print_end,
+          'plot_end':plot_end,
+          'save_last_plot':save_last_plot,
+          'outputs_interpolation_save':outputs_interpolation_saved,
+          'outputs_denoising_save':outputs_denoising_saved,
+          'light_file':light_version,
+          'speedup':speedup}
 
 spectrum_name = config['spectrum_name']
 output_dir = config['output_dir']

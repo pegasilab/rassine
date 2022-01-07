@@ -88,17 +88,17 @@ if preprocessed:
     print(' [STEP INFO] Preprocessing...')
     if os.path.exists(rv_timeseries):
         print(' [INFO] Table correctly specified')
-        os.system('python Rassine'+file_ver+'_multiprocessed.py -v PREPROCESS -s '+str(rv_timeseries)+' -n '+str(nthreads_preprocess)+' -i '+instrument+' -o '+output_dir) #reduce files in the fileroot column on the dace table 
+        os.system('python Rassine_multiprocessed.py -v PREPROCESS -s '+str(rv_timeseries)+' -n '+str(nthreads_preprocess)+' -i '+instrument+' -o '+output_dir) #reduce files in the fileroot column on the dace table
     else:
         print(' [INFO] Table uncorrectly specified : %s'%(rv_timeseries))
-        os.system('python Rassine'+file_ver+'_multiprocessed.py -v PREPROCESS -s '+dir_spec_timeseries+' -n '+str(nthreads_preprocess)+' -i '+instrument+' -o '+output_dir)
+        os.system('python Rassine_multiprocessed.py -v PREPROCESS -s '+dir_spec_timeseries+' -n '+str(nthreads_preprocess)+' -i '+instrument+' -o '+output_dir)
 
     if not len(glob.glob(dir_spec_timeseries+'PREPROCESSED/*.p')):
         error = sys.exit(' [ERROR] No file found in the preprocessing directory : %s'%(dir_spec_timeseries+'PREPROCESSED/'))
 
 if match_frame:
     print(' [STEP INFO] Matching frame...')
-    os.system('python Rassine'+file_ver+'_multiprocessed.py -v MATCHING -s '+dir_spec_timeseries+'PREPROCESSED/'+' -n '+str(nthreads_matching)+' -d '+str(dlambda)+' -k '+str(rv_timeseries))
+    os.system('python Rassine_multiprocessed.py -v MATCHING -s '+dir_spec_timeseries+'PREPROCESSED/'+' -n '+str(nthreads_matching)+' -d '+str(dlambda)+' -k '+str(rv_timeseries))
 
 if not os.path.exists(dir_spec_timeseries+'MASTER/'):
     os.system('mkdir '+dir_spec_timeseries+'MASTER/')
@@ -129,7 +129,7 @@ if rassine_normalisation_master:
 master_name = glob.glob(dir_spec_timeseries+'MASTER/RASSINE_Master_spectrum*.p')[0]
 if rassine_normalisation:
     print(' [STEP INFO] Normalisation frame...')
-    os.system('python Rassine'+file_ver+'_multiprocessed.py -v RASSINE -s '+dir_spec_timeseries+'STACKED/Stacked -n '+str(nthreads_rassine)+' -l '+master_name+' -P '+str(True)+' -e '+str(False))
+    os.system('python Rassine_multiprocessed.py -v RASSINE -s '+dir_spec_timeseries+'STACKED/Stacked -n '+str(nthreads_rassine)+' -l '+master_name+' -P '+str(True)+' -e '+str(False))
 
 
 master_spectrum_name = None
@@ -140,7 +140,7 @@ if rassine_intersect_continuum:
     print(' [STEP INFO] Normalisation clustering algorithm')
     ras.intersect_all_continuum_sphinx(glob.glob(dir_spec_timeseries+'STACKED/RASSINE*.p'), feedback = bool(1-full_auto),  master_spectrum=master_spectrum_name, copies_master=0, kind='anchor_index', nthreads=6, fraction=0.2, threshold = 0.66, tolerance=0.5, add_new = True)
 
-    os.system('python Rassine'+file_ver+'_multiprocessed.py -v INTERSECT -s '+dir_spec_timeseries+'STACKED/RASSINE -n '+str(nthreads_intersect))
+    os.system('python Rassine_multiprocessed.py -v INTERSECT -s '+dir_spec_timeseries+'STACKED/RASSINE -n '+str(nthreads_intersect))
 
 
 if rassine_diff_continuum:
@@ -151,7 +151,7 @@ if rassine_diff_continuum:
     else:
         master_file, savgol_window = ras.matching_diff_continuum_sphinx(glob.glob(dir_spec_timeseries+'STACKED/RASSINE*.p'), master=master_name, sub_dico = 'matching_anchors', savgol_window = 200, zero_point=False)
 
-    error = os.system('python Rassine'+file_ver+'_multiprocessed.py -v SAVGOL -s '+dir_spec_timeseries+'STACKED/RASSINE -n '+str(nthreads_intersect)+' -l '+master_name+' -P '+str(True)+' -e '+str(False)+' -w '+str(savgol_window))
+    error = os.system('python Rassine_multiprocessed.py -v SAVGOL -s '+dir_spec_timeseries+'STACKED/RASSINE -n '+str(nthreads_intersect)+' -l '+master_name+' -P '+str(True)+' -e '+str(False)+' -w '+str(savgol_window))
 
     if not error:
         os.system('touch '+dir_spec_timeseries+'rassine_finished.txt')

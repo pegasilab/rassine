@@ -31,7 +31,6 @@ plx_mas = 0
 instrument = 'HARPS'
 process = 'RASSINE' #either PREPROCESS, MATCHING OR RASSINE
 
-
 #sys arguments bypass the previous ones
 if len(sys.argv)>1:
     optlist,args =  getopt.getopt(sys.argv[1:],'s:i:o:a:l:P:n:e:v:d:k:p:w:')
@@ -106,9 +105,6 @@ def run_rassine(file_liste):
     else:
         for n in file_liste:
             os.system('python Rassine.py -s '+n+' -o '+output_dir+' -a '+str(feedback)+' -P '+str(only_print_end)+' -l '+anchor_file+' -e '+str(plot_end))            
-
-def run_matching_diff(file_liste):
-    matching_diff_continuum(file_liste, sub_dico = 'matching_anchors', master=anchor_file, savgol_window = savgol_window, zero_point=False)
 
 def run_matching_diff(file_liste):
     matching_diff_continuum(file_liste, sub_dico = 'matching_anchors', master=anchor_file, savgol_window = savgol_window, zero_point=False)

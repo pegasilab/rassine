@@ -5,3 +5,4 @@ scipy
 sphinxcontrib-bibtex
 sphinx-autodoc-typehints
 sphinx-argparse
+sphinxnotes-strike

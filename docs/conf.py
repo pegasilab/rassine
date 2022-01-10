@@ -25,6 +25,7 @@ extensions = [
     "sphinx.ext.mathjax",
     "myst_nb",
     'sphinxarg.ext', # to document command line arguments
+    "sphinxnotes.strike", # TODO: temp use while we work on the website
 ]
 
 #autosummary_generate = True

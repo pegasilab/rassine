@@ -37,94 +37,17 @@ from matplotlib.ticker import MultipleLocator
 import rassine as ras
 import argparse
 
-from typing import Union, Literal
+from typing import Union, Literal, List, Tuple
 
 matplotlib.use('Qt5Agg', force=True)
 
 #get_ipython().run_line_magic('matplotlib','qt5')
 
-
 python_version = sys.version[0]
 config = {}
 
-def nonneg_int_or_auto(str: str) -> Union[Literal['auto'], int]:
-    '''
-    Parses a string argument that contains either a non-negative integer or the 'auto' string
-    
-    Args:
-       str: String argument to parse
 
-    Returns:
-       The parsed value
-    '''
-    if str == 'auto'
-        return 'auto'
-    elif str.isdigit():
-        return int(str)
-    else
-        raise argparse.ArgumentTypeError("'{}' is not a valid non-negative integer or 'auto'".format(str))
 
-def float_or_auto(str: str) -> Union[Literal['auto'], float]:
-    '''
-    Parses a string argument that contains either a floating-point number or the 'auto' string
-
-    Args:
-        str: String argument to parse
-
-    Returns:
-        The parsed value
-    '''
-    if str == 'auto'
-        return 'auto'
-    else
-        try:
-            return float(str)
-        except ValueError:
-            raise argparse.ArgumentTypeError("'{}' is not a valid floating-point number or 'auto'".format(str))
-
-    # types taken from rassine_config.py
-
-parser = argparse.ArgumentParser(description='RASSINE tool')
-parameters = parser.add_argument_group(title = 'Algorithm parameters')
-
-parser.add_argument('-s', '--spectrum_name', type=str, default=cwd + '/spectra_library/spectrum_cenB.csv',
-                    help='Full path of your spectrum pickle/csv file')
-
-parser.add_argument('-o', '--output_dir', type=str, default=cwd + '/output/',
-                    help='Directory where output files are written')
-
-parser.add_argument('--synthetic_spectrum', type=bool, default=False,
-                    help='True if working with a noisy-free synthetic spectra')
-
-parser.add_argument('--anchor_file', type=str, default='',
-                    help='Put a RASSINE output file that will fix the value of the 7 parameters to the same value than in the anchor file')
-
-parser.add_argument('--column_wave', type=str, default='wave')
-parser.add_argument('--column_flux', type=str, default='flux')
-
-parser.add_argument('--float_precision', type=str, default='float32',
-                    help='Float precision for the output products wavelength grid')
-
-parameters.add_argument('--par_stretching', type=str,
-                    default='auto_0.5',
-                    help="Stretch the x and y axes ratio ('auto' available)")
-
-parser.add_argument('--par_vicinity', type=int, default=7,
-                    help='Half-window to find a local maxima')
-
-parameters.add_argument('--par_smoothing_box', type=nonneg_int_or_auto, default=6,
-                        help="Half-window of the box used to smooth (1 => no smoothing, 'auto' available)")
-
-# TODO: use mutually exclusive argument groups here
-# par_smoothing_box = 'auto' implies either 'erf', 'hat_exp'
-parser.add_argument('--par_smoothing_kernel', type=str, default='savgol',
-                    choices=['rectangular', 'gaussian', 'savgol', 'erf', 'hat_exp'],
-                    help ="If par_smoothing_box is an integer, valid options are rectangular, gaussian, savgol. If par_smoothing_box is auto, valid options are erf and hat_exp")
-
-parameters.add_argument('--par_fwhm', type=float_or_auto, default='auto',
-                        help ="FWHM of the CCF in km/s ('auto' available)")
-
-parser.add_argument('--CCF_mask', type='str')
 # =============================================================================
 #  IMPORT CONFIG FILE
 # =============================================================================

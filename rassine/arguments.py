@@ -1,6 +1,6 @@
 import argparse
 from typing import Literal, List, Union, Tuple
-import re
+import os, re
 
 def par_stretching_type(s: str) -> Union[str, float]:
     """

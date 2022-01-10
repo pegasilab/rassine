@@ -24,6 +24,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.mathjax",
     "myst_nb",
+    "sphinxnotes.strike", # TODO: temp use while we work on the website
 ]
 
 #autosummary_generate = True

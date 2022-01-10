@@ -1,14 +1,7 @@
-————————
-IMPORTANT INFORMATIONS :
-————————
+Important informations
+======================
 
-Please cite Cretignier et al., 2020 paper (see the paper in the directory for a better understanding of the code).
-ADS Link : https://ui.adsabs.harvard.edu/abs/2020arXiv200613098C/abstract
-
-RASSINE is a free access (https://github.com/MichaelCretignier/Rassine_public) Python3 code, compatible with Python2, which is a simple tool to normalise spectra with the less "fine-tuning buttons" possible.
-
-A tutorial is available (Tuto_rassine.pdf).
-
+A :doc:`tutorial` is available.
 
 By default, the input file has to be either a pickle or csv dictionary with at minimum two columns containing the key words 'wave' and 'flux'.
 RASSINE can also read fits file by preprocessing the file with the  « preprocess_fits » function.
@@ -23,11 +16,11 @@ The user do not need to compile it by himself/herself with Python since it will 
 RASSINE can be run in multi-processed using the Rassine_multiprocessed.py code.
 Finally, RASSINE contains a python code Rassine_trigger.py which is automatically launching all the different steps if you are working with a spectra time-series.
 
-————————
-BASIC RULES :
-————————
+Basic rules
+-----------
 
 If :
+
 1) Individual spectra of different stars : Adapt the Rassine_config.py parameters —> launch Rassine.py in Ipython shell
 2) Spectra time-series : Adapt the Rassine_trigger.py parameters —> launch Rassine_trigger.py in Ipython shell
 
@@ -41,9 +34,8 @@ The trigger will make different steps that you can control with the boolean butt
 6) Launch the intersect_all_continuum on spectra created in 5)
 7) Launch the matching_all_continuum on spectra created in 6)
 
-————————
-MORE INFORMATIONS :
-————————
+More informations
+-----------------
 
 You can also run the main Rassine.py code in sys mode, in this case the options are :
 
@@ -60,7 +52,7 @@ You can also run the main Rassine.py code in sys mode, in this case the options 
 
 Sys options are dominant in comparison to the values written in the Rassine_config.py file.
 You can provide a RASSINE output file to normalise another spectra from the same star using the 'anchor_file' parameter.
-The anchor file will acts as as a new config file for the parameters. 
+The anchor file will acts as as a new config file for the parameters.
 Anchor file is dominant compared to sys mode.
 
 In summary :
@@ -74,9 +66,8 @@ By interacting with the Sphinx you can control the process until the wanted prod
 Most parameters can be replaced by ‘auto’, if so always keep an eye on the feedback AUTO INFO if you are using the automatic mode.
 Keep in mind that no guaranty is given about the final product.
 
-————————
-REMARKS
-————————
+Remarks
+-------
 
 Remark :
     1) you don't need to change any parameters in the code except the ones in the Rassine_config.py or Rassine_trigger.py file

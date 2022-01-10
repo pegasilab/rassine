@@ -1,12 +1,14 @@
 RASSINE
 =======
 
-This repository contains RASSINE, an interactive tool for normalising stellar spectra
-as described in :footcite:`Cretignier2020`, with a few more features.
-Please cite this paper if you are using the code.
+RASSINE is a free access `<https://github.com/MichaelCretignier/Rassine_public>`_ Python3 code,
+:strike:`compatible with Python2,` which is a simple tool to normalise spectra with the less "fine-tuning buttons" possible.
+
+Please cite :footcite:`Cretignier2020` (see the paper in the directory for a better understanding of the code).
+
+ADS Link : `<https://ui.adsabs.harvard.edu/abs/2020arXiv200613098C/abstract>`_
 
 .. footbibliography::
-   
 
 Credits
 ~~~~~~~
@@ -21,8 +23,8 @@ Changelog
 .. toctree::
    :hidden:
    :maxdepth: 3
-   :caption: General information
 
-   install
+   important
+   tutorial
    api
    bibliography

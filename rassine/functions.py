@@ -12,6 +12,9 @@ import matplotlib
 import platform
 
 import numpy as np
+import numpy.typing as npt
+import typing
+
 from scipy.signal import savgol_filter
 from scipy.stats import norm
 from scipy.interpolate import interp1d
@@ -61,18 +64,27 @@ def my_input(text):
 # FUNCTIONS (alphabetic ordered)
 # =============================================================================
 
-def ccf(wave,spec1,spec2,extended=1500):
+def ccf(wave:npt.ArrayLike, spec1:npt.ArrayLike, spec2:npt.ArrayLike, extended:int=1500):
     """
-    CCF for a equidistant grid in log wavelength spec1 = spectrum, spec2 =  binary mask, mask_telluric = binary mask
+    Compute the Cross Correlation Function for an equidistant grid in log wavelength.
 
     Parameters
     ----------
-    extended : int-type
+    wave : array_like
+        The wavelength vector of the spectrum. 
+    spec1 : array_like
+        The flux vector of the spectrum.
+    spec2: array_like
+        The binary mask used to cross-correlate.
+    extended: int
+        The length of the extension of the vectors.
 
     Returns
     -------
-
-    Return the vrad lag grid as well as the CCF
+    vrad_grid : array_like
+        The velocity values of the CCF elements.
+    ccf : array_like
+        The values of the CCF. 
 
     """
 
@@ -94,9 +106,19 @@ def ccf(wave,spec1,spec2,extended=1500):
     return (c_lum*10**shift_save)-c_lum, np.array(convolution)
 
 
-def check_none_negative_values(array):
+def check_none_negative_values(array:npt.ArrayLike):
     """
-    Remove negative number
+    Remove negative numbers an a 1-D vector by the local closest non-zero value. 
+
+    Parameters
+    ----------
+    array : array_like
+        The wavelength vector of the spectrum. 
+
+    Returns
+    -------
+    array_filtered : array_like
+        The vector with null values replaced. 
 
     """
     neg = np.where(array<=0)[0]
@@ -121,12 +143,27 @@ def check_none_negative_values(array):
     return array
 
 
-def clustering(array, tresh, num):
-    """
-    Detect and form cluster on an array considering than values are closer than the tresh value.
-    Only cluster containing more elements than num are kept.
+def clustering(array:npt.ArrayLike, tresh:float, num:float):
 
     """
+    Detect and form 1D-cluster on an array. A new cluster is formed once the next vector value is farther than a treshold value. 
+
+    Parameters
+    ----------
+    array : array_like
+        The vector used to create the clustering. 
+    tresh : float
+        Treshold value distance used to define a new cluster.
+    num : float
+        The minimum number of elements to consider a cluster
+
+    Returns
+    -------
+    cluster_matrix : array_like
+        The matrix containing the left indice, right indice and the length of the 1D cluster  
+
+    """
+
     difference = np.diff(array)
     cluster = (difference<tresh)
     indice = np.arange(len(cluster))[cluster]
@@ -154,19 +191,49 @@ def clustering(array, tresh, num):
         return [np.array([j]) for j in array]
 
 
-def create_grid(wave_min, dwave, nb_bins):
+def create_grid(wave_min:float, dwave:float, nb_bins:int):
     """
-    Form a  wavelength grid from a minimal wavelength, a dwave and a number of elements.
+    Create an equidistant wavelength vector. 
+
+    Parameters
+    ----------
+    wave_min : float
+        Minimum wavelength value. 
+    dwave : float
+        Wavelength step.
+    nb_bins : int
+        Length of the wavelength vector.
+
+    Returns
+    -------
+    grid_vector : array_like
+        The vector containing the equidistant values. 
 
     """
+
     return np.linspace(wave_min, wave_min+(nb_bins-1)*dwave, nb_bins) # the grid of wavelength of your spectrum (assumed equidistant in lambda)
 
 
 def doppler_r(lamb,v):
     """
-    Relativistic doppler shift of a wavelength by a velocity v in kms
+    Relativistic doppler shift of a wavelength by a velocity v in kms.
+
+    Parameters
+    ----------
+    lamb : float
+        Wavelength. 
+    v : float
+        Velocity in kms.
+
+    Returns
+    -------
+    new_wave1 : array_like
+        Wavelength Doppler shifted with +v
+    new_wave2 : array_like
+        Wavelength Dopplelr shifted with -v
 
     """
+
     factor = np.sqrt((1+1000*v/c_lum)/(1-1000*v/c_lum))
     lambo = lamb*factor
     lambs = lamb*factor**(-1)
@@ -174,9 +241,30 @@ def doppler_r(lamb,v):
 
 
 def empty_ccd_gap(wave,flux,left=None,right=None, extended=30):
+
     """
     Ensure a 0 value in the gap between the ccd of HARPS s1d with extended=30 kms extension
+
+    Parameters
+    ----------
+    wave : array_like
+        Wavelength vector. 
+    flux : array_like
+        Flux vector.
+    left : float
+        Wavelength of the left CCF gap.
+    right : float
+        Wavelength of the right CCF gap.
+    extended : int
+        Extension of the gap in kms. 
+
+    Returns
+    -------
+    flux_filtered : array_like
+        Flux values with null values inside the specified gap
+
     """
+
     dgrid = np.diff(wave)[0]
 
     if left is not None:
@@ -197,19 +285,28 @@ def empty_ccd_gap(wave,flux,left=None,right=None, extended=30):
 
 def find_nearest(array,value,dist_abs=True):
     """
-    Find the closest value in an array
+    Find the closest element of a vector.
 
     Parameters
     ----------
+    array : array_like
+        Wavelength vector. 
+    value : array_like
+        Flux vector.
+    dist_abs : bool
+        Give the distance in absolute value.
 
-    dist_abs : provide the distance output in absolute
-
-    Return
-    ------
-
-    index of th closest element, value and distance
+    Returns
+    -------
+    indice : int
+        Indice of the closest element.
+    value : int
+        Value of the closest element.
+    distance : float
+        Distance to the closest element.
 
     """
+
     if type(value)!=np.ndarray:
         value = np.array([value])
     idx = np.argmin((np.abs(array-value[:,np.newaxis])),axis=1)
@@ -250,6 +347,23 @@ def grouping(array, tresh, num):
 
 
 def local_max(spectre,vicinity):
+    """
+    Perform a local maxima algorithm of a vector. 
+
+    Parameters
+    ----------
+    spectre : array_like
+        The vector to investigate. 
+    vicinity : int
+        The half window in which a local maxima is searched.
+
+    Returns
+    -------
+    maxima_matrix : array_like
+        A matrix containing the index and vector values of the detected local maxima.
+    """    
+
+
     vec_base = spectre[vicinity:-vicinity]
     maxima = np.ones(len(vec_base))
     for k in range(1,vicinity):
@@ -278,12 +392,43 @@ def import_files_mcpu(file_liste,kind):
 
 def intersect_all_continuum_sphinx(names, master_spectrum=None, copies_master=0, kind='anchor_index',
                                    nthreads=6, fraction=0.2, threshold = 0.66, tolerance=0.5, add_new = True, feedback=True):
-    """Search for the interction of all the anchors points in a list of filename
+    """
+    Search for the interction of all the anchors points in a list of filename and update the selection of anchor points in the same files.
+    
     For each anchor point the fraction of the closest distance to a neighbourhood is used.
     Anchor point under the threshoold are removed (1 = most deleted, 0 = most kept).
     Possible to use multiprocessing with nthreads cpu.
     If you want to fix the anchors points, enter a master spectrum path and the number of copies you want of it.
+
+    Parameters
+    ----------
+    names : array_like
+        List of RASSINE files. 
+    master_spectrum : str
+        Name of the RASSINE master spectrum file.
+    copies_master : int
+        Number of copy of the master. If 0 value is specified, copies_master is set to 2*N with N the number of RASSINE files.
+    kind : str
+        Entry kw of the vector to select in the RASSINE files
+    nthreads : int
+        Number of threads for multiprocessing
+    fraction : float
+        Parameter of the model between 0 and 1
+    treshold : float
+        Parameter of the model between 0 and 1
+    tolerance : float
+        Parameter of the model between 0 and 1
+    add_new : bool
+        Add anchor points that were not detected. 
+    feedback : bool
+        Activate the GUI matplotlib interface 
+    
+
+    Returns
+    -------
+
     """
+
     print('Loading of the files, wait ... \n')
     names = np.sort(names)
     sub_dico = 'output'
@@ -571,6 +716,21 @@ def intersect_all_continuum_sphinx(names, master_spectrum=None, copies_master=0,
     save_pickle(directory+'/'+tool_name, output_cluster)
 
 def intersect_all_continuum(names, add_new = True):
+    """
+    Perform the intersection of the RASSINE files by using the anchor location saved in the master RASSINE spectrum. 
+
+    Parameters
+    ----------
+    names : array_like
+        List of RASSINE files. 
+    add_new : bool
+        Add anchor points that were not detected. 
+
+    Returns
+    -------
+
+    """
+
     print('Extraction of the new continua, wait... \n')
 
     names = np.sort(names)
@@ -775,6 +935,27 @@ def intersect_all_continuum(names, add_new = True):
             save_pickle(names[i],file)
 
 def matching_diff_continuum_sphinx(names, sub_dico = 'matching_anchors', master=None, savgol_window = 200, zero_point=False):
+    """
+    Match the continuum of individual spectra to a reference spectrum with a savgol filtering on the spectra difference. The savogol window parameter can be selected by the GUI interface. 
+
+    Parameters
+    ----------
+    names : array_like
+        List of RASSINE files. 
+    sub_dico : str
+        Name of the continuum to use. Either 'output' (RASSINE individual) or 'matching_anchors' (RASSINE time-series)
+    master : str
+        Name of the RASSINE master spectrum file.
+    savgol window : int
+        Length of the window for the savgol filtering. 
+    zero_point : bool
+        No more used ?
+
+    Returns
+    -------
+
+    """
+
     snr = []
     for j in names:
         file = open_pickle(j)
@@ -861,9 +1042,26 @@ def matching_diff_continuum_sphinx(names, sub_dico = 'matching_anchors', master=
     return master, savgol_window
 
 def matching_diff_continuum(names, sub_dico = 'matching_anchors', master=None, savgol_window = 200, zero_point=False):
-    """A savgol fitering can be performed on spectra diff
-    (the spectrum with the highest snr is used as reference) to remove remaining fluctuation.
-    If zero point = False, the median level of the spectra difference is not removed and only the fluctuation are."""
+    """
+    Match the continuum of individual spectra to a reference spectrum with a savgol filtering on the spectra difference. 
+
+    Parameters
+    ----------
+    names : array_like
+        List of RASSINE files. 
+    sub_dico : str
+        Name of the continuum to use. Either 'output' (RASSINE individual) or 'matching_anchors' (RASSINE time-series)
+    master : str
+        Name of the RASSINE master spectrum file.
+    savgol window : int
+        Length of the window for the savgol filtering. 
+    zero_point : bool
+        No more used ?
+
+    Returns
+    -------
+
+    """
 
     snr = []
     for j in names:
@@ -927,6 +1125,38 @@ def matching_diff_continuum(names, sub_dico = 'matching_anchors', master=None, s
 
 
 def make_continuum(wave, flux, flux_denoised, grid, spectrei, continuum_to_produce = ['all','all']):
+    """
+    Perform the classical sanity check sequence of continuum.
+
+    Parameters
+    ----------
+    wave : array_like
+        Wavelength vector.
+    flux : array_like
+        Flux vector.
+    flux_denoised : array_like
+        Flux vector smoothed.
+    grid : array_like
+        Length of the window for the savgol filtering. 
+    spectrei : array_like
+        No more used ?
+    continuum_to_produce : list
+        Specyfing on which continuum to perform the sanity check.
+
+    Returns
+    -------
+
+    continuum_linear : array_like
+        The linearly interpolated continuum
+    continuum_cubic : array_like
+        The cubicly interpolated continuum
+    continuum_linear_denoised : array_like
+        The linearly inteprolated continuum denoised
+    continuum_cubic_denoised : array_like
+        The cubicly inteprolated continuum denoised
+    
+    """
+
 
     continuum1_denoised = np.zeros(len(grid))
     continuum3_denoised = np.zeros(len(grid))
@@ -971,6 +1201,29 @@ def make_sound(sentence):
 
 
 def match_nearest(array1, array2):
+    """
+    Match the closest elements of two arrays vectors and return the matching matrix.
+
+    Parameters
+    ----------
+    array1 : array_like
+        First vector.
+    array2 : array_like
+        Second vector.
+
+    Returns
+    -------
+
+    matching_matrix : array_like
+        Matrix where each column contain : 
+        1) the indices in the first vector
+        2) the indices in the second vector
+        3) the values in the first vector
+        4) the values in the second vector
+        5) the distance between the closest elements
+    
+    """ 
+
     dmin = np.diff(np.sort(array1)).min()
     dmin2 = np.diff(np.sort(array2)).min()
     array1_r = array1 + 0.001*dmin*np.random.randn(len(array1))
@@ -1006,7 +1259,29 @@ def plot_debug(grid,spectre,wave,flux):
 
 
 def preprocess_fits(files_to_process, instrument='HARPS', plx_mas=0, final_sound=True, output_dir=None):
-    """Preprocess  the files depending on the s1d format instrument, HARPS, HARPN, CORALIE or ESPRESSO"""
+    """
+    Preprocess the files spectra to produce readeable RASSINE files.
+    
+    The preprocessing depends on the s1d format of the instrument : HARPS, HARPN, CORALIE or ESPRESSO (if new DRS is used, use the ESPRESSO kw not matter the instrument)
+
+    Parameters
+    ----------
+    files_to_process : array_like
+        List of s1d spectra .fits spectra.
+    instrument : str
+        Instrument format of the s1d spectra.
+    plx_mas : float
+        parallaxe in mas (no more necessary ?)
+    final_sound : bool
+        Produce a sound once the preprocessing has finished (MacOS)
+    output_dir : str
+        Name of the output directory. If None, the output directory is created at the same location than the spectra.
+
+    Returns
+    -------
+    
+    """ 
+
     files_to_process = np.sort(files_to_process)
     number_of_files = len(files_to_process)
     counter = 0
@@ -1193,7 +1468,25 @@ def preprocess_fits(files_to_process, instrument='HARPS', plx_mas=0, final_sound
 
 
 def preprocess_prematch_stellar_frame(files_to_process, rv=0, dlambda=None):
-    """compute needed information to all the spectra of a star in the same stellar frame by specifying the rv in km/s and the dlambda to form the grid in angstrom"""
+    """
+    Define the wavelength vector on which all the spectra will be reinterpolated (common wavelength vector) and detect CDD gap. 
+    
+    The wavelength vector is defined from the maximum of all the spectra minimum wavelength and minimum of all the spectra maximum wavelength. 
+    A RV shift can be applied on all the spectra during the reintepolation stage.
+
+    Parameters
+    ----------
+    files_to_process : array_like
+        List of s1d .p preprocessed spectra.
+    rv : array_like
+        RV shift in kms to apply on the spectra (e.g binary, large trend). 
+    dlambda : float
+        Wavelength step in angstrom used to produce the equidistant wavelength vector. 
+
+    Returns
+    -------
+    
+    """ 
 
     files_to_process = np.sort(files_to_process)
 
@@ -1310,7 +1603,29 @@ def preprocess_prematch_stellar_frame(files_to_process, rv=0, dlambda=None):
 
 
 def preprocess_match_stellar_frame(files_to_process, args=None, rv=0, dlambda=None, final_sound=True):
-    """process all the spectra of a star in the same stellar frame by specifying the rv in km/s and the dlambda to form the grid in angstrom"""
+    """
+    Reinterpolate all the spectra on a common wavelength grid.  
+    
+    The wavelength vector is defined from the maximum of all the spectra minimum wavelength and minimum of all the spectra maximum wavelength. 
+    A RV shift can be applied on all the spectra during the reintepolation stage.
+
+    Parameters
+    ----------
+    files_to_process : array_like
+        List of s1d .p preprocessed spectra.
+    args : tuple
+        arguments to produce the wavelength vector. If None, will be determined automatically.
+    rv : array_like
+        RV shift in kms to apply on the spectra (e.g binary, large trend). 
+    dlambda : float
+        Wavelength step in angstrom used to produce the equidistant wavelength vector. 
+    final_sound : bool
+        Produce a sound once the preprocessing has finished (MacOS)
+
+    Returns
+    -------
+    
+    """ 
 
     files_to_process = np.sort(files_to_process)
 
@@ -1382,10 +1697,22 @@ def preprocess_match_stellar_frame(files_to_process, args=None, rv=0, dlambda=No
         make_sound('Matching stellar spectra has finished')
 
 def preprocess_prestacking(files_to_process, bin_length = 1, dbin = 0):
-    """Stack the s1d spectras by bin_length in days.
-    Use dbin to shift the zero point (useful for solar observation).
-    Define the zero point of the counter for the product name.
     """
+    Stack all the spectra according to a defined binning length.  
+    
+    Parameters
+    ----------
+    files_to_process : array_like
+        List of s1d .p preprocessed spectra (common wavelength grid).
+    bin_length : int
+        Length for the binning in days (nightly binning = 1).
+    dbin : float
+        Shift in days of the binning strating point (nightly = 0, daily = 0.5) 
+
+    Returns
+    -------
+    
+    """ 
 
     files_to_process = np.sort(files_to_process)
     directory, dustbin = os.path.split(files_to_process[0])
@@ -1427,11 +1754,24 @@ def preprocess_prestacking(files_to_process, bin_length = 1, dbin = 0):
     return jdb, berv, lamp, acc_sec, groups
 
 def preprocess_stack(files_to_process, bin_length = 1, dbin = 0, make_master=True):
-
-    """Stack the s1d spectras by bin_length in days.
-    Use dbin to shift the zero point (useful for solar observation).
-    Define the zero point of the counter for the product name.
     """
+    Stack all the spectra according to a defined binning length.  
+    
+    Parameters
+    ----------
+    files_to_process : array_like
+        List of s1d .p preprocessed spectra (common wavelength grid).
+    bin_length : int
+        Length for the binning in days (nightly binning = 1).
+    dbin : float
+        Shift in days of the binning strating point (nightly = 0, daily = 0.5) 
+    make_master : bool
+        Produce a master spectrum by stacking all the observations.
+
+    Returns
+    -------
+    
+    """ 
 
     files_to_process = np.sort(files_to_process)
     directory, dustbin = os.path.split(files_to_process[0])
@@ -1643,14 +1983,49 @@ def produce_line(grid,spectre,box=5,shape='savgol',vic=7):
     return index,wave,flux
 
 
-def save_pickle(filename,output,header=None):
+def save_pickle(filename:str, output:dict, header=None):
+
+    """
+    Save a pickle file with the proper protocol pickle version.
+
+    Parameters
+    ----------
+    filename : str
+        Name of the output pickle file.
+    output : dict
+        Output dictionnary table to save.
+
+    Returns
+    -------
+
+    """
     if filename.split('.')[-1]=='p':
         pickle.dump(output,open(filename,'wb'),protocol=protocol_pick)
     if filename.split('.')[-1]=='fits': #for futur work
         pass
 
 
-def smooth(y, box_pts, shape='rectangular'): #rectangular kernel for the smoothing
+def smooth(y:npt.ArrayLike, box_pts:int, shape:str='rectangular'): #rectangular kernel for the smoothing
+
+    """
+    Smoothing function. 
+
+    Parameters
+    ----------
+    y : array_like
+        The data to be smoothed. 
+    box_pts : int
+        Half-width of the smoothing window.
+    shape: str
+        The kernel used to smooth the data (either : 'rectangular, gaussian, savgol')
+
+    Returns
+    -------
+    y_smooth : array_like
+        The smoothed data.
+
+    """
+
     box2_pts = int(2*box_pts-1)
     if shape=='savgol':
         if box2_pts>=5:
@@ -1719,6 +2094,29 @@ def supress_ccd_gap(files_to_process,continuum='linear'):
 
 
 def rm_outliers(array, m=1.5, kind='sigma', direction='sym'):
+
+    """
+    Perform a M-sigma-clipping to remove outliers. 
+
+    Parameters
+    ----------
+    array : array_like
+        The data to filter. 
+    m : float
+        m-sigma value for the clipping.
+    kind: str
+        The method for the clipping. Either 'sigma' (classical std) or 'inter' (IQ sigma clipping)
+    direction : str
+        In case of interquartile clipping, the direction in which to perform the clipping. Either 'sym','highest' or 'lowest'. 
+
+    Returns
+    -------
+    binary_mask : array_like
+        The binary mask flagging outliers.
+    array_filtered : array_like
+        The array outliers removed. 
+
+    """
     if type(array)!=np.ndarray:
         array=np.array(array)
     if kind == 'inter':
@@ -1738,6 +2136,30 @@ def rm_outliers(array, m=1.5, kind='sigma', direction='sym'):
 
 
 def rolling_stat(array,window=1,min_periods=1):
+    """
+    Perform a rolling statistics. 
+
+    Parameters
+    ----------
+    array : array_like
+        The vector to investigate. 
+    window : int
+        The window used for the rolling statistic.
+    min_periods: int
+        Computation of the statistics up to the min_periods border value
+
+    Returns
+    -------
+    rolling_median : array_like
+        The rolling median.
+    rolling_Q1 : array_like
+        The rolling 25th percentile. 
+    rolling_Q3 : array_like
+        The rolling 75th percentile. 
+    rolling_IQ : array_like
+        The rolling IQ (Q3-Q1). 
+    """    
+
     roll_median = np.ravel(pd.DataFrame(array).rolling(window,min_periods=min_periods,center=True).quantile(0.50))
     roll_Q1 = np.ravel(pd.DataFrame(array).rolling(window,min_periods=min_periods,center=True).quantile(0.25))
     roll_Q3 = np.ravel(pd.DataFrame(array).rolling(window,min_periods=min_periods,center=True).quantile(0.75))
@@ -1746,6 +2168,27 @@ def rolling_stat(array,window=1,min_periods=1):
 
 
 def rolling_iq(array,window=1,min_periods=1):
+    """
+    Perform a rolling IQ statistic in a fixed window. 
+
+    Parameters
+    ----------
+    array : array_like
+        The vector to investigate. 
+    window : int
+        The window used for the rolling statistic.
+    min_periods: int
+        Computation of the statistics up to the min_periods border value
+
+    Returns
+    -------
+    rolling_Q1 : array_like
+        The rolling 25th percentile. 
+    rolling_Q3 : array_like
+        The rolling 75th percentile. 
+    rolling_IQ : array_like
+        The rolling IQ (Q3-Q1). 
+    """    
     roll_Q1 = np.ravel(pd.DataFrame(array).rolling(window,min_periods=min_periods,center=True).quantile(0.25))
     roll_Q3 = np.ravel(pd.DataFrame(array).rolling(window,min_periods=min_periods,center=True).quantile(0.75))
     roll_IQ = roll_Q3 - roll_Q1

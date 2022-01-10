@@ -1,0 +1,127 @@
+\documentclass[10pt]{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage{subfigure}
+\usepackage{siunitx}
+%Astronomical symbols
+\usepackage{mathabx}
+\setlength{\topmargin}{-0.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0.0in}
+\setlength{\evensidemargin}{0.0in}
+\setlength{\textwidth}{6.5in}
+\def\labelenumi{\alph{enumi})}
+\def\theenumi{\alph{enumi}}
+\def\labelenumii{(\arabic{enumii})}
+\def\theenumii{\arabic{enumii}}
+\def\p@enumii{\theenumi.}
+\def\labelenumiii{\arabic{enumiii}.}
+\def\theenumiii{\arabic{enumiii}}
+\def\p@enumiii{(\theenumi.\theenumii)}
+\def\labelenumiv{\arabic{enumiv}.}
+\def\theenumiv{\arabic{enumiv}}
+\def\p@enumiv{\p@enumiii.\theenumiii}
+\pagestyle{plain}
+%\setcounter{secnumdepth}{0}
+%\parindent=0pt
+\begin{document}
+\setcounter{section}{0}
+
+
+\begin{table}
+	\caption{Table of the parameters that can be controlled in the \textbf{Rassine\_config.py} file.\newline}             % title of Table
+	\label{table:1}      % is used to refer this table in the text
+	\centering                          % used for centering table
+	\begin{tabular}{| l | p{80mm} | c | c |}        % centered columns (4 columns)
+		\hline                 % inserts double horizontal lines
+		Parameters  & Description & Automatic & Value \\    % table heading
+		\hline                        % inserts single horizontal line
+		spectrum\_name &  Name of the spectrum file to reduce. The file can be either a pickle, csv, or txt. For pickle and csv the default colunm name must be 'wave' and 'flux' but this name can be changed by the column\_wave and column\_flux parameters. For fits file, use the Rassine\_trigger.py file with preprocessing button.    & No & string \\ \hline      % inserting body of the table
+		output\_dir & Output directory where RASSINE products are saved. Note that is if the spectrum name is entered in sys mode, the ourput file is by default at the same location than the input file except if an output directory is also specified in sys mode. & Yes & string \\ \hline 
+		synthetic\_spectrum & To allow the reduction of synthetic spectrum.  & No & True/False  \\ \hline 
+		anchor\_file& Name of the RASSINE output file that can be used to fix the parameters value. Anchor file will bypass the parameters value entered in sys mode and from the config file.    & No & string  \\ \hline 
+		column\_wave & Name of the column containing the wavelength grid. & No & string  \\ \hline 
+		column\_flux  & Name of the column containing the flux values.    & No & string \\ \hline 
+		float\_precision  & Float precision of the wavelength grid. & No & string \\ \hline 
+		par\_stretching & Shrinking of the flux axis compared to the wavelength axis. The format of the automatic mode is \textbf{'auto\_x'} with x a 1 decimal positive float number. x = 0.0 means high tension, whereas x = 1.0 mean low tension. You can also enter a float value by yourself (usually between 2 and 30).  & Yes & string or float \\ \hline 
+		par\_vicinity &  Size of the window in wavelength indices used to define a local maxima.  & No & integer \\ \hline 		
+		par\_smoothing\_box & Size of the window in wavelength indiced used to smooth the spectrum. Put \textbf{'auto'} to use the Fourier filtering. & Yes & string or integer \\ \hline 		
+		par\_smoothing\_kernel &  To use the automatic mode which apply a Fourier filtering use \textbf{'erf' or 'hat\_exp'} kernel and 'auto' in par\_smoothing\_box. Else, use 'rectangular', 'gaussian', 'savgol'. Developers advise the \textbf{'savgol'} kernel except if the user is dealing with spectra spanning low and high SNR range.   & Yes & string \\ \hline 		
+		par\_fwhm  & FWHM of the CCF of the spectrum. The user can let \textbf{'auto' }to let RASSINE determine this value by itself. & Yes & string or float \\ \hline 
+		CCF\_mask & CCF mask used to determine the FWHM. RASSINE construct its own mask by default. The user can specify its own mask which should be placed in the CCF\_MASK directory.  & Yes & string \\ \hline 		
+		RV\_sys  & RV systemic of the star in km/s used to shift the CCF mask. Since RASSINE construct directly the mask with the spectrum, the default value is 0.   & Yes & float \\ \hline 		
+		mask\_telluric   & A list of borders region to exclude of the CCF. By default the region where determine for spectrograph in the visible.   & No & list of list  \\ \hline 		
+		par\_R  & Minimum radius of the alpha shape scaled to the bluest part of the spectrum in $\AA$. Put \textbf{'auto'} to let RASSINE fix the value. & Yes & string or float \\ \hline 		
+		par\_Rmax &  Maximum radius of the alpha shape scaled to the bluest part of the spectrum in $\AA$. Put \textbf{'auto'} to let RASSINE fix the value. & Yes & string or float  \\ \hline 						
+	\end{tabular}
+\end{table}
+
+\begin{table}
+	\caption{Table of the parameters that can be controlled in the \textbf{Rassine\_config.py} file.\newline}             % title of Table
+	\label{table:1}      % is used to refer this table in the text
+	\centering                          % used for centering table
+	\begin{tabular}{| l | p{80mm} | c | c |}        % centered columns (4 columns)
+		\hline                 % inserts double horizontal lines
+		Parameters  & Description & Automatic & Value \\    % table heading
+		\hline                        % inserts single horizontal line
+		par\_reg\_nu & Penalty law of the alpha shape. Enter \textbf{'poly\_nu'} with nu a positive 1 decimal float number for the polynomial law, or     \textbf{'sigmoid\_nu\_mu'} with nu, mu  a positive 1 decimal float number. & No & string \\ \hline 		
+		denoising\_dist & Window in wavelength indices used to determine the anchor flux value by averaging around the local maximum. Only necessary for low SNR spectra. & No & integer \\ \hline 		
+		count\_cut\_lim  & Number of times borders continuum are flatten (2 or 3 give usually good values).   & No & integer \\ \hline 		
+		count\_out\_lim  & Number of times outliers rejection algorithm is performed by derivative criterion. One iteration rejected the 0.5\% of the anchor points with highest derivative.  & No &  integer \\ \hline 		
+		interpol   & 'linear' or 'cubic', the shape of the interpolation used in the graphical interface.   & No & string \\ \hline 		
+		feedback   & Trigger the interaction with the Sphinx ans the graphical feedback interface.    & No & True/False  \\ \hline 		
+		only\_print\_end  & Suppress the informations printed except the last line when RASSINE has finished.   & No & True/False\\ \hline 		
+		plot\_end  & Display the last plot & No & True/False  \\ \hline 		
+		save\_last\_plot  & Save the last plot & No & True/False \\ \hline 		
+		outputs\_interpolation\_saved  & Either 'linear', 'cubic' or 'all' to save some specific continuum.  & No & string \\ \hline 		
+		outputs\_denoising\_saved & Either 'undenoised','denoised','all' to save some specific continuum & No & string \\ \hline 		
+		light\_version & Only save the primary output to produce a lighter output file. & No & True/False \\ \hline 		
+		%speedup  & Let 1 for the moment since need investigations.  & No & integer \\ \hline 				
+	\end{tabular}
+\end{table}
+
+\begin{table}
+	\caption{Table of the parameters that can be controlled in the \textbf{Rassine\_trigger.py} file.\newline}             % title of Table
+	\label{table:2}      % is used to refer this table in the text
+	\centering                          % used for centering table
+	\begin{tabular}{| l | p{80mm}| c |}        % centered columns (4 columns)
+		\hline                 % inserts double horizontal lines
+		Parameters & Description & Value \\    % table heading
+		\hline                        % inserts single horizontal line
+		instrument & The instrument from which spectra are taken. Either 'HARPS','HARPN','CORALIE' or 'ESPRESSO' for the moment. Will be used during the preprocessing to format the fits file. & string \\ \hline      % inserting body of the table
+		dir\_spec\_timeseries & Directory path of the spectra timeseries & string \\ \hline 
+		nthreads\_preprocess  & Number of multiprocessed in preprocessing & integer  \\ \hline 
+		nthreads\_matching  & Number of multiprocessed in matching  & integer  \\ \hline 
+		nthreads\_rassine  & Number of multiprocessed in rassine  & integer  \\ \hline 
+		nthreads\_intersect  & Number of multiprocessed in rassine post reduction & integer  \\ \hline 
+		rv\_timeseries  & give the systemic RV of the star & float \\ \hline 
+		
+		%plx\_mas & Parallaxe of the star reduced. Used to determine the secular drift. & float  \\ \hline 
+		dlambda  & Value of the dlambda grid. If all the spectra come from the same instrument and s1d are already on a equidistant grid, RASSINE will determine automatically the dlambda. In the opposite case fix by yourself the dlambda step in $\AA$ of the wavelength grid.  & float  \\ \hline 
+		bin\_length\_stack  & Length in days of the window used to stack spectra (nightly stacking = 1). Spectra are stacked based on their jdb value obtained during the preprocessing. & float \\ \hline 		
+		dbin  & Offset in days for the binning of the stacking (0.5 for daily stack, 0 for nightly stack). &  \\ \hline 		
+		%counter\_stack  & Define the first index used in the Stacked spectra name. & integer \\ \hline 		
+		%make\_master & To produce a master spectrum by stacking all spectra together. Should be True except if your directory contains spectra obtained with different instrument, or contains different stars. & True/False \\ \hline 
+		use\_master\_as\_reference & To duplicate the master file at the intersect\_all\_continuum stage & True/False \\ \hline 
+		full\_auto & To completely disable the Sphinx feedback & True/False \\ \hline 
+		
+		
+	\end{tabular}
+\end{table}
+
+\begin{table}
+	\caption{Table of the parameters that can be controlled in the \textbf{Rassine\_functions.py} file.\newline}             % title of Table
+	\label{table:2}      % is used to refer this table in the text
+	\centering                          % used for centering table
+	\begin{tabular}{| l |  p{80mm} | c | c |}        % centered columns (4 columns)
+		\hline                 % inserts double horizontal lines
+		Parameters & Description & Automatic & Value \\    % table heading
+		\hline                        % inserts single horizontal line
+		protocol\_pickle & Fix the protocol version of the pickle output file. By default in 'auto' the protocol is the same than the python version on which you are launching RASSINE.  & Yes & string of float \\ \hline      % inserting body of the table
+		name\_voice & Choose the gender voice of RASSINE. Victoria or Daniel are available.  & No & int \\ \hline
+	\end{tabular}
+\end{table}
+
+
+\end{document}

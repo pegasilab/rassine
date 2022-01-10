@@ -4,4 +4,4 @@ matplotlib
 scipy
 sphinxcontrib-bibtex
 sphinx-autodoc-typehints
-autodocsumm
+sphinx-argparse

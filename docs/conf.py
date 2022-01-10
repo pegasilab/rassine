@@ -24,6 +24,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.mathjax",
     "myst_nb",
+    'sphinxarg.ext', # to document command line arguments
 ]
 
 #autosummary_generate = True

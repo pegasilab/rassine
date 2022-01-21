@@ -16,6 +16,7 @@ import matplotlib.pylab as plt
 import os
 import sys
 import getopt
+import logging
 
 cwd = os.getcwd()
 root = cwd
@@ -34,7 +35,7 @@ nthreads_intersect = 6                # number of threads in parallel for the po
 
 rv_timeseries = root+'/spectra_library/HD4628/data/s1d/HARPN/DACE_TABLE/Dace_extracted_table.csv'      # RV time-series to remove in kms, (only if binaries with ~kms RV amplitudes) stored in a pickle dictionnary inside 'model' keyword
 
-dlambda = None                     # wavelength grid step of the equidistant grid, only if unevenly wavelength grid on lack of homogeneity in spectra time-series
+dlambda = 0.01                     # wavelength grid step of the equidistant grid, only if unevenly wavelength grid on lack of homogeneity in spectra time-series
 bin_length_stack = 1               # length of the binning for the stacking in days
 dbin = 0                           # dbin to shift the binning (0.5 for solar data)
 use_master_as_reference = False    # use master spectrum as reference for the clustering algorithm (case of low SNR spectra)
@@ -55,53 +56,47 @@ rassine_diff_continuum = 1
 # =============================================================================
 # trigger
 # =============================================================================
-
-if len(sys.argv)>1:
-    optlist,args =  getopt.getopt(sys.argv[1:],'s:i:a:b:d:l:o:')
-    for j in optlist:
-        if j[0] == '-s': 
-            star = j[1]
-        if j[0] == '-i': 
-            instrument = j[1]
-        if j[0] == '-a': 
-            full_auto = bool(int(j[1]))
-        if j[0] == '-b': 
-            bin_length_stack = int(j[1])
-        if j[0] == '-l': 
-            dlambda = float(j[1])
-        if j[0] == '-d': 
-            directory = j[1] 
-        if j[0] == '-o': 
-            output_dir = j[1]
-
-    dir_spec_timeseries = root+'/spectra_library/'+star+'/data/s1d/'+directory+'/'
-    rv_timeseries = root+'/spectra_library/'+star+'/data/s1d/'+directory+'/DACE_TABLE/Dace_extracted_table.csv'
+star = 'HD23249'
+instrument = 'HARPS'
+full_auto = False
+bin_length_stack = 1
+dlambda = 0.01
+directory = 'HARPS03'
+output_dir = '/home/denis/w/rassine/spectra_library/HD23249/data/s1d/HARPS03/'
+dir_spec_timeseries = root+'/spectra_library/'+star+'/data/s1d/'+directory+'/'
+rv_timeseries = root+'/spectra_library/'+star+'/data/s1d/'+directory+'/DACE_TABLE/Dace_extracted_table.csv'
 
 try:
     print(' Output directory is :', output_dir)
 except:
-    output_dir =  dir_spec_timeseries
-
-file_ver = '' # TODO: remove this later, as we require min. Python 3.8
+    output_dir = dir_spec_timeseries
 
 if preprocessed:
     print(' [STEP INFO] Preprocessing...')
     if os.path.exists(rv_timeseries):
         print(' [INFO] Table correctly specified')
-        os.system('python Rassine_multiprocessed.py -v PREPROCESS -s '+str(rv_timeseries)+' -n '+str(nthreads_preprocess)+' -i '+instrument+' -o '+output_dir) #reduce files in the fileroot column on the dace table
-    else:
-        print(' [INFO] Table uncorrectly specified : %s'%(rv_timeseries))
-        os.system('python Rassine_multiprocessed.py -v PREPROCESS -s '+dir_spec_timeseries+' -n '+str(nthreads_preprocess)+' -i '+instrument+' -o '+output_dir)
+        cmdline = 'python Rassine_multiprocessed.py -v PREPROCESS -s '+str(rv_timeseries)+' -n '+str(nthreads_preprocess)+' -i '+instrument+' -o '+output_dir
+        logging.info(cmdline)
+        os.system(cmdline) #reduce files in the fileroot column on the dace table
+#    else:
+#        print(' [INFO] Table uncorrectly specified : %s'%(rv_timeseries))
+#        cmdline = 'python Rassine_multiprocessed.py -v PREPROCESS -s '+dir_spec_timeseries+' -n '+str(nthreads_preprocess)+' -i '+instrument+' -o '+output_dir
+#        logging.info(cmdline)
+#        os.system(cmdline)
 
     if not len(glob.glob(dir_spec_timeseries+'PREPROCESSED/*.p')):
         error = sys.exit(' [ERROR] No file found in the preprocessing directory : %s'%(dir_spec_timeseries+'PREPROCESSED/'))
 
 if match_frame:
     print(' [STEP INFO] Matching frame...')
-    os.system('python Rassine_multiprocessed.py -v MATCHING -s '+dir_spec_timeseries+'PREPROCESSED/'+' -n '+str(nthreads_matching)+' -d '+str(dlambda)+' -k '+str(rv_timeseries))
+    cmdline = 'python Rassine_multiprocessed.py -v MATCHING -s '+dir_spec_timeseries+'PREPROCESSED/'+' -n '+str(nthreads_matching)+' -d '+str(dlambda)+' -k '+str(rv_timeseries)
+    logging.info(cmdline)
+    os.system(cmdline)
 
 if not os.path.exists(dir_spec_timeseries+'MASTER/'):
-    os.system('mkdir '+dir_spec_timeseries+'MASTER/')
+    cmdline = 'mkdir '+dir_spec_timeseries+'MASTER/'
+    logging.info(cmdline)
+    os.system(cmdline)
 
 if stacking:
     print(' [STEP INFO] Stacking frame...')
@@ -123,13 +118,17 @@ if os.path.exists(dir_spec_timeseries+'PREPROCESSED/'):
 master_name = glob.glob(dir_spec_timeseries+'MASTER/Master_spectrum*.p')[0]
 if rassine_normalisation_master:
     print(' [STEP INFO] Normalisation master spectrum')
-    os.system('python Rassine.py -s '+master_name+' -a '+str(bool(1-full_auto))+' -S True -e '+str(bool(1-full_auto)))
+    cmdline = 'python Rassine.py -s '+master_name+' -a '+str(bool(1-full_auto))+' -S True -e '+str(bool(1-full_auto))
+    logging.info(cmdline)
+    os.system(cmdline)
 
 
 master_name = glob.glob(dir_spec_timeseries+'MASTER/RASSINE_Master_spectrum*.p')[0]
 if rassine_normalisation:
     print(' [STEP INFO] Normalisation frame...')
-    os.system('python Rassine_multiprocessed.py -v RASSINE -s '+dir_spec_timeseries+'STACKED/Stacked -n '+str(nthreads_rassine)+' -l '+master_name+' -P '+str(True)+' -e '+str(False))
+    cmdline = 'python Rassine_multiprocessed.py -v RASSINE -s '+dir_spec_timeseries+'STACKED/Stacked -n '+str(nthreads_rassine)+' -l '+master_name+' -P '+str(True)+' -e '+str(False)
+    logging.info(cmdline)
+    os.system(cmdline)
 
 
 master_spectrum_name = None

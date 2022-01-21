@@ -26,5 +26,6 @@ Changelog
 
    important
    tutorial
+   tools
    api
    bibliography

@@ -2,6 +2,8 @@ import argparse
 from typing import Literal, List, Union, Tuple
 import os, re
 
+float_regex = r'-?(0|[1-9][0-9]*)([.][0-9]+)?([eE][+-]?[0-9]+)?'
+
 def par_stretching_type(s: str) -> Union[str, float]:
     """
     Parses a par_stretching argument
@@ -12,7 +14,6 @@ def par_stretching_type(s: str) -> Union[str, float]:
     Returns:
         The parsed value, either a float or a string with format "auto_XXX" where XXX is a float
     """
-    float_regex = r'-?(0|[1-9][0-9]*)([.][0-9]+)?([eE][+-]?[0-9]+)?'
     auto_regex = r'auto_-?(0|[1-9][0-9]*)([.][0-9]+)?([eE][+-]?[0-9]+)?'
     if re.fullmatch(float_regex, s):
         return float(s)
@@ -57,7 +58,6 @@ def float_or_auto(s: str) -> Union[Literal['auto'], float]:
             raise argparse.ArgumentTypeError("'{}' is not a valid floating-point number or 'auto'".format(s))
 
     # types taken from rassine_config.py
-
 
 def mask_telluric_type(s: str) -> List[Tuple[float, float]]:
     """

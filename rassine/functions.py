@@ -1,15 +1,4 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Feb  7 16:34:29 2019
-
-@author: cretignier
-
-"""
-
-from __future__ import print_function
-import matplotlib
-import platform
 
 import numpy as np
 import numpy.typing as npt
@@ -30,7 +19,6 @@ from astropy.io import fits
 from astropy.time import Time
 import os
 from colorama import Fore
-#from tqdm import tqdm
 import time
 
 pickle.DEFAULT_PROTOCOL = 3

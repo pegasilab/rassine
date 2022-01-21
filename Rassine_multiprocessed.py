@@ -84,7 +84,6 @@ else:
 
 rassine_files_to_reduce = np.sort(glob.glob(files_to_reduce+'*.p'))
 
-
 if output_dir=='':
     output_dir = os.path.dirname(rassine_files_to_reduce[0])+'/'
 

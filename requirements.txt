@@ -5,3 +5,5 @@ pandas
 matplotlib
 PyQt5
 parsy
+pandas-stubs
+deepdish

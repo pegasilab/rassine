@@ -22,3 +22,8 @@ Modules
    :members:
    :undoc-members:
    :exclude-members: norm, interp1d, Slider, Button, RadioButtons, multicpu, Time
+
+.. automodule:: rassine.dace
+   :members:
+   :undoc-members:
+   :imported-members:

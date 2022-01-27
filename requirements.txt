@@ -7,3 +7,5 @@ PyQt5
 parsy
 pandas-stubs
 deepdish
+hickle
+tables

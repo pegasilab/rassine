@@ -48,7 +48,7 @@ def get_parser():
     return parser
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     p = get_parser()
     args = p.parse_args()
     # preprocess_stack wants strings

@@ -2,7 +2,6 @@ from pathlib import Path
 import numpy.typing as npt
 import pandas as pd
 
-
 def read_rv(file: Path) -> npt.ArrayLike:
     """
     Reads the RV values

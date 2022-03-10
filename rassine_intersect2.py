@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 
-import rassine as ras
+import rassine.functions as rasfun
 
 
 def get_parser():
@@ -26,4 +26,4 @@ def get_parser():
 if __name__ == "__main__":
     parser = get_parser()
     args = parser.parse_args()
-    ras.intersect_all_continuum(list(map(str, args.names)), add_new=args.add_new)
+    rasfun.intersect_all_continuum(list(map(str, args.names)), add_new=args.add_new)

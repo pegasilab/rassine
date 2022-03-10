@@ -38,7 +38,7 @@ from scipy.interpolate import interp1d
 from scipy.optimize import curve_fit
 from scipy.special import erf
 
-import rassine as ras
+import rassine.functions as ras
 
 matplotlib.use("Qt5Agg", force=True)
 

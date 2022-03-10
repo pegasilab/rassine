@@ -8,7 +8,7 @@ from typing import List
 import deepdish as dd
 import numpy as np
 
-from rassine import preprocess_match_stellar_frame
+from rassine.functions import preprocess_match_stellar_frame
 
 
 def get_parser():

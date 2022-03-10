@@ -47,7 +47,6 @@ def get_parser() -> ParametersParser:
 if __name__ == "__main__":
     myparser = get_parser()
     myargs = myparser.parse_all()
-    print(myargs)
     inputfile = myargs.root_path / myargs.dace_input_file
     newfolder = myargs.root_path / myargs.input_data_path
     files = np.sort(pd.read_csv(inputfile)["fileroot"])

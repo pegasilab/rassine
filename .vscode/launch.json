@@ -1,0 +1,40 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "RASSINE preprocess",
+            "type": "python",
+            "request": "launch",
+            "program": "rassine_preprocess.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "-i",
+                "HARPS",
+                "-o",
+                "/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/",
+                "/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/raw/HARPS.2005-11-16T07:05:03.095_s1d_A.fits",
+                "/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/raw/HARPS.2005-11-16T07:06:03.552_s1d_A.fits",
+                "/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/raw/HARPS.2005-11-16T07:07:06.508_s1d_A.fits",
+                "/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/raw/HARPS.2006-03-16T23:46:41.842_s1d_A.fits",
+                "/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/raw/HARPS.2006-03-16T23:48:08.061_s1d_A.fits",
+                "/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/raw/HARPS.2006-03-16T23:49:31.029_s1d_A.fits",
+                "/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/raw/HARPS.2006-03-16T23:50:51.287_s1d_A.fits",
+                "/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/raw/HARPS.2006-03-16T23:52:12.215_s1d_A.fits",
+                "/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/raw/HARPS.2006-03-16T23:53:32.373_s1d_A.fits",
+                "/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/raw/HARPS.2006-03-16T23:54:51.441_s1d_A.fits"
+            ]
+        }
+    ]
+}

@@ -13,6 +13,11 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from astropy.io import fits
+from astropy.time import Time
+from colorama import Fore
+
+from rassine.functions import save_pickle
 
 
 def preprocess_fits(

@@ -4,7 +4,7 @@ import os
 import textwrap
 from pathlib import Path
 
-import rassine as ras
+import rassine.functions as rasfun
 
 
 def get_parser():
@@ -54,7 +54,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     # preprocess_stack wants strings
     files = [str(path) for path in args.input_directory.glob("RASSINE*.p")]
-    master, savgol_window = ras.matching_diff_continuum_sphinx(
+    master, savgol_window = rasfun.matching_diff_continuum_sphinx(
         files,
         sub_dico=args.sub_dico,
         master=args.master,

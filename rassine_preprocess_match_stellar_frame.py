@@ -9,7 +9,7 @@ import numpy as np
 import numpy.typing as npt
 
 import rassine.io
-from rassine import preprocess_prematch_stellar_frame
+from rassine.functions import preprocess_prematch_stellar_frame
 
 
 def float_or_rv_file(s: str) -> Union[npt.ArrayLike, float]:
@@ -70,7 +70,7 @@ if __name__ == "__main__":
     dlambda: Optional[float] = args.dlambda
     rv: Union[npt.ArrayLike, float] = args.rv
     output_file: Path = args.output_file
-    inputfiles = np.sort(list(input_dir.glob("*.p")))
+    inputfiles = np.sort(list(input_dir.glob("*.p")))  # type: ignore
 
     assert len(inputfiles) > 0, "At least one input file must be available"
 

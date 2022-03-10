@@ -6,7 +6,7 @@ class IndividualSpectrum(IsDescription):
     Describes an entry in the DACE table
     """
 
-    id = UInt32Col() # Index (first column of the DACE table)
+    id = UInt32Col()  # Index (first column of the DACE table)
     rjd = Float64Col()
     vrad = Float64Col()
     svrad = Float64Col()
@@ -64,4 +64,3 @@ class IndividualSpectrum(IsDescription):
     lamp_offset = Float64Col()
     model = Float64Col()
     mjd = Float64Col()
-    

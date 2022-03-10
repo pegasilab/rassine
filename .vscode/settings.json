@@ -1,0 +1,31 @@
+{
+    "python.linting.mypyEnabled": true,
+    "editor.rulers": [
+        99
+    ],
+    "editor.formatOnSave": true,
+    "python.formatting.provider": "black",
+    "python.formatting.blackArgs": [
+        "--line-length=99"
+    ],
+    "python.sortImports.args": [
+        "--profile",
+        "black",
+        "--line-length",
+        "99",
+    ],
+    "[python]": {
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        }
+    },
+    "files.exclude": {
+        ".venv/": true,
+        "**/__pycache__": true,
+        "**/.mypy_cache": true,
+        "**/.pytest_cache": true,
+        "**/build": true,
+        "**/dist": true,
+        ".history/": true,
+    },
+}

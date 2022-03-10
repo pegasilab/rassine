@@ -1,25 +1,25 @@
 # -*- coding: utf-8 -*-
 
-import numpy as np
-import numpy.typing as npt
-import typing
-
-from scipy.signal import savgol_filter
-from scipy.stats import norm
-from scipy.interpolate import interp1d
-import matplotlib.pylab  as plt
-import pandas as pd
+import glob as glob
+import multiprocessing as multicpu
+import os
 import pickle
 import sys
-from matplotlib.widgets import Slider, Button, RadioButtons
-import multiprocessing as multicpu
+import time
+import typing
 from itertools import repeat
-import glob as glob
+
+import matplotlib.pylab as plt
+import numpy as np
+import numpy.typing as npt
+import pandas as pd
 from astropy.io import fits
 from astropy.time import Time
-import os
 from colorama import Fore
-import time
+from matplotlib.widgets import Button, RadioButtons, Slider
+from scipy.interpolate import interp1d
+from scipy.signal import savgol_filter
+from scipy.stats import norm
 
 pickle.DEFAULT_PROTOCOL = 3
 

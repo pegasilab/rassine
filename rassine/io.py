@@ -1,6 +1,8 @@
 from pathlib import Path
+
 import numpy.typing as npt
 import pandas as pd
+
 
 def read_rv(file: Path) -> npt.ArrayLike:
     """
@@ -17,12 +19,12 @@ def read_rv(file: Path) -> npt.ArrayLike:
     Read values
     """
 
-    if file.suffix == '.csv':
+    if file.suffix == ".csv":
         # RV time-series to remove in kms, (binary  or known planets) otherwise give the systemic velocity
-        rv = pd.read_csv(file)['model']
-    elif file.suffix == '.p':
-        rv = pd.read_pickle(file)['model']
+        rv = pd.read_csv(file)["model"]
+    elif file.suffix == ".p":
+        rv = pd.read_pickle(file)["model"]
     else:
-        raise ValueError('Cannot read this file format')
+        raise ValueError("Cannot read this file format")
 
     return rv

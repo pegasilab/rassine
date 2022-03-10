@@ -1,13 +1,13 @@
-from dataclasses import dataclass
 import argparse
-from argparse import ArgumentParser, Action, Namespace
-from typing import Optional, List, Dict, Set, Sequence, Tuple, Mapping
-from pathlib import Path
+import logging
 import os
 import sys
+from argparse import Action, ArgumentParser, Namespace
 from configparser import ConfigParser, SectionProxy
+from dataclasses import dataclass
 from functools import total_ordering
-import logging
+from pathlib import Path
+from typing import Dict, List, Mapping, Optional, Sequence, Set, Tuple
 
 
 class EnrichedAction:
@@ -53,8 +53,8 @@ class EnrichedAction:
         Returns:
             The name of the long option string, used as a configuration file key
         """
-        candidates = [s for s in action.option_strings if len(s) >= 1 and s[0] != '-']
-        candidates.extend([s[2:] for s in action.option_strings if s.startswith('--')])
+        candidates = [s for s in action.option_strings if len(s) >= 1 and s[0] != "-"]
+        candidates.extend([s[2:] for s in action.option_strings if s.startswith("--")])
         if candidates:
             return candidates[0]
         else:
@@ -76,9 +76,17 @@ class EnrichedAction:
         """
 
         #
-        invalid_types = [argparse._StoreConstAction, argparse._AppendAction, argparse._CountAction,
-                         argparse._HelpAction, argparse._VersionAction, argparse._SubParsersAction,
-                         argparse._ExtendAction, argparse._StoreTrueAction, argparse._StoreFalseAction]
+        invalid_types = [
+            argparse._StoreConstAction,
+            argparse._AppendAction,
+            argparse._CountAction,
+            argparse._HelpAction,
+            argparse._VersionAction,
+            argparse._SubParsersAction,
+            argparse._ExtendAction,
+            argparse._StoreTrueAction,
+            argparse._StoreFalseAction,
+        ]
 
         return not any([isinstance(action, t) for t in invalid_types])
 
@@ -93,6 +101,7 @@ class ConfigSection(object):
         strict: Whether the parsing is strict, i.e. all keys in the configuration file must correspond to
                 parameters (strict=True), or whether to ignore extra keys (strict=False)
     """
+
     name: str
     strict: bool = False
 
@@ -119,8 +128,14 @@ class ParametersParser(ArgumentParser):
         config_action: Enriched action that appends configuration file paths (with the action in the config_parser)
     """
 
-    def __init__(self, *args, config_common_section: str = 'common',
-                 relaxed_config_sections: Sequence[str] = [], strict_config_sections: Sequence[str] = [], **kwargs):
+    def __init__(
+        self,
+        *args,
+        config_common_section: str = "common",
+        relaxed_config_sections: Sequence[str] = [],
+        strict_config_sections: Sequence[str] = [],
+        **kwargs,
+    ):
         """
         Constructs a ParametersParser
 
@@ -132,8 +147,10 @@ class ParametersParser(ArgumentParser):
         self.enriched_actions: List[EnrichedAction] = []
         self.invalid_configfile_actions: List[Action] = []
         self.config_common_section: str = config_common_section
-        self.config_sections: Sequence[ConfigSection] = [ConfigSection(name, name in strict_config_sections)
-                                                         for name in (relaxed_config_sections + strict_config_sections)]
+        self.config_sections: Sequence[ConfigSection] = [
+            ConfigSection(name, name in strict_config_sections)
+            for name in (relaxed_config_sections + strict_config_sections)
+        ]
         self.config_parser: ArgumentParser = ArgumentParser()
         self.config_action: Optional[EnrichedAction] = None
         super().__init__(*args, **kwargs)
@@ -152,16 +169,21 @@ class ParametersParser(ArgumentParser):
         Returns:
             The construction configuration file action
         """
-        assert self.config_action is None, 'The method add_config_argument must be called at parser construction'
+        assert (
+            self.config_action is None
+        ), "The method add_config_argument must be called at parser construction"
 
         # Add the configuration action to the configuration parser
-        config_action = self.config_parser.add_argument(*args, **kwargs)  # it is the only option of the config. parser
+        config_action = self.config_parser.add_argument(
+            *args, **kwargs
+        )  # it is the only option of the config. parser
         self.config_action = EnrichedAction(config_action, env_var_name)
 
         # Add the configuration action to this parser, so that the option shows in the documentation/help
         action: Action = super().add_argument(*args, **kwargs)
-        assert isinstance(action, argparse._AppendAction), \
-            "For the configuration file option, the action must be 'append'"
+        assert isinstance(
+            action, argparse._AppendAction
+        ), "For the configuration file option, the action must be 'append'"
         assert action.type == Path, "For configuration file option, the type of must pathlib.Path"
         self.invalid_configfile_actions.append(action)
 
@@ -205,7 +227,7 @@ class ParametersParser(ArgumentParser):
 
     @staticmethod
     def explode_config_filenames(filenames: str) -> Sequence[Path]:
-        return list([Path(name.strip()) for name in filenames.split(',') if name.strip()])
+        return list([Path(name.strip()) for name in filenames.split(",") if name.strip()])
 
     def get_config_files(self, args: Sequence[str], env: Mapping[str, str]) -> List[Path]:
         """
@@ -219,7 +241,9 @@ class ParametersParser(ArgumentParser):
             Path to configuration files
         """
         config_action = self.config_action
-        assert config_action is not None, 'A ParametersParser must define exactly one config argument'
+        assert (
+            config_action is not None
+        ), "A ParametersParser must define exactly one config argument"
 
         config_files: List[Path] = []
 
@@ -228,7 +252,10 @@ class ParametersParser(ArgumentParser):
         if config_env is not None:
             new_files: List[Path] = list(self.explode_config_filenames(config_env))
             if new_files:
-                logging.info('Using configuration files from the environment: ' + ','.join(map(str, new_files)))
+                logging.info(
+                    "Using configuration files from the environment: "
+                    + ",".join(map(str, new_files))
+                )
             config_files.extend(new_files)
 
         config_args, discard = self.config_parser.parse_known_args(args)
@@ -238,7 +265,10 @@ class ParametersParser(ArgumentParser):
             for filenames in config_cmdline_args:
                 new_files.extend(self.explode_config_filenames(filenames))
             if new_files:
-                logging.info('Using configuration files from the command-line: ' + ','.join(map(str, new_files)))
+                logging.info(
+                    "Using configuration files from the command-line: "
+                    + ",".join(map(str, new_files))
+                )
             config_files.extend(new_files)
 
         return config_files
@@ -250,12 +280,17 @@ class ParametersParser(ArgumentParser):
         Args:
             env: Environment variables
         """
-        env_var_names: Dict[str, Action] = dict([(ea.env_var_name, ea.action) for ea in self.enriched_actions
-                                                 if ea.env_var_name is not None])
+        env_var_names: Dict[str, Action] = dict(
+            [
+                (ea.env_var_name, ea.action)
+                for ea in self.enriched_actions
+                if ea.env_var_name is not None
+            ]
+        )
         for name, value in env.items():
             if name in env_var_names:
                 action = env_var_names[name]
-                logging.info(f'Set {action.dest} to {value} from environment variable {name}')
+                logging.info(f"Set {action.dest} to {value} from environment variable {name}")
                 action.default = value
 
     def populate_from_config_section(self, section: SectionProxy, *, strict: bool):
@@ -266,23 +301,42 @@ class ParametersParser(ArgumentParser):
             section: Parsed configuration section
             strict: Whether to parse in strict mode
         """
-        invalid_keys: Set[str] = \
-            set([name for name in [EnrichedAction.extract_config_var_name(a) for a in self.invalid_configfile_actions]
-                 if name is not None])
-        config_option_names: Dict[str, Action] = dict([(ea.config_var_name, ea.action) for ea in self.enriched_actions
-                                                       if ea.config_var_name is not None])
+        invalid_keys: Set[str] = set(
+            [
+                name
+                for name in [
+                    EnrichedAction.extract_config_var_name(a)
+                    for a in self.invalid_configfile_actions
+                ]
+                if name is not None
+            ]
+        )
+        config_option_names: Dict[str, Action] = dict(
+            [
+                (ea.config_var_name, ea.action)
+                for ea in self.enriched_actions
+                if ea.config_var_name is not None
+            ]
+        )
         for key, value in section.items():
-            assert key not in invalid_keys, \
-                f"Key {key} is an option but not a valid configuration file key"
+            assert (
+                key not in invalid_keys
+            ), f"Key {key} is an option but not a valid configuration file key"
             if key in config_option_names:
-                logging.info(f'Set {key} to {value} from configuration file')
+                logging.info(f"Set {key} to {value} from configuration file")
                 action = config_option_names[key]
                 action.default = value
             else:
-                assert not strict, f"Key {key} is unknown and the section {section.name} is parsed in strict mode"
+                assert (
+                    not strict
+                ), f"Key {key} is unknown and the section {section.name} is parsed in strict mode"
 
-    def parse_all(self, args: Optional[Sequence[str]] = None, env: Optional[Mapping[str, str]] = None,
-                  namespace: Optional[Namespace] = None) -> Namespace:
+    def parse_all(
+        self,
+        args: Optional[Sequence[str]] = None,
+        env: Optional[Mapping[str, str]] = None,
+        namespace: Optional[Namespace] = None,
+    ) -> Namespace:
         """
         Parses environment variables, configuration files and command-line arguments
 
@@ -294,7 +348,7 @@ class ParametersParser(ArgumentParser):
         Returns:
             The populated namespace
         """
-        assert not self.used, 'A ParametersParser can only be used once'
+        assert not self.used, "A ParametersParser can only be used once"
         self.used = True
         if args is None:
             args = sys.argv[1:]  # args default to the system args
@@ -304,7 +358,7 @@ class ParametersParser(ArgumentParser):
         self.populate_from_env_variables(env)
         for config_filename in config_files:
             cp = ConfigParser()
-            with open(config_filename, 'r') as file:
+            with open(config_filename, "r") as file:
                 cp.read_file(file, str(config_filename))
             try:
                 if self.config_common_section in cp.sections():
@@ -315,5 +369,7 @@ class ParametersParser(ArgumentParser):
                     if section_name in cp.sections():
                         self.populate_from_config_section(cp[section_name], strict=strict)
             except Exception as exc:
-                raise Exception(f"Configuration file {config_filename} could not be properly parsed") from exc
+                raise Exception(
+                    f"Configuration file {config_filename} could not be properly parsed"
+                ) from exc
         return super().parse_args(args, namespace=namespace)

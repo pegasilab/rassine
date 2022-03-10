@@ -1,0 +1,67 @@
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]
+
+[tool.black]
+line-length = 99
+target_version = ['py38']
+
+[tool.poetry]
+authors = ["Michael Cretignier <michael.cretignier@gmail.com>", "Denis Rosset <physics@denisrosset.com>"]
+description = "RASSINE astronomy tool"
+license = "BSD-3-Clause"
+name = "rassine"
+readme = "README.md"
+repository = "https://github.com/denisrosset/rassine.git"
+version = "0.1.0"
+
+[tool.poetry.dependencies]
+PyQt5-Qt = "^5.15.2"
+PyQt5-sip = "^12.9.1"
+astropy = "^4.2.1"
+configpile = {version = "^5.0.0", extras = ["parsy", "rich"]}
+h5py = "^2.10.0"
+matplotlib = "^3.3.4"
+numpy = "^1.20.1"
+pandas = "^1.2.4"
+parsy = "^1.4.0"
+pydantic = "^1.8.0"
+python = "^3.8,<3.11"
+scipy = "^1.6.2"
+
+myst-nb = {version = "^0.13.2", optional = true}
+sphinx = {version = "4.3.2", optional = true}
+sphinx-argparse = {version = "^0.3.1", optional = true}
+sphinx-autodoc-typehints = {version = "^1.17.0", optional = true}
+sphinx-book-theme = {version = "^0.2.0", optional = true}
+sphinx-pydantic = {version = "^0.1.1", optional = true}
+sphinxcontrib-bibtex = {version = "^2.4.1", optional = true}
+sphinxnotes-strike = {version = "^1.0", optional = true}
+
+[tool.poetry.extras]
+docs = [
+  "sphinx",
+  "sphinx-argparse",
+  "sphinx-autodoc-typehints",
+  "sphinx-book-theme",
+  "sphinx-pydantic",
+  "sphinxcontrib-bibtex",
+  "sphinxnotes-strike",
+  "esbonio",
+]
+
+[tool.poetry.dev-dependencies]
+black = "^22.1.0"
+esbonio = {version = "^0.9.0", optional = true}
+isort = "^5.10.1"
+mypy = "^0.931"
+pandas-stubs = "^1.2.0.43"
+pytest = "^7.0.1"
+pytest-black = "^0.3.12"
+pytest-mypy-plugins = "^1.9.3"
+
+[tool.pytest.ini_options]
+addopts = [
+  "--black",
+  "--tb=short",
+]

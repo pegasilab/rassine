@@ -69,13 +69,13 @@ rm /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/PREPROCESSED/
 
 not_full_auto=1 # we get different results by using the GUI and just pressing ENTER vs. full auto mode, is that bad?
 master=$(ls -t /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/MASTER/Master*.p | head -n 1)
-python Rassine.py -s $master -a $not_full_auto -S True -e $not_full_auto
+python rassine_main.py -s $master -a $not_full_auto -S True -e $not_full_auto
 rassine_master=$(ls -t /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/MASTER/RASSINE_Master_spectrum*.p | head -n 1)
 
 nthreads_rassine=4
 # Step 4B Normalisation frame, done in parallel
 output_dir=/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED
-ls /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED/Stacked*.p | parallel --jobs $nthreads_rassine --keep-order python Rassine.py -o $output_dir -a False -P True -e False -l $rassine_master -s
+ls /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED/Stacked*.p | parallel --jobs $nthreads_rassine --keep-order python rassine_main.py -o $output_dir -a False -P True -e False -l $rassine_master -s
 
 
 ## Intersect continuum

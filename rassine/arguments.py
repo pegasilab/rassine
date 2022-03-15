@@ -1,6 +1,7 @@
 import argparse
 import os
 import re
+from argparse import OPTIONAL
 from typing import List, Literal, Tuple, Union
 
 float_regex = r"-?(0|[1-9][0-9]*)([.][0-9]+)?([eE][+-]?[0-9]+)?"
@@ -21,6 +22,8 @@ def par_stretching_type(s: str) -> Union[str, float]:
         return float(s)
     elif re.fullmatch(auto_regex, s):
         return s
+    else:
+        raise ValueError(s)
 
 
 def nonneg_int_or_auto(s: str) -> Union[Literal["auto"], int]:
@@ -85,7 +88,8 @@ def mask_telluric_type(s: str) -> List[Tuple[float, float]]:
         lambda s: (s[0], s[1])
     )
     pairs = string("[") >> pair.sep_by(string(",")) << string("]")
-    return pairs.parse(s)
+    res: List[Tuple[float, float]] = pairs.parse(s)
+    return res
 
 
 def str2bool(s: str) -> bool:

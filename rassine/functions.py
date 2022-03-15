@@ -1306,9 +1306,9 @@ def make_continuum(wave, flux, flux_denoised, grid, spectrei, continuum_to_produ
     continuum_cubic : array_like
         The cubicly interpolated continuum
     continuum_linear_denoised : array_like
-        The linearly inteprolated continuum denoised
+        The linearly interpolated continuum denoised
     continuum_cubic_denoised : array_like
-        The cubicly inteprolated continuum denoised
+        The cubicly interpolated continuum denoised
 
     """
 

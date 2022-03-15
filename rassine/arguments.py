@@ -310,7 +310,7 @@ def argument_parser(cwd: str = "") -> argparse.ArgumentParser:
         "--par_reg_nu",
         type=str,
         default="poly_1.0",
-        help="Penality-radius law, either poly_d (d the degree of the polynome x**d) or or sigmoid_c_s where c is the center and s the steepness",
+        help="Penalty-radius law, either poly_d (d the degree of the polynome x**d) or or sigmoid_c_s where c is the center and s the steepness",
     )  # TODO why the comma
 
     parser.add_argument(

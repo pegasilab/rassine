@@ -3,6 +3,7 @@
     "editor.rulers": [
         99
     ],
+    "python.analysis.indexing": true,
     "editor.formatOnSave": true,
     "python.formatting.provider": "black",
     "python.formatting.blackArgs": [
@@ -28,4 +29,27 @@
         "**/dist": true,
         ".history/": true,
     },
+    "cSpell.words": [
+        "arange",
+        "astropy",
+        "astype",
+        "berv",
+        "CDELT",
+        "CRVAL",
+        "denoised",
+        "denoising",
+        "dwave",
+        "fwhm",
+        "HARPN",
+        "interp",
+        "parsy",
+        "pylab",
+        "radps",
+        "RASSINE",
+        "Rmax",
+        "savgol",
+        "scipy",
+        "TARG",
+        "tellurics"
+    ],
 }

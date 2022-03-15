@@ -3,4 +3,5 @@
 __pycache__/
 /output/
 /docs/_build/
-.history/
+/.history/
+/dist/

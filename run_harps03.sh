@@ -12,10 +12,10 @@ dlambda=0.01
 #
 # This step did correspond to
 # python Rassine_multiprocessed.py -v PREPROCESS -s "$dace_table" -n $nthreads_preprocess -i HARPS -o "$output_dir"
-export RASSINE_ROOT_PATH=/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03
-export RASSINE_CONFIG_FILES=harps03.ini
-# python dace_extract_filenames.py | parallel -N$nchunks --jobs $nthreads --keep-order python rassine_preprocess.py
-
+export RASSINE_ROOT=/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03
+export RASSINE_CONFIG=harps03.ini
+python dace_extract_filenames.py | parallel --will-cite -N$nchunks --jobs $nthreads --keep-order python rassine_preprocess.py
+exit
 
 nchunks_preprocess=10
 nthreads_preprocess=4
@@ -23,7 +23,7 @@ nthreads_preprocess=4
 
 dace_table=/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/DACE_TABLE/Dace_extracted_table.csv
 output_dir=/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/
-python dace_extract_filenames.py  | parallel --verbose -N$nchunks_preprocess --jobs $nthreads_preprocess --keep-order python rassine_preprocess.py -i HARPS -o "$output_dir"
+dace_extract_filenames | parallel --will-cite --verbose -N$nchunks_preprocess --jobs $nthreads_preprocess --keep-order python rassine_preprocess.py -i HARPS -o "$output_dir"
 
 ## Match frame (Borders)
 # This was python Rassine_multiprocessed.py -v MATCHING -s /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/PREPROCESSED/ -n $nthreads_matching -d $dlambda -k /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/DACE_TABLE/Dace_extracted_table.csv
@@ -43,7 +43,7 @@ nchunks_matching=10
 nthreads_matching=4
 
 nspectra=$(ls "$preprocessed_dir"/*.p | wc -l)
-seq 0 $(($nspectra - 1)) | parallel -N$nchunks_matching --jobs $nthreads_matching --keep-order python rassine_borders_reinterpolate.py --parameter-file "$matching_parameters" --input-dir "$preprocessed_dir"
+seq 0 $(($nspectra - 1)) | parallel --will-cite -N$nchunks_matching --jobs $nthreads_matching --keep-order python rassine_borders_reinterpolate.py --parameter-file "$matching_parameters" --input-dir "$preprocessed_dir"
 
 ## Stacking
 # Step 3
@@ -75,7 +75,7 @@ rassine_master=$(ls -t /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/H
 nthreads_rassine=4
 # Step 4B Normalisation frame, done in parallel
 output_dir=/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED
-ls /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED/Stacked*.p | parallel --jobs $nthreads_rassine --keep-order python rassine_main.py -o $output_dir -a False -P True -e False -l $rassine_master -s
+ls /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED/Stacked*.p | parallel --will-cite --jobs $nthreads_rassine --keep-order python rassine_main.py -o $output_dir -a False -P True -e False -l $rassine_master -s
 
 
 ## Intersect continuum
@@ -91,7 +91,7 @@ python rassine_anchor_scan.py --input-directory /home/denis/w/rassine1/spectra_l
 nthreads_intersect2=4
 nchunks_intersect2=10
 
-ls /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED/RASSINE* | parallel -N$nchunks_intersect2 --jobs $nthreads_intersect2 --keep-order python rassine_anchor_filter.py
+ls /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED/RASSINE* | parallel --will-cite  -N$nchunks_intersect2 --jobs $nthreads_intersect2 --keep-order python rassine_anchor_filter.py
 # note: removed the master spectrum option
 
 ## matching_diff_continuum_sphinx
@@ -106,7 +106,7 @@ savgol_window=$(< $output_savgol_window)
 # "matching_diff"
 nthreads_savgol=4
 nchunks_savgol=10
-ls /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED/RASSINE* | parallel -N$nchunks_savgol --jobs $nthreads_savgol --keep-order python rassine_savgol_filter.py --anchor-file $rassine_master --savgol-window $savgol_window
+ls /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED/RASSINE* | parallel --will-cite  -N$nchunks_savgol --jobs $nthreads_savgol --keep-order python rassine_savgol_filter.py --anchor-file $rassine_master --savgol-window $savgol_window
 #python Rassine_multiprocessed.py -v SAVGOL -s /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED/RASSINE -n $nthreads_intersect -l $rassine_master -P True -e False -w $savgol_window
 touch /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/rassine_finished.txt
 

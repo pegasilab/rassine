@@ -15,12 +15,15 @@ readme = "README.md"
 repository = "https://github.com/denisrosset/rassine.git"
 version = "0.1.0"
 
+[tool.poetry.scripts]
+dace_extract_filenames = "rassine.cli.dace_extract_filenames:script"
+
 [tool.poetry.dependencies]
 PyQt5 = "^5.15.6"
 PyQt5-Qt = "^5.15.2"
 PyQt5-sip = "^12.9.1"
 astropy = "^4.2.1"
-configpile = {version = "^5.0.0", extras = ["parsy", "rich"]}
+configpile = {version = "^6.1.0", extras = ["parsy", "rich"]}
 deepdish = "^0.3.7"
 h5py = "^2.10.0"
 matplotlib = "^3.3.4"
@@ -32,6 +35,7 @@ python = "^3.8,<3.11"
 scipy = "^1.6.2"
 
 myst-nb = {version = "^0.13.2", optional = true}
+recursive-diff = "^1.0.0"
 sphinx = {version = "4.3.2", optional = true}
 sphinx-argparse = {version = "^0.3.1", optional = true}
 sphinx-autodoc-typehints = {version = "^1.17.0", optional = true}
@@ -39,6 +43,7 @@ sphinx-book-theme = {version = "^0.2.0", optional = true}
 sphinx-pydantic = {version = "^0.1.1", optional = true}
 sphinxcontrib-bibtex = {version = "^2.4.1", optional = true}
 sphinxnotes-strike = {version = "^1.0", optional = true}
+typing-extensions = "^4.1.1"
 
 [tool.poetry.extras]
 docs = [
@@ -54,6 +59,7 @@ docs = [
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
+commitizen = "^2.21.2"
 esbonio = {version = "^0.9.0", optional = true}
 isort = "^5.10.1"
 mypy = "^0.931"

@@ -83,7 +83,7 @@ class EnrichedAction:
             argparse._HelpAction,
             argparse._VersionAction,
             argparse._SubParsersAction,
-            argparse._ExtendAction,
+            argparse._ExtendAction,  # type:ignore
             argparse._StoreTrueAction,
             argparse._StoreFalseAction,
         ]
@@ -149,7 +149,7 @@ class ParametersParser(ArgumentParser):
         self.config_common_section: str = config_common_section
         self.config_sections: Sequence[ConfigSection] = [
             ConfigSection(name, name in strict_config_sections)
-            for name in (relaxed_config_sections + strict_config_sections)
+            for name in [*relaxed_config_sections, *strict_config_sections]
         ]
         self.config_parser: ArgumentParser = ArgumentParser()
         self.config_action: Optional[EnrichedAction] = None

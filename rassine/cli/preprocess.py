@@ -11,8 +11,7 @@ from astropy.time import Time
 from configpile import AutoName, Param, Positional, types
 from typing_extensions import Annotated
 
-from ..dace import read_dace_csv_and_extract_filename
-from ..data import Preprocessed
+from ..data import MetaTable, Preprocessed
 from ..functions import save_pickle
 from .base import RassineConfig, RelPath
 
@@ -69,9 +68,9 @@ class Task(RassineConfig):
             pickle.dump(output, f, self.pickle_protocol)
 
     def preprocess_fits_harps_coraline_harpn(self) -> None:
-        table: Optional[pd.DataFrame] = None
+        mt: Optional[MetaTable] = None
         if self.dace_input_file is not None:
-            table = read_dace_csv_and_extract_filename(self.root << self.dace_input_file)
+            mt = MetaTable.read_csv(self.root << self.dace_input_file)
         instrument = self.instrument
         plx_mas = self.plx_mas
 
@@ -131,8 +130,8 @@ class Task(RassineConfig):
 
                 spectre /= 1.4e10 / 125**2  # calibrated to match with HARPS SNR
 
-            if table is not None:
-                mjd = table.loc[table["filename"] == str(file.name), "mjd"].values[0]
+            if mt is not None:
+                mjd = mt.table.loc[mt.table["filename"] == str(file.name), "mjd"].values[0]
             else:
                 try:
                     mjd = header["MJD-OBS"]
@@ -160,9 +159,9 @@ class Task(RassineConfig):
             self.save(output_file, out)
 
     def preprocess_fits_espresso_express(self) -> None:
-        table: Optional[pd.DataFrame] = None
+        mt: Optional[MetaTable] = None
         if self.dace_input_file is not None:
-            table = read_dace_csv_and_extract_filename(self.root << self.dace_input_file)
+            mt = MetaTable.read_csv(self.root << self.dace_input_file)
         instrument = self.instrument
         plx_mas = self.plx_mas
 
@@ -193,8 +192,8 @@ class Task(RassineConfig):
             wave_min = np.min(grid)
             wave_max = np.max(grid)
             spectre_step = np.mean(np.diff(grid))
-            if table is not None:
-                mjd = table.loc[table["filename"] == str(file.name), "mjd"].values[0]
+            if mt is not None:
+                mjd = mt.table.loc[mt.table["filename"] == str(file.name), "mjd"].values[0]
             else:
                 try:
                     mjd = float(header["MJD-OBS"])

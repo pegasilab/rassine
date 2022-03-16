@@ -35,21 +35,48 @@
         "astype",
         "berv",
         "CDELT",
+        "CHECKME",
         "CRVAL",
         "denoised",
         "denoising",
+        "dlambda",
         "dwave",
+        "fileroot",
         "fwhm",
         "HARPN",
+        "iloc",
         "interp",
         "parsy",
+        "pdataclass",
+        "pydantic",
         "pylab",
         "radps",
         "RASSINE",
+        "reinterpolation",
         "Rmax",
         "savgol",
         "scipy",
         "TARG",
         "tellurics"
     ],
+    //    "esbonio.server.enabled": true,
+    "todo-tree.general.tags": [
+        "BUG",
+        "HACK",
+        "FIXME",
+        "TODO",
+        "XXX",
+        "[ ]",
+        "[x]",
+        "CHECKME"
+    ],
+    "todo-tree.highlights.customHighlight": {
+        "CHECKME": {
+            "icon": "flame",
+            "foreground": "#000000",
+            "iconColour": "#800000",
+            "gutterIcon": true
+        },
+    },
+    "esbonio.server.enabled": true
 }

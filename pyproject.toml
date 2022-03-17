@@ -7,7 +7,11 @@ line-length = 99
 target_version = ['py38']
 
 [tool.poetry]
-authors = ["Michael Cretignier <michael.cretignier@gmail.com>", "Denis Rosset <physics@denisrosset.com>"]
+authors = [
+  "Michael Cretignier <michael.cretignier@gmail.com>",
+  "Denis Rosset <physics@denisrosset.com>",
+  "Jérémie Francfort <jeremie.francfort@unige.ch>",
+]
 description = "RASSINE astronomy tool"
 license = "BSD-3-Clause"
 name = "rassine"
@@ -28,7 +32,7 @@ configpile = {version = "^7.5.0", extras = ["parsy", "rich"]}
 deepdish = "^0.3.7"
 h5py = "^2.10.0"
 matplotlib = "^3.3.4"
-numpy = "^1.21.5"
+numpy = "^1.22.3"
 pandas = "^1.2.4"
 parsy = "^1.4.0"
 pydantic = "^1.8.0"
@@ -48,6 +52,16 @@ typing-extensions = "^4.1.1"
 
 [mypy]
 plugins = ["numpy.typing.mypy_plugin", "pydantic.mypy"]
+python_version = "3.8"
+
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+warn_untyped_fields = true
 
 [tool.poetry.extras]
 docs = [

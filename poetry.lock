@@ -746,7 +746,7 @@ traitlets = "*"
 
 [[package]]
 name = "jupyter-server"
-version = "1.15.5"
+version = "1.15.6"
 description = "The backend—i.e. core services, APIs, and REST endpoints—to Jupyter web applications."
 category = "main"
 optional = true
@@ -1184,7 +1184,7 @@ test = ["hypothesis (>=5.5.3)", "pytest (>=6.0)", "pytest-xdist (>=1.31)"]
 
 [[package]]
 name = "pandas-stubs"
-version = "1.2.0.50"
+version = "1.2.0.51"
 description = "Type annotations for Pandas"
 category = "dev"
 optional = false
@@ -2235,7 +2235,7 @@ docs = ["sphinx", "sphinx-argparse", "sphinx-autodoc-typehints", "sphinx-book-th
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8,<3.11"
-content-hash = "4db96d5a1581c404bd15f8eaa4fe155d93aff2cbf37378adf68e62f5df8cdcd4"
+content-hash = "91341e3e5f3dfcb5bb22e7701d434f75e2930ebe0dcaa9314720d8f36ae16d79"
 
 [metadata.files]
 alabaster = [
@@ -2672,8 +2672,8 @@ jupyter-core = [
     {file = "jupyter_core-4.9.2.tar.gz", hash = "sha256:d69baeb9ffb128b8cd2657fcf2703f89c769d1673c851812119e3a2a0e93ad9a"},
 ]
 jupyter-server = [
-    {file = "jupyter_server-1.15.5-py3-none-any.whl", hash = "sha256:939bb7ec3a75b6e5d6ee2d9989307367e3535cd89ea565e8bc435052790dd61a"},
-    {file = "jupyter_server-1.15.5.tar.gz", hash = "sha256:01b3f05cda404612e7366f491cfed39b49bdbf07e16d9d073f404c60dd0d199d"},
+    {file = "jupyter_server-1.15.6-py3-none-any.whl", hash = "sha256:e393934c19fcc324a7fca77f811eacd91201440f04c6fbb15c959c463baaa9c5"},
+    {file = "jupyter_server-1.15.6.tar.gz", hash = "sha256:56bd6f580d1f46b62294990e8e78651025729f5d3fc798f10f2c03f0cdcbf28d"},
 ]
 jupyter-server-mathjax = [
     {file = "jupyter_server_mathjax-0.2.5-py3-none-any.whl", hash = "sha256:d165c9ff876a1c32ccf99d309b57463fae206d9b6f0f3a9fa34ed01b3b26605e"},
@@ -2975,8 +2975,8 @@ pandas = [
     {file = "pandas-1.4.1.tar.gz", hash = "sha256:8db93ec98ac7cb5f8ac1420c10f5e3c43533153f253fe7fb6d891cf5aa2b80d2"},
 ]
 pandas-stubs = [
-    {file = "pandas-stubs-1.2.0.50.tar.gz", hash = "sha256:fdeaee677603a73b7a44eb01d12ef504b7af94db4d671e295a30157da0219ca5"},
-    {file = "pandas_stubs-1.2.0.50-py3-none-any.whl", hash = "sha256:9511f5ce436bc6515064f707d0fd77a41b9eed195417d93ae3aa159f7002ad4f"},
+    {file = "pandas-stubs-1.2.0.51.tar.gz", hash = "sha256:593bd379df0edb7551c172e18acdfe73fb0c55d7746ccf09f29b640740a36f82"},
+    {file = "pandas_stubs-1.2.0.51-py3-none-any.whl", hash = "sha256:3e997c890eeca71d0cabe3ef3be99903ec75e0e82283f7b59ff1b997beebd581"},
 ]
 pandocfilters = [
     {file = "pandocfilters-1.5.0-py2.py3-none-any.whl", hash = "sha256:33aae3f25fd1a026079f5d27bdd52496f0e0803b3469282162bafdcbdf6ef14f"},

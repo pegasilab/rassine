@@ -14,9 +14,10 @@ dlambda=0.01
 # python Rassine_multiprocessed.py -v PREPROCESS -s "$dace_table" -n $nthreads_preprocess -i HARPS -o "$output_dir"
 export RASSINE_ROOT=/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03
 export RASSINE_CONFIG=harps03.ini
-# dace_table=/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/DACE_TABLE/Dace_extracted_table.csv
-mkdir -p $RASSINE_ROOT/PROCESSED
-dace_extract_filenames | parallel --will-cite --verbose -N$nchunks --jobs $nthreads --keep-order rassine_preprocess 
+
+mkdir -p $RASSINE_ROOT/PREPROCESSED
+check_and_enumerate -i raw/ | parallel --will-cite --verbose -N$nchunks --jobs $nthreads --keep-order \
+  rassine_preprocess --input-folder raw/ --output-folder PREPROCESSED/
 
 exit
 # dace_extract_filenames | parallel --will-cite --verbose --keep-order rassine_preprocess -i HARPS -o "$output_dir"

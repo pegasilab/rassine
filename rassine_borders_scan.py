@@ -4,7 +4,6 @@ import argparse
 from pathlib import Path
 from typing import Optional, Union
 
-import deepdish as dd
 import numpy as np
 import numpy.typing as npt
 
@@ -104,4 +103,4 @@ if __name__ == "__main__":
         "rv": rv,
         "rv_mean": rv_mean,
     }
-    dd.io.save(output_file, output)
+    # dd.io.save(output_file, output)

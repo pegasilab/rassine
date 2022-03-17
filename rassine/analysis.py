@@ -4,7 +4,7 @@ import numpy as np
 import numpy.typing as npt
 import pandas as pd
 
-from . import Float
+from .types import *
 
 
 def grouping(array: npt.NDArray[np.float64], tresh: Float, num: int):

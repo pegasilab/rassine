@@ -2,7 +2,18 @@ import logging
 import pickle
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, ClassVar, List, Optional, Sequence, Type, TypeVar, Union, cast
+from typing import (
+    Callable,
+    ClassVar,
+    List,
+    NamedTuple,
+    Optional,
+    Sequence,
+    Type,
+    TypeVar,
+    Union,
+    cast,
+)
 
 import numpy as np
 import numpy.typing as npt
@@ -16,15 +27,31 @@ from numpy import float64
 from typing_extensions import Annotated
 
 from ..analysis import find_nearest, grouping
-from ..data import MetaTable, Preprocessed
 from ..io import save_pickle
 from ..math import create_grid, doppler_r
 from ..types import *
-from .base import RassineConfig, RelPath
+from . import preprocess
+from .base import RassineConfigBeforeStack, RelPath
+
+
+class Summary(NamedTuple):
+    wave_min_k: Float
+    wave_max_k: Float
+    dlambda: Float
+    hole_left_k: Float
+    hole_right_k: Float
+    static_grid: Optional[NFArray]  #: size of size of the spectrum?
+    wave_min: NFArray  #: vector length is number of spectra
+    berv: NFArray  #: vector length is number of spectra
+    lamp: NFArray  #: vector length is number of spectra
+    plx_mas: NFArray  #: vector length is number of spectra
+    acc_sec: NFArray  #: vector length is number of spectra
+    rv: NFArray  #: vector length is number of spectra
+    rv_mean: Float
 
 
 @dataclass(frozen=True)
-class Task(RassineConfig):
+class Task(RassineConfigBeforeStack):
     """
     Identification tool for wavelength vector parameters
 
@@ -41,30 +68,12 @@ class Task(RassineConfig):
 
     ini_strict_sections_ = ["borders-scan"]
 
-    #: Optional DACE CSV input file path
-    dace_input_file: Annotated[
-        Optional[RelPath],
-        Param.store(RelPath.param_type.empty_means_none(), env_var_name=AutoName.DERIVED),
-    ]
-
-    def validate_dace_input_file(self) -> Validator:
-        if self.dace_input_file is None:
-            return None
-        fn = self.root << self.dace_input_file
-        if not fn.is_file():
-            return Err.make(f"Meta table {fn} must exist")
-        else:
-            return None
-
     #: Relative path to the input data files
     input_folder: Annotated[RelPath, Param.store(types.path)]
 
     def validate_input_folder(self) -> Validator:
-        folder = self.root << self.input_folder
-        if not folder.is_dir():
-            return Err.make(f"Input folder {folder} must exist")
-        else:
-            return None
+        f = self.root << self.input_folder
+        return Err.check(f.is_dir(), f"Input folder {f} must exist")
 
     #: JSON output file
     output_file: Annotated[RelPath, Param.store(types.path)]
@@ -83,36 +92,31 @@ class Task(RassineConfig):
     #: Whether to verify that the RV shift is in a reasonable range
     verify_rv_magnitude: Annotated[bool, Param.store(types.bool_, default_value="True")]
 
-    def validate_apply_rv_shift(self) -> Validator:
-        if self.apply_rv_shift and self.dace_input_file is None:
-            return Err.make(
-                "The RV shift is taken from the meta table, so a meta table must be provided"
-            )
-        else:
-            return None
-
-    def load(self, pickle_file: Path) -> Preprocessed:
+    def load(self, pickle_file: Path) -> preprocess.OutputDict:
         with open(pickle_file, "rb") as f:
-            return cast(Preprocessed, pickle.load(f))
+            return cast(preprocess.OutputDict, pickle.load(f))
 
     def run(self) -> None:
+        """
+        Runs the processing
+        """
 
         # from def preprocess_prematch_stellar_frame(files_to_process, rv=0, dlambda=None):
-        files_to_process: List[Path] = [*(self.root << self.input_folder).glob("*.p")]
-        files_to_process.sort()
-        n_files = len(files_to_process)
+        files: List[Path] = [*(self.root << self.input_folder).glob("*.p")]
+        files.sort()
+        n = len(files)  # number of files
 
         # RV correction
         rv_shift: Optional[npt.NDArray[np.float64]] = None
 
         if self.apply_rv_shift:
-            assert self.dace_input_file is not None
-            mt = MetaTable.read_csv(self.root << self.dace_input_file)
+            assert self.input_master_table is not None
+            mt = MetaTable.read_csv(self.root << self.input_master_table)
             assert (
                 "model" in mt.table.columns
             ), "A model column must be present in the MetaTable file"
             rv = mt.table["model"].to_numpy().cast(np.float64)
-            assert len(rv) == n_files, "Incorrect number of files in meta table"
+            assert len(rv) == n, "Incorrect number of files in meta table"
 
         if self.verify_rv_magnitude and rv_shift is not None:
             if np.max(abs(rv)) > 300:
@@ -125,21 +129,21 @@ class Task(RassineConfig):
             rv_mean = np.median(rv_shift)
             rv_shift -= rv_mean
 
-        wave_min: NFArray = np.zeros((n_files,))
-        wave_max: NFArray = np.zeros((n_files,))
+        wave_min: NFArray = np.zeros((n,))
+        wave_max: NFArray = np.zeros((n,))
 
         hole_left: NFArray = np.empty((0,))
         hole_right: NFArray = np.empty((0,))
 
         # TODO: diff c'est le step
         diff: NFArray = np.empty((0,))
-        all_length: NIArray = np.zeros((n_files,), dtype=np.int64)
-        berv: NFArray = np.zeros((n_files,))
-        lamp: NFArray = np.zeros((n_files,))
-        plx_mas: NFArray = np.zeros((n_files,))
-        acc_sec: NFArray = np.zeros((n_files,))
+        all_length: NIArray = np.zeros((n,), dtype=np.int64)
+        berv: NFArray = np.zeros((n,))
+        lamp: NFArray = np.zeros((n,))
+        plx_mas: NFArray = np.zeros((n,))
+        acc_sec: NFArray = np.zeros((n,))
 
-        for i, fn in enumerate(files_to_process):
+        for i, fn in enumerate(files):
             f = self.load(fn)
             shift = 0.0
             if rv_shift is not None:
@@ -239,7 +243,7 @@ class Task(RassineConfig):
 
         # static_grid is separate
 
-        # n-sized: berv, lamp, plx_mas, acc_sec, rv, dlambda, wave_min (what about wave_max)
+        # n-sized: berv, lamp, plx_mas, acc_sec, rv, wave_min (what about wave_max)
 
         return (
             wave_min_k,

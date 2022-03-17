@@ -3,7 +3,7 @@ from typing import Tuple
 import numpy as np
 import numpy.typing as npt
 
-from . import Float
+from .types import *
 
 c_lum = 299.792e6
 

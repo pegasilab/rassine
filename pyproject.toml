@@ -28,7 +28,7 @@ PyQt5 = "^5.15.6"
 PyQt5-Qt = "^5.15.2"
 PyQt5-sip = "^12.9.1"
 astropy = "^4.2.1"
-configpile = {version = "^7.6.0", extras = ["parsy", "rich"]}
+configpile = {version = "^7.6.1", extras = ["parsy", "rich"]}
 deepdish = "^0.3.7"
 h5py = "^2.10.0"
 matplotlib = "^3.3.4"
@@ -57,6 +57,23 @@ python_version = "3.8"
 warn_return_any = true
 warn_unused_configs = true
 
+# super strict
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+show_column_numbers = true
+show_error_codes = true
+show_error_context = true
+show_none_errors = true
+strict_equality = true
+strict_optional = true
+warn_redundant_casts = true
+
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
@@ -78,7 +95,7 @@ docs = [
 black = "^22.1.0"
 commitizen = "^2.21.2"
 isort = "^5.10.1"
-mypy = "^0.931"
+mypy = "^0.941"
 pandas-stubs = "^1.2.0.43"
 pytest = "^7.0.1"
 pytest-black = "^0.3.12"

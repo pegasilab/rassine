@@ -61,6 +61,7 @@ class BorderScanned(Basic):
     # wave_max
     pass
 
+
 @pdataclass(frozen=True)
 class BorderScannedGeneral:
 

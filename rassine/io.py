@@ -3,6 +3,7 @@ from pathlib import Path
 
 import numpy.typing as npt
 import pandas as pd
+from astropy.io import fits
 
 default_pickle_protocol: int = 3
 
@@ -31,6 +32,16 @@ def read_rv(file: Path) -> npt.ArrayLike:
         raise ValueError("Cannot read this file format")
 
     return rv
+
+
+def open_pickle(filename):
+    if filename.split(".")[-1] == "p":
+        a = pd.read_pickle(filename)
+        return a
+    elif filename.split(".")[-1] == "fits":
+        data = fits.getdata(filename)
+        header = fits.getheader(filename)
+        return data, header
 
 
 def save_pickle(filename: str, output: dict, protocol: int = default_pickle_protocol):

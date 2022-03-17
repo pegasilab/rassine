@@ -20,7 +20,9 @@ from scipy.signal import savgol_filter
 from scipy.stats import norm
 
 from .analysis import clustering, find_nearest, grouping, match_nearest, rolling_iq
-from .math import create_grid, gaussian
+from .io import open_pickle, save_pickle
+from .math import create_grid, doppler_r, gaussian
+from .types import *
 
 # =============================================================================
 # FUNCTIONS LIBRARY
@@ -41,9 +43,9 @@ def my_input(text):
 
 
 def ccf(
-    wave: npt.NDArray[np.float64],
-    spec1: npt.NDArray[np.float64],
-    spec2: npt.NDArray[np.float64],
+    wave: NFArray,
+    spec1: NFArray,
+    spec2: NFArray,
     extended: int = 1500,
 ):
     """
@@ -1182,23 +1184,8 @@ def make_continuum(wave, flux, flux_denoised, grid, spectrei, continuum_to_produ
 
 
 def make_sound(sentence):
-    if type(voice_name) == str:
-        try:
-            os.system("say -v " + voice_name + ' "' + sentence + '"')
-        except:
-            print("\7")
-    else:
-        print("\7")
-
-
-def open_pickle(filename):
-    if filename.split(".")[-1] == "p":
-        a = pd.read_pickle(filename)
-        return a
-    elif filename.split(".")[-1] == "fits":
-        data = fits.getdata(filename)
-        header = fits.getheader(filename)
-        return data, header
+    # TODO: remove
+    pass
 
 
 def preprocess_prematch_stellar_frame(files_to_process, rv=0, dlambda=None):

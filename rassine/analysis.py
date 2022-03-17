@@ -161,26 +161,24 @@ def match_nearest(array1, array2):
     )
 
 
-def rolling_iq(array, window=1, min_periods=1):
+def rolling_iq(
+    array: NFArray, window: int = 1, min_periods: int = 1
+) -> Tuple[NFArray, NFArray, NFArray]:
     """
     Perform a rolling IQ statistic in a fixed window.
 
-    Parameters
-    ----------
-    array : array_like
-        The vector to investigate.
-    window : int
-        The window used for the rolling statistic.
-    min_periods: int
-        Computation of the statistics up to the min_periods border value
+    Args:
+        array: The vector to investigate.
+        window: The window used for the rolling statistic.
+        min_periods: Computation of the statistics up to the min_periods border value
 
     Returns
     -------
-    rolling_Q1 : array_like
+    rolling_Q1S:
         The rolling 25th percentile.
-    rolling_Q3 : array_like
+    rolling_Q3:
         The rolling 75th percentile.
-    rolling_IQ : array_like
+    rolling_IQ:
         The rolling IQ (Q3-Q1).
     """
     roll_Q1 = np.ravel(

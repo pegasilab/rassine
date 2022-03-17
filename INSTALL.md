@@ -11,4 +11,7 @@
 
 - run `poetry install`
 
+- if GNU Parallel is not installed (for example on macOS), copy the `parallel` and `sem` scripts
+  to the .venv/bin folder
+   
 - execute `poetry run ./run_harps03.sh` in the base folder

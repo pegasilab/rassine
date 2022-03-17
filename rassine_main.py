@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Feb  7 16:34:29 2019
-19.04.19
-@author: michael cretignier & jémémie francfort
 
 # =====================================================================================
 # Rolling Alpha Shape for a Spectral Improved Normalisation Estimator (RASSINE)
@@ -15,7 +12,6 @@ Created on Thu Feb  7 16:34:29 2019
      { }   / .-. o\   /O  /   \  o\   /O /    ^  (RASSSSSSINE)
       \ `-` /   \ O`-'o  /     \  O`-`o /
   jgs  `-.-`     '.____.'       `.____.'
-
 """
 
 from __future__ import print_function
@@ -1353,7 +1349,7 @@ if feedback:
 
     Interpol = interp1d(wave, flux, kind=interpol, bounds_error=False, fill_value="extrapolate")
     continuum = Interpol(grid)
-    continuum = ras.troncated(continuum, spectre)
+    continuum = ras.truncated(continuum, spectre)
     (l2,) = plt.plot(grid, continuum, label="intermediate continuum")
     plt.xlim(None, minx + len_x / 10.0)
     plt.ylim(None, spectre[0 : int(len(grid) / 10.0)].max())
@@ -1383,7 +1379,7 @@ if feedback:
             continuum = interp1d(
                 wave, flux, kind=interpol, bounds_error=False, fill_value="extrapolate"
             )(grid)
-            continuum = ras.troncated(continuum, spectre)
+            continuum = ras.truncated(continuum, spectre)
             l1.set_ydata(flux)
             l2.set_ydata(continuum)
             l3.set_ydata(flux)
@@ -1400,7 +1396,7 @@ if feedback:
                 continuum = interp1d(
                     wave, flux, kind=interpol, bounds_error=False, fill_value="extrapolate"
                 )(grid)
-                continuum = ras.troncated(continuum, spectre)
+                continuum = ras.truncated(continuum, spectre)
                 l1.set_ydata(flux)
                 l2.set_ydata(continuum)
                 l3.set_ydata(flux)
@@ -1493,7 +1489,7 @@ if feedback:
 
     Interpol = interp1d(wave, flux, kind=interpol, bounds_error=False, fill_value="extrapolate")
     continuum = Interpol(grid)
-    continuum = ras.troncated(continuum, spectre)
+    continuum = ras.truncated(continuum, spectre)
     (l4,) = plt.plot(grid, continuum, alpha=1)
     plt.legend(loc=4)
 
@@ -1505,7 +1501,7 @@ if feedback:
         fill_value="extrapolate",
     )
     continuum = Interpol(grid)
-    continuum = ras.troncated(continuum, spectre)
+    continuum = ras.truncated(continuum, spectre)
     (l5,) = plt.plot(grid, continuum, color="k", ls=":", alpha=1)
 
     plt.subplot(2, 1, 2)
@@ -1535,7 +1531,7 @@ if feedback:
 
     Interpol = interp1d(wave, flux, kind=interpol, bounds_error=False, fill_value="extrapolate")
     continuum = Interpol(grid)
-    continuum = ras.troncated(continuum, spectre)
+    continuum = ras.truncated(continuum, spectre)
     (l8,) = plt.plot(grid, continuum, alpha=1, label="current continuum")
     Interpol = interp1d(
         wave[~mask_out2],
@@ -1545,7 +1541,7 @@ if feedback:
         fill_value="extrapolate",
     )
     continuum = Interpol(grid)
-    continuum = ras.troncated(continuum, spectre)
+    continuum = ras.truncated(continuum, spectre)
     (l9,) = plt.plot(grid, continuum, color="k", ls=":", alpha=1, label="updated continuum")
     plt.legend(loc=1)
     plt.show(block=False)
@@ -1592,7 +1588,7 @@ if feedback:
                 wave, flux, kind=interpol, bounds_error=False, fill_value="extrapolate"
             )
             continuum = Interpol(grid)
-            continuum = ras.troncated(continuum, spectre)
+            continuum = ras.truncated(continuum, spectre)
 
             l1.set_xdata(wave)
             l1.set_ydata(flux)
@@ -1641,7 +1637,7 @@ if feedback:
                 fill_value="extrapolate",
             )
             continuum = Interpol(grid)
-            continuum = ras.troncated(continuum, spectre)
+            continuum = ras.truncated(continuum, spectre)
             l9.set_ydata(continuum)
 
             self.ind = 0
@@ -1667,7 +1663,7 @@ if feedback:
                     fill_value="extrapolate",
                 )
                 continuum = Interpol(grid)
-                continuum = ras.troncated(continuum, spectre)
+                continuum = ras.truncated(continuum, spectre)
                 l4.set_ydata(continuum)
                 l8.set_ydata(continuum)
 
@@ -1679,7 +1675,7 @@ if feedback:
                     fill_value="extrapolate",
                 )
                 continuum = Interpol(grid)
-                continuum = ras.troncated(continuum, spectre)
+                continuum = ras.truncated(continuum, spectre)
                 l5.set_ydata(continuum)
 
                 l1.set_xdata(self.wave_backup[-1])
@@ -1726,7 +1722,7 @@ if feedback:
                     fill_value="extrapolate",
                 )
                 continuum = Interpol(grid)
-                continuum = ras.troncated(continuum, spectre)
+                continuum = ras.truncated(continuum, spectre)
                 l9.set_ydata(continuum)
 
                 center = index[sort_val[self.ind]]
@@ -1762,7 +1758,7 @@ if feedback:
                     fill_value="extrapolate",
                 )
                 continuum = Interpol(grid)
-                continuum = ras.troncated(continuum, spectre)
+                continuum = ras.truncated(continuum, spectre)
                 l9.set_ydata(continuum)
 
                 center = index[sort_val[self.ind]]
@@ -1892,11 +1888,11 @@ if len(wave) != len(wave_backup):
     #            plt.axvline(x=j,color='k',ls='-')
     #        Interpol = interp1d(wave, flux, kind = interpol, bounds_error = False, fill_value = 'extrapolate')
     #        continuum = Interpol(grid)
-    #        continuum = troncated(continuum)
+    #        continuum = truncated(continuum)
     #        plt.plot(grid,continuum,ls=':',label='new continuum')
     #        Interpol = interp1d(wave_backup, flux_backup, kind = interpol, bounds_error = False, fill_value = 'extrapolate')
     #        continuum = Interpol(grid)
-    #        continuum = troncated(continuum)
+    #        continuum = truncated(continuum)
     #        plt.plot(grid,continuum,label = 'old continuum')
     #        plt.legend()
     #        plt.show()
@@ -1925,7 +1921,7 @@ if feedback:
     # plt.scatter(wave, flux, color = 'k', label='anchor_points (%s)'%(int(len(wave))))
     Interpol3 = interp1d(wave, flux, kind=interpol, bounds_error=False, fill_value="extrapolate")
     continuum3 = Interpol3(grid)
-    continuum3 = ras.troncated(continuum3, spectre)
+    continuum3 = ras.truncated(continuum3, spectre)
     plt.title("Manual maxima suppression/adjunction", fontsize=14)
     (l1,) = plt.plot(grid, continuum3, zorder=5, label="continuum")
     (l2,) = plt.plot(wave, flux, "ko", label="anchor points", zorder=4)
@@ -1974,7 +1970,7 @@ if feedback:
                 self.vecx, self.vecy, kind=interpol, bounds_error=False, fill_value="extrapolate"
             )
             continuum3 = Interpol3(grid)
-            continuum3 = ras.troncated(continuum3, spectre)
+            continuum3 = ras.truncated(continuum3, spectre)
 
             l1.set_ydata(continuum3)
             l2.set_xdata(self.vecx)

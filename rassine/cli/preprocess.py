@@ -12,7 +12,7 @@ from configpile import AutoName, Param, Positional, types
 from typing_extensions import Annotated
 
 from ..data import MetaTable, Preprocessed
-from ..functions import save_pickle
+from ..io import save_pickle
 from .base import RassineConfig, RelPath
 
 # TODO: DACE -> metatable

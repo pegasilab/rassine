@@ -1,7 +1,10 @@
+import pickle
 from pathlib import Path
 
 import numpy.typing as npt
 import pandas as pd
+
+default_pickle_protocol: int = 3
 
 
 def read_rv(file: Path) -> npt.ArrayLike:
@@ -28,3 +31,25 @@ def read_rv(file: Path) -> npt.ArrayLike:
         raise ValueError("Cannot read this file format")
 
     return rv
+
+
+def save_pickle(filename: str, output: dict, protocol: int = default_pickle_protocol):
+
+    """
+    Save a pickle file with the proper protocol pickle version.
+
+    Parameters
+    ----------
+    filename : str
+        Name of the output pickle file.
+    output : dict
+        Output dictionnary table to save.
+
+    Returns
+    -------
+
+    """
+    if filename.split(".")[-1] == "p":
+        pickle.dump(output, open(filename, "wb"), protocol=protocol)
+    if filename.split(".")[-1] == "fits":  # TODO: for future work
+        pass

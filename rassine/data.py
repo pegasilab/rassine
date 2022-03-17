@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 from pathlib import Path
-from typing import Optional, TypedDict
+from typing import Any, Mapping, Optional, Sequence, TypedDict
 
 import numpy as np
 import numpy.typing as npt
@@ -15,10 +15,17 @@ from pydantic.dataclasses import dataclass as pdataclass
 
 # mjd: Needed for observation time
 
-@pdataclass(frozen=True)
-class MetaTableRow(TypedDict):
+# TODO: there is duplicate information between DACE and FITS? lamp? what do we do?
+
+
+T = TypeVar("T", bound=RowType)
+
+
+@pdataclass(frozen=True)  # we use pydantic dataclasses to get validation
+class MetaTableRow:
     """
     Format of the rows in the meta table
+
     """
 
     #: Full filename including folders, folders may be outdated
@@ -28,11 +35,22 @@ class MetaTableRow(TypedDict):
     filename: str
 
     #: Observation date/time in MJD
-    mjd: np.float64
+    mjd: np.float_
+
+    #: Optional RV shift correction
+    model: Optional[np.float_] = None
+
+    test_not_there: Optional[str] = None
 
 
 @dataclass(frozen=True)
 class MetaTable:
+    """
+    Meta table for processed spectra
+
+    Rows must be already sorted according to filenames
+    """
+
     table: pd.DataFrame
 
     @staticmethod
@@ -55,14 +73,18 @@ class MetaTable:
 
     def __getitem__(self, i: int) -> MetaTableRow:
         """
-        Retrieves a row from
+        Retrieves a row from the table
+
         Args:
-            i:
+            i: Row index
 
         Returns:
-
+            A row dataclass
         """
-        return MetaTableRow(**self.table.iloc[i].to_dict())  # type: ignore
+        data: Mapping[str, Any] = self.table.iloc[i].to_dict()
+        fs = fields(MetaTableRow)
+        fieldnames: Sequence[str] = [f.name for f in fs]
+        return MetaTableRow(**{k: v for k, v in data.items() if k in fieldnames})  # type: ignore
 
 
 class Preprocessed(TypedDict):

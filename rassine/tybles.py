@@ -19,11 +19,6 @@ from typing import (
 
 import pandas as pd
 
-if TYPE_CHECKING:
-    from dataclasses import dataclass as pdataclass
-else:
-    from pydantic.dataclasses import dataclass as pdataclass
-
 
 def _is_optional(t: type) -> bool:
     """
@@ -34,7 +29,7 @@ def _is_optional(t: type) -> bool:
     return type(None) in get_args(t)
 
 
-@pdataclass(frozen=True)
+@dataclass(frozen=True)
 class Row(ABC):
     """
     Describes a typed row in a Pandas dataframe

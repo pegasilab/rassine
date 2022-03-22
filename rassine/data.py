@@ -1,12 +1,12 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional, TypedDict
 
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
-from pydantic.dataclasses import dataclass as pdataclass
 
 from .tybles import Row, Table
 
@@ -19,7 +19,7 @@ from .tybles import Row, Table
 # TODO: there is duplicate information between DACE and FITS? lamp? what do we do?
 
 
-@pdataclass(frozen=True)  # we use pydantic dataclasses to get validation
+@dataclass(frozen=True)  # we use pydantic dataclasses to get validation
 class Basic(Row):
     """
     Format of the rows in the meta table
@@ -50,7 +50,7 @@ class Basic(Row):
         return table
 
 
-@pdataclass(frozen=True)
+@dataclass(frozen=True)
 class BorderScanned(Basic):
     berv: np.float64
     lamp: np.float64
@@ -62,7 +62,7 @@ class BorderScanned(Basic):
     pass
 
 
-@pdataclass(frozen=True)
+@dataclass(frozen=True)
 class BorderScannedGeneral:
 
     # TODO: document fields

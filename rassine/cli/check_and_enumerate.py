@@ -12,7 +12,7 @@ from configpile import AutoName, Config, Param, types
 from typing_extensions import Annotated
 
 from ..tybles import Table
-from .base import BasicInfo, RassineConfigBeforeStack, RelPath
+from .base import BasicInfo, RassineConfigBeforeStack, RelPath, RootPath, relPath, rootPath
 
 
 @dataclass(frozen=True)
@@ -27,7 +27,7 @@ class Task(RassineConfigBeforeStack):
     ini_strict_sections_ = ["list-filenames"]
 
     #: Relative path to the folder containing the raw spectra
-    input_folder: Annotated[RelPath, Param.store(RelPath.param_type, short_flag_name="-i")]
+    input_folder: Annotated[RelPath, Param.store(relPath, short_flag_name="-i")]
 
     #: Pattern for input files, by default look for FITS files
     glob_pattern: Annotated[str, Param.store(types.word, default_value="*.fits")]
@@ -37,14 +37,14 @@ class Task(RassineConfigBeforeStack):
 
 
 def run(t: Task) -> None:
-    fn = t.root << t.input_master_table
+    fn = t.root.at(t.input_master_table)
     table = Table.read_csv(fn, BasicInfo)
     tb_files: Set[str] = {r.filename for r in table.all()}
-    fs_files: Set[str] = {f.name for f in (t.root << t.input_folder).glob(t.glob_pattern)}
+    fs_files: Set[str] = {f.name for f in (t.root.at(t.input_folder)).glob(t.glob_pattern)}
     if (t.strict and tb_files != fs_files) or (tb_files - fs_files):
         print("Error: mismatch between filenames in master table and on filesystem")
         for f in tb_files - fs_files:
-            print(f"{f} is in the table but not in {t.root << t.input_folder}")
+            print(f"{f} is in the table but not in {t.root.at(t.input_folder)}")
         for f in fs_files - tb_files:
             print(f"{f} is on the filesystem but not in the master table")
         sys.exit(1)

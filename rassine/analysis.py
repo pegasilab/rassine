@@ -7,7 +7,7 @@ import pandas as pd
 from .types import *
 
 
-def grouping(array: npt.NDArray[np.float64], tresh: Float, num: int):
+def grouping(array: NFArray, tresh: Float, num: int):
     difference = abs(np.diff(array))
     cluster = difference < tresh
     indices = np.arange(len(cluster))[cluster]

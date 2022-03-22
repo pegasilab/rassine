@@ -15,14 +15,13 @@ from typing import (
     cast,
 )
 
+import deepdish as dd
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
 from astropy.io import fits
 from astropy.time import Time
-from attr import s
-from configpile import AutoName, Err, Expander, Param, Positional, Result, Validator, types
-from configpile.errors import is_err, is_value, wrap_exceptions
+from configpile import AutoName, Err, Expander, Param, Positional, Res, Validator, types
 from numpy import float64
 from typing_extensions import Annotated
 
@@ -32,7 +31,7 @@ from ..math import create_grid, doppler_r
 from ..tybles import Table
 from ..types import *
 from . import preprocess
-from .base import BasicInfo, RassineConfigBeforeStack, RelPath
+from .base import BasicInfo, RassineConfigBeforeStack, RelPath, RootPath, relPath, rootPath
 
 
 class Summary(NamedTuple):
@@ -41,14 +40,14 @@ class Summary(NamedTuple):
     dlambda: Float
     hole_left_k: Float
     hole_right_k: Float
-    # static_grid: Optional[NFArray]  #: size of size of the spectrum?
-    # wave_min: NFArray  #: vector length is number of spectra
-    # berv: NFArray  #: vector length is number of spectra
-    # lamp: NFArray  #: vector length is number of spectra
-    # plx_mas: NFArray  #: vector length is number of spectra
-    # acc_sec: NFArray  #: vector length is number of spectra
-    # rv: NFArray  #: vector length is number of spectra
-    # rv_mean: Optional[Float]
+    static_grid: Optional[NFArray]  #: size of size of the spectrum?
+    wave_min: NFArray  #: vector length is number of spectra
+    berv: NFArray  #: vector length is number of spectra
+    lamp: NFArray  #: vector length is number of spectra
+    plx_mas: NFArray  #: vector length is number of spectra
+    acc_sec: NFArray  #: vector length is number of spectra
+    rv_shift: NFArray  #: vector length is number of spectra
+    rv_mean: Optional[Float]
 
 
 @dataclass(frozen=True)
@@ -70,14 +69,14 @@ class Task(RassineConfigBeforeStack):
     ini_strict_sections_ = ["borders-scan"]
 
     #: Relative path to the input data files
-    input_folder: Annotated[RelPath, Param.store(types.path)]
+    input_folder: Annotated[RelPath, Param.store(relPath, short_flag_name="-i")]
 
     def validate_input_folder(self) -> Validator:
-        f = self.root << self.input_folder
+        f = self.root.at(self.input_folder)
         return Err.check(f.is_dir(), f"Input folder {f} must exist")
 
-    #: JSON output file
-    output_file: Annotated[RelPath, Param.store(types.path)]
+    #: HDF5 output file
+    output_file: Annotated[RelPath, Param.store(relPath, short_flag_name="-o")]
 
     #: Wavelength sampling step of the spectrum in Angstrom, if not provided, RASSINE attempts guessing
     dlambda: Annotated[
@@ -99,27 +98,30 @@ def load(pickle_file: Path) -> preprocess.OutputDict:
         return cast(preprocess.OutputDict, pickle.load(f))
 
 
-def produce_summary(self: Task) -> Summary:
+def run(t: Task) -> Summary:
     """
     Runs the processing
     """
 
     # from def preprocess_prematch_stellar_frame(files_to_process, rv=0, dlambda=None):
-    files: List[Path] = [*(self.root << self.input_folder).glob("*.p")]
+    files: List[Path] = [*(t.root.at(t.input_folder)).glob("*.p")]
     files.sort()
     n = len(files)  # number of files
 
-    mt = Table.read_csv(self.root << self.input_master_table, BasicInfo)
+    assert n > 0, "Must have at least one file"
+
+    mt = Table.read_csv(t.root.at(t.input_master_table), BasicInfo)
 
     # RV correction
-    rv_shift: Optional[npt.NDArray[np.float64]] = None
+    rv_shift: npt.NDArray[np.float64] = np.zeros((n,))
     rv_mean: Optional[Float] = None
+    # CHECKME: what if no rv_shift
 
-    if self.apply_rv_shift:
+    if t.apply_rv_shift:
         assert "model" in mt.table.columns, "A model column must be present in the master table"
-        rv = mt.table["model"].to_numpy().cast(np.float64)
+        rv = mt.table["model"].to_numpy().astype(np.float64)
 
-        if self.verify_rv_magnitude:
+        if t.verify_rv_magnitude:
             if np.max(abs(rv)) > 300:
                 raise ValueError(
                     "RV value are certainly in m/s instead of km/s!"
@@ -142,7 +144,7 @@ def produce_summary(self: Task) -> Summary:
     lamp: NFArray = np.zeros((n,))
     plx_mas: NFArray = np.zeros((n,))
     acc_sec: NFArray = np.zeros((n,))
-    dlambda: Optional[float] = self.dlambda
+    dlambda: Optional[Float] = t.dlambda
 
     for i, fn in enumerate(files):
         f = load(fn)
@@ -232,63 +234,25 @@ def produce_summary(self: Task) -> Summary:
     # static_grid is separate
 
     # n-sized: berv, lamp, plx_mas, acc_sec, rv, wave_min (what about wave_max)
-    res: Summary = (
+    res: Summary = Summary(
         wave_min_k,
         wave_max_k,
         dlambda,
         hole_left_k,
         hole_right_k,
-        # static_grid,
-        # wave_min,
-        # berv,
-        # lamp,
-        # plx_mas,
-        # acc_sec,
-        # rv,
-        # rv_mean,
+        static_grid,
+        wave_min,
+        berv,
+        lamp,
+        plx_mas,
+        acc_sec,
+        rv_shift,
+        rv_mean,
     )
     return res
 
 
-# if __name__ == "__main__":
-#     parser = get_parser()
-#     args = parser.parse_args()
-#     input_dir: Path = args.input_dir
-#     dlambda: Optional[float] = args.dlambda
-#     rv: Union[npt.ArrayLike, float] = args.rv
-#     output_file: Path = args.output_file
-#     inputfiles = np.sort(list(input_dir.glob("*.p")))  # type: ignore
-
-#     assert len(inputfiles) > 0, "At least one input file must be available"
-
-#     (
-#         wave_min_k,
-#         wave_max_k,
-#         dlambda,
-#         hole_left_k,
-#         hole_right_k,
-#         static_grid,
-#         wave_min,
-#         berv,
-#         lamp,
-#         plx_mas,
-#         acc_sec,
-#         rv,
-#         rv_mean,
-#     ) = preprocess_prematch_stellar_frame(list(map(str, inputfiles)), dlambda=dlambda, rv=rv)
-#     output = {
-#         "wave_min_k": wave_min_k,
-#         "wave_max_k": wave_max_k,
-#         "dlambda": dlambda,
-#         "hole_left_k": hole_left_k,
-#         "hole_right_k": hole_right_k,
-#         "static_grid": static_grid,
-#         "wave_min": wave_min,
-#         "berv": berv,
-#         "lamp": lamp,
-#         "plx_mas": plx_mas,
-#         "acc_sec": acc_sec,
-#         "rv": rv,
-#         "rv_mean": rv_mean,
-#     }
-#     dd.io.save(output_file, output)
+def cli() -> None:
+    t = Task.from_command_line_()
+    data = run(t)
+    dd.io.save(t.root.at(t.output_file), data)

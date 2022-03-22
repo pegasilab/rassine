@@ -14,13 +14,11 @@ dlambda=0.01
 # python Rassine_multiprocessed.py -v PREPROCESS -s "$dace_table" -n $nthreads_preprocess -i HARPS -o "$output_dir"
 export RASSINE_ROOT=/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03
 export RASSINE_CONFIG=harps03.ini
-
 mkdir -p $RASSINE_ROOT/PREPROCESSED
-check_and_enumerate -i raw/ | parallel --will-cite --verbose -N$nchunks --jobs $nthreads --keep-order \
-  rassine_preprocess --input-folder raw/ --output-folder PREPROCESSED/
-
+#check_and_enumerate -i raw/ | parallel --will-cite --verbose -N$nchunks --jobs $nthreads --keep-order \
+#  rassine_preprocess --input-folder raw/ --output-folder PREPROCESSED/
+borders_scan -i PREPROCESSED/ -o matching.h5 --dlambda 0.01 --apply-rv-shift true
 exit
-# dace_extract_filenames | parallel --will-cite --verbose --keep-order rassine_preprocess -i HARPS -o "$output_dir"
 ## Match frame (Borders)
 # This was python Rassine_multiprocessed.py -v MATCHING -s /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/PREPROCESSED/ -n $nthreads_matching -d $dlambda -k /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/DACE_TABLE/Dace_extracted_table.csv
 # Steo 2A we extract the frame parameters and write them to a file

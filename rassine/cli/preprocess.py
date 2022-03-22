@@ -13,7 +13,7 @@ from pydantic.dataclasses import dataclass as pdataclass
 from typing_extensions import Annotated
 
 from ..tybles import Row, Table
-from .base import BasicInfo, RassineConfigBeforeStack, RelPath
+from .base import BasicInfo, RassineConfigBeforeStack, RelPath, RootPath, relPath, rootPath
 
 # TODO: DACE -> metatable
 # TODO: remove the mjd patch
@@ -74,7 +74,7 @@ class Task(RassineConfigBeforeStack):
     ini_strict_sections_ = ["preprocess"]
 
     #: Relative path to the input data files
-    input_folder: Annotated[RelPath, Param.store(RelPath.param_type)]
+    input_folder: Annotated[RelPath, Param.store(relPath)]
 
     #: Indices of spectrum to process
     inputs: Annotated[
@@ -98,12 +98,12 @@ class Task(RassineConfigBeforeStack):
     #: Name of the output directory. If None, the output directory is created at the same location than the spectra.
     output_folder: Annotated[
         RelPath,
-        Param.store(RelPath.param_type, short_flag_name="-o"),
+        Param.store(relPath, short_flag_name="-o"),
     ]
 
     def validate_output_folder_(self) -> Validator:
         return Err.check(
-            (self.root << self.output_folder).is_dir(), "The output directory needs to exist"
+            (self.root.at(self.output_folder)).is_dir(), "The output directory needs to exist"
         )
 
 
@@ -116,8 +116,8 @@ def preprocess_fits_harps_coraline_harpn(t: Task, row: BasicInfo) -> None:
     instrument = t.instrument
     plx_mas = t.plx_mas
     name = row.filename
-    file: Path = (t.root << t.input_folder) / name
-    output_file: Path = (t.root << t.output_folder) / (file.stem + ".p")
+    file: Path = t.root.at(t.input_folder, name)
+    output_file: Path = t.root.at(t.output_folder, file.stem + ".p")
     header = fits.getheader(file)  # load the fits header
     data = fits.getdata(file)
     # CHECKME: I have removed the try/catch, now if a file cannot be read it errors
@@ -191,8 +191,8 @@ def preprocess_fits_espresso_express(t: Task, row: BasicInfo) -> None:
     instrument = t.instrument
     plx_mas = t.plx_mas
     name = row.filename
-    file: Path = (t.root << t.input_folder) / name
-    output_file: Path = (t.root << t.output_folder) / (file.stem + ".p")
+    file: Path = t.root.at(t.input_folder, name)
+    output_file: Path = t.root.at(t.output_folder, file.stem + ".p")
 
     header = fits.getheader(file)  # load the fits header
     data = fits.getdata(file)
@@ -254,7 +254,7 @@ def preprocess_fits_espresso_express(t: Task, row: BasicInfo) -> None:
 
 def cli() -> None:
     t = Task.from_command_line_()
-    mt = Table.read_csv(t.root << t.input_master_table, BasicInfo)
+    mt = Table.read_csv(t.root.at(t.input_master_table), BasicInfo)
     inputs: Sequence[int] = t.inputs
     if not inputs:
         inputs = list(range(mt.nrows()))

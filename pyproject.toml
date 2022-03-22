@@ -20,6 +20,7 @@ repository = "https://github.com/denisrosset/rassine.git"
 version = "0.1.0"
 
 [tool.poetry.scripts]
+borders_scan = "rassine.cli.borders_scan:cli"
 check_and_enumerate = "rassine.cli.check_and_enumerate:cli"
 rassine_preprocess = "rassine.cli.preprocess:cli"
 
@@ -28,19 +29,19 @@ PyQt5 = "^5.15.6"
 PyQt5-Qt = "^5.15.2"
 PyQt5-sip = "^12.9.1"
 astropy = "^4.2.1"
-configpile = {version = "^7.6.1", extras = ["parsy", "rich"]}
+configpile = {version = "8.0.0b0", extras = ["parsy", "rich"]}
 deepdish = "^0.3.7"
 h5py = "^2.10.0"
 matplotlib = "^3.3.4"
 numpy = "^1.22.3"
 pandas = "^1.2.4"
 parsy = "^1.4.0"
-pydantic = "^1.9.0"
 python = "^3.8,<3.11"
+recursive-diff = "^1.0.0"
 scipy = "^1.6.2"
+typing-extensions = "^4.1.1"
 
 myst-nb = {version = "^0.13.2", optional = true}
-recursive-diff = "^1.0.0"
 sphinx = {version = "4.3.2", optional = true}
 sphinx-argparse = {version = "^0.3.1", optional = true}
 sphinx-autodoc-typehints = {version = "^1.17.0", optional = true}
@@ -48,10 +49,34 @@ sphinx-book-theme = {version = "^0.2.0", optional = true}
 sphinx-pydantic = {version = "^0.1.1", optional = true}
 sphinxcontrib-bibtex = {version = "^2.4.1", optional = true}
 sphinxnotes-strike = {version = "^1.0", optional = true}
-typing-extensions = "^4.1.1"
+
+[tool.poetry.extras]
+docs = [
+  "myst-nb",
+  "sphinx",
+  "sphinx-argparse",
+  "sphinx-autodoc-typehints",
+  "sphinx-book-theme",
+  "sphinx-pydantic",
+  "sphinxcontrib-bibtex",
+  "sphinxnotes-strike",
+]
+
+[tool.poetry.dev-dependencies]
+black = "^22.1.0"
+commitizen = "^2.21.2"
+doc8 = "^0.10.1"
+esbonio = "^0.10.2"
+isort = "^5.10.1"
+mypy = "^0.941"
+pandas-stubs = "^1.2.0.43"
+pytest = "^7.0.1"
+pytest-black = "^0.3.12"
+pytest-mypy-plugins = "^1.9.3"
+rstcheck = "^3.3.1"
 
 [mypy]
-plugins = ["numpy.typing.mypy_plugin", "pydantic.mypy"]
+plugins = ["numpy.typing.mypy_plugin"]
 python_version = "3.8"
 
 warn_return_any = true
@@ -73,33 +98,6 @@ show_none_errors = true
 strict_equality = true
 strict_optional = true
 warn_redundant_casts = true
-
-[tool.pydantic-mypy]
-init_forbid_extra = true
-init_typed = true
-warn_required_dynamic_aliases = true
-warn_untyped_fields = true
-
-[tool.poetry.extras]
-docs = [
-  "sphinx",
-  "sphinx-argparse",
-  "sphinx-autodoc-typehints",
-  "sphinx-book-theme",
-  "sphinx-pydantic",
-  "sphinxcontrib-bibtex",
-  "sphinxnotes-strike",
-]
-
-[tool.poetry.dev-dependencies]
-black = "^22.1.0"
-commitizen = "^2.21.2"
-isort = "^5.10.1"
-mypy = "^0.941"
-pandas-stubs = "^1.2.0.43"
-pytest = "^7.0.1"
-pytest-black = "^0.3.12"
-pytest-mypy-plugins = "^1.9.3"
 
 [tool.pytest.ini_options]
 addopts = [

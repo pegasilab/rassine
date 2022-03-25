@@ -154,6 +154,21 @@ optional = true
 python-versions = "*"
 
 [[package]]
+name = "beartype"
+version = "0.10.4"
+description = "Unbearably fast runtime type checking in pure Python."
+category = "main"
+optional = false
+python-versions = ">=3.6.0"
+
+[package.extras]
+all = ["typing-extensions (>=3.10.0.0)"]
+dev = ["coverage (>=5.5)", "sphinx", "pytest (>=4.0.0)", "tox (>=3.20.1)", "sphinx (>=4.1.0)", "mypy (>=0.800)", "typing-extensions", "numpy"]
+doc-rtd = ["sphinx (==4.1.0)", "sphinx-rtd-theme (==0.5.1)"]
+test-tox = ["sphinx", "pytest (>=4.0.0)", "mypy (>=0.800)", "typing-extensions", "numpy"]
+test-tox-coverage = ["coverage (>=5.5)"]
+
+[[package]]
 name = "beautifulsoup4"
 version = "4.10.0"
 description = "Screen-scraping library"
@@ -304,7 +319,7 @@ test = ["flake8 (==3.7.8)", "hypothesis (==3.55.3)"]
 
 [[package]]
 name = "configpile"
-version = "8.0.0b0"
+version = "8.0.0"
 description = "Configuration from command line parameters, configuration files and environment variables"
 category = "main"
 optional = false
@@ -319,7 +334,7 @@ typing-extensions = ">=4.1.1,<5.0.0"
 [package.extras]
 parsy = ["parsy (>=1.4.0,<2.0.0)"]
 rich = ["rich (>=11.2.0,<12.0.0)"]
-docs = ["myst-nb (>=0.13.2,<0.14.0)", "sphinx (==4.3.2)", "sphinx-argparse (>=0.3.1,<0.4.0)", "sphinx-autodoc-typehints (>=1.17.0,<2.0.0)", "sphinx-book-theme (>=0.2.0,<0.3.0)"]
+docs = ["myst-nb (>=0.13.2,<0.14.0)", "sphinx (==4.3.2)", "sphinx-argparse (>=0.3.1,<0.4.0)", "sphinx-autodoc-typehints (>=1.17.0,<2.0.0)", "sphinx-book-theme (>=0.2.0,<0.3.0)", "sphinxcontrib-programoutput (>=0.17,<0.18)"]
 
 [[package]]
 name = "cycler"
@@ -2293,7 +2308,7 @@ docs = ["myst-nb", "sphinx", "sphinx-argparse", "sphinx-autodoc-typehints", "sph
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8,<3.11"
-content-hash = "776cedab8f2ca38d2bf78a781c3de533fd26a0e5399115ac99468d5c18374ce8"
+content-hash = "341d68288ad070a29501d560d733691b7e5d54548ce405292be2772d75fab4af"
 
 [metadata.files]
 alabaster = [
@@ -2380,6 +2395,10 @@ babel = [
 backcall = [
     {file = "backcall-0.2.0-py2.py3-none-any.whl", hash = "sha256:fbbce6a29f263178a1f7915c1940bde0ec2b2a967566fe1c65c1dfb7422bd255"},
     {file = "backcall-0.2.0.tar.gz", hash = "sha256:5cbdbf27be5e7cfadb448baf0aa95508f91f2bbc6c6437cd9cd06e2a4c215e1e"},
+]
+beartype = [
+    {file = "beartype-0.10.4-py3-none-any.whl", hash = "sha256:1a65453bc25b39979bf5ad65fe5e73350551282956456d828fb5783468649e3e"},
+    {file = "beartype-0.10.4.tar.gz", hash = "sha256:24ec69f6a7f4e6e97af403d08de270def3248518060327095d23b1c4df64bf2a"},
 ]
 beautifulsoup4 = [
     {file = "beautifulsoup4-4.10.0-py3-none-any.whl", hash = "sha256:9a315ce70049920ea4572a4055bc4bd700c940521d36fc858205ad4fcde149bf"},
@@ -2499,8 +2518,8 @@ commonmark = [
     {file = "commonmark-0.9.1.tar.gz", hash = "sha256:452f9dc859be7f06631ddcb328b6919c67984aca654e5fefb3914d54691aed60"},
 ]
 configpile = [
-    {file = "configpile-8.0.0b0-py3-none-any.whl", hash = "sha256:e1477c6e1f8da807021f64e3fc7f225a2a05d2a63348238c80b0944ae5f0f4ec"},
-    {file = "configpile-8.0.0b0.tar.gz", hash = "sha256:83c1db45d247ea8bd4a4d64c0021a12bdf77f01542905f13212e3dcbff7a82f7"},
+    {file = "configpile-8.0.0-py3-none-any.whl", hash = "sha256:df6c710b3d89803e64ad018ca88376b4f3beeba8094d92ff170a367367048b0f"},
+    {file = "configpile-8.0.0.tar.gz", hash = "sha256:c7b005682d7147865dfc77bea06db7d78d4a5245952b7dc0ca72045c88835ca4"},
 ]
 cycler = [
     {file = "cycler-0.11.0-py3-none-any.whl", hash = "sha256:3a27e95f763a428a739d2add979fa7494c912a32c17c4c38c4d5f082cad165a3"},

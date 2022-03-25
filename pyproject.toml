@@ -29,7 +29,7 @@ PyQt5 = "^5.15.6"
 PyQt5-Qt = "^5.15.2"
 PyQt5-sip = "^12.9.1"
 astropy = "^4.2.1"
-configpile = {version = "8.0.0b0", extras = ["parsy", "rich"]}
+configpile = {version = "8.0.0", extras = ["parsy", "rich"]}
 deepdish = "^0.3.7"
 h5py = "^2.10.0"
 matplotlib = "^3.3.4"
@@ -49,6 +49,7 @@ sphinx-book-theme = {version = "^0.2.0", optional = true}
 sphinx-pydantic = {version = "^0.1.1", optional = true}
 sphinxcontrib-bibtex = {version = "^2.4.1", optional = true}
 sphinxnotes-strike = {version = "^1.0", optional = true}
+beartype = "^0.10.4"
 
 [tool.poetry.extras]
 docs = [

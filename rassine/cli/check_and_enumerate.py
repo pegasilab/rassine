@@ -8,11 +8,11 @@ from typing import Sequence, Set
 
 import numpy as np
 import pandas as pd
-from configpile import AutoName, Config, Param, types
+from configpile import *
 from typing_extensions import Annotated
 
 from ..tybles import Table
-from .base import BasicInfo, RassineConfigBeforeStack, RelPath, RootPath, relPath, rootPath
+from .base import BasicInfo, RassineConfigBeforeStack, RelPath, RootPath
 
 
 @dataclass(frozen=True)

@@ -310,6 +310,7 @@ def intersect_all_continuum_sphinx(
 
     snr = np.array(snr)
 
+    
     if master_spectrum is not None:
         if copies_master == 0:
             print(
@@ -1391,10 +1392,12 @@ def preprocess_match_stellar_frame(
 
     """
 
+    # TODO: get files from the master table
     files_to_process = np.sort(files_to_process)
 
     number_of_files = len(files_to_process)
 
+    # TODO: force people to provide args
     if args is None:
         args = preprocess_prematch_stellar_frame(files_to_process, rv=rv, dlambda=dlambda)
 

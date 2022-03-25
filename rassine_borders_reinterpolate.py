@@ -53,7 +53,7 @@ if __name__ == "__main__":
         p["lamp"][indices],
         p["plx_mas"][indices],
         p["acc_sec"][indices],
-        p["rv"][indices],
+        p["rv_shift"][indices],
         p["rv_mean"],
     )
     # what about dlambda

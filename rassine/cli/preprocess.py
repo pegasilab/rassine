@@ -8,17 +8,17 @@ import numpy.typing as npt
 import pandas as pd
 from astropy.io import fits
 from astropy.time import Time
-from configpile import AutoName, Err, Param, Positional, Validator, types
-from pydantic.dataclasses import dataclass as pdataclass
+from configpile import *
 from typing_extensions import Annotated
 
 from ..tybles import Row, Table
-from .base import BasicInfo, RassineConfigBeforeStack, RelPath, RootPath, relPath, rootPath
+from .base import BasicInfo, RassineConfigBeforeStack, RelPath, RootPath
 
 # TODO: DACE -> metatable
 # TODO: remove the mjd patch
 # TODO: check what should be done when FITS are not readable
 # TODO: do we need the plx_mas thing?
+import beartype
 
 
 class OutputDict(TypedDict):
@@ -74,7 +74,7 @@ class Task(RassineConfigBeforeStack):
     ini_strict_sections_ = ["preprocess"]
 
     #: Relative path to the input data files
-    input_folder: Annotated[RelPath, Param.store(relPath)]
+    input_folder: Annotated[RelPath, Param.store(RelPath.param_type)]
 
     #: Indices of spectrum to process
     inputs: Annotated[
@@ -82,7 +82,7 @@ class Task(RassineConfigBeforeStack):
         Param.append(
             types.int_.as_sequence_of_one(),
             positional=Positional.ZERO_OR_MORE,
-            long_flag_name=AutoName.FORBIDDEN,
+            long_flag_name=None,
             short_flag_name=None,
         ),
     ]
@@ -98,10 +98,10 @@ class Task(RassineConfigBeforeStack):
     #: Name of the output directory. If None, the output directory is created at the same location than the spectra.
     output_folder: Annotated[
         RelPath,
-        Param.store(relPath, short_flag_name="-o"),
+        Param.store(RelPath.param_type, short_flag_name="-o"),
     ]
 
-    def validate_output_folder_(self) -> Validator:
+    def validate_output_folder_(self) -> Optional[Err]:
         return Err.check(
             (self.root.at(self.output_folder)).is_dir(), "The output directory needs to exist"
         )

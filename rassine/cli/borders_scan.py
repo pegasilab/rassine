@@ -10,6 +10,7 @@ from typing import (
     Optional,
     Sequence,
     Type,
+    TypedDict,
     TypeVar,
     Union,
     cast,
@@ -21,7 +22,7 @@ import numpy.typing as npt
 import pandas as pd
 from astropy.io import fits
 from astropy.time import Time
-from configpile import AutoName, Err, Expander, Param, Positional, Res, Validator, types
+from configpile import *
 from numpy import float64
 from typing_extensions import Annotated
 
@@ -31,10 +32,15 @@ from ..math import create_grid, doppler_r
 from ..tybles import Table
 from ..types import *
 from . import preprocess
-from .base import BasicInfo, RassineConfigBeforeStack, RelPath, RootPath, relPath, rootPath
+from .base import BasicInfo, LoggingLevel, RassineConfigBeforeStack, RelPath, RootPath
 
 
-class Summary(NamedTuple):
+@dataclass
+class StepDescription:
+
+    inputs = {"dict1.subdict2": }
+
+class Summary(TypedDict):
     wave_min_k: Float
     wave_max_k: Float
     dlambda: Float
@@ -69,14 +75,14 @@ class Task(RassineConfigBeforeStack):
     ini_strict_sections_ = ["borders-scan"]
 
     #: Relative path to the input data files
-    input_folder: Annotated[RelPath, Param.store(relPath, short_flag_name="-i")]
+    input_folder: Annotated[RelPath, Param.store(RelPath.param_type, short_flag_name="-i")]
 
-    def validate_input_folder(self) -> Validator:
+    def validate_input_folder_(self) -> Optional[Err]:
         f = self.root.at(self.input_folder)
         return Err.check(f.is_dir(), f"Input folder {f} must exist")
 
     #: HDF5 output file
-    output_file: Annotated[RelPath, Param.store(relPath, short_flag_name="-o")]
+    output_file: Annotated[RelPath, Param.store(RelPath.param_type, short_flag_name="-o")]
 
     #: Wavelength sampling step of the spectrum in Angstrom, if not provided, RASSINE attempts guessing
     dlambda: Annotated[
@@ -234,25 +240,27 @@ def run(t: Task) -> Summary:
     # static_grid is separate
 
     # n-sized: berv, lamp, plx_mas, acc_sec, rv, wave_min (what about wave_max)
-    res: Summary = Summary(
-        wave_min_k,
-        wave_max_k,
-        dlambda,
-        hole_left_k,
-        hole_right_k,
-        static_grid,
-        wave_min,
-        berv,
-        lamp,
-        plx_mas,
-        acc_sec,
-        rv_shift,
-        rv_mean,
-    )
+    res: Summary = {
+        "wave_min_k": wave_min_k,
+        "wave_max_k": wave_max_k,
+        "dlambda": dlambda,
+        "hole_left_k": hole_left_k,
+        "hole_right_k": hole_right_k,
+        "static_grid": static_grid,
+        "wave_min": wave_min,
+        "berv": berv,
+        "lamp": lamp,
+        "plx_mas": plx_mas,
+        "acc_sec": acc_sec,
+        "rv_shift": rv_shift,
+        "rv_mean": rv_mean,
+    }
     return res
 
 
 def cli() -> None:
     t = Task.from_command_line_()
+    logging.getLogger().setLevel(t.logging_level)
     data = run(t)
+    logging.info(f"Writing borders parameters in {t.root.at(t.output_file)}")
     dd.io.save(t.root.at(t.output_file), data)

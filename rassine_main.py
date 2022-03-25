@@ -2208,6 +2208,12 @@ index = index.astype("int")
 # SAVE THE OUTPUT
 # =============================================================================
 
+# TODO: mode "basic" with the stuff that used later in the pipeline
+#       mode "full" with everything
+
+# linear / undenoised
+# to discuss further
+
 if (outputs_interpolation_saved == "linear") & (outputs_denoising_saved == "undenoised"):
     basic = {
         "continuum_linear": continuum1,

@@ -1,10 +1,13 @@
 #!/bin/bash
 set -u
 
+script_path=$(realpath "${BASH_SOURCE[-1]}")
+script_folder=$(dirname "$script_path")
+export RASSINE_ROOT=$script_folder/spectra_library/HD23249/data/s1d/HARPS03
+export RASSINE_CONFIG=$script_folder/harps03.ini
+export RASSINE_LOGGING_LEVEL=DEBUG
 nthreads=4 # number of concurrent jobs
 nchunks=40 # number of spectra per Python script invocation
-
-dlambda=0.01
 
 ## Preprocess
 # Step 1: we read the FITS files in the format of a particular instrument and output files in the format
@@ -12,9 +15,18 @@ dlambda=0.01
 #
 # This step did correspond to
 # python Rassine_multiprocessed.py -v PREPROCESS -s "$dace_table" -n $nthreads_preprocess -i HARPS -o "$output_dir"
-export RASSINE_ROOT=/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03
-export RASSINE_CONFIG=harps03.ini
 mkdir -p $RASSINE_ROOT/PREPROCESSED
+preprocess_table -I DACE_TABLE/Dace_extracted_table.csv -i raw -O individual_table.csv
+
+individual1_table=$RASSINE_ROOT/individual1_table.csv
+# if the summary table exists, remove it
+[ -f $individual1_table ] && rm $individual1_table 
+enumerate_table -i individual_table.csv | parallel --will-cite --verbose -N$nchunks --jobs $nthreads --keep-order \
+  preprocess_import -i raw -o PREPROCESSED -I individual_table.csv -O individual1_table.csv
+
+reorder_csv -c name -r individual_table.csv individual1_table.csv
+
+exit
 
 check_and_enumerate -i raw/ | parallel --will-cite --verbose -N$nchunks --jobs $nthreads --keep-order \
   rassine_preprocess --input-folder raw/ --output-folder PREPROCESSED/

@@ -29,25 +29,23 @@ from typing_extensions import Annotated
 from ..analysis import find_nearest, grouping
 from ..io import save_pickle
 from ..math import create_grid, doppler_r
-from ..tybles import Table
-from ..types import *
-from . import preprocess
-from .base import BasicInfo, LoggingLevel, RassineConfigBeforeStack, RelPath, RootPath
+from . import preprocess_import
+from .data import BasicInfo, LoggingLevel, RassineConfigBeforeStack, RelPath, RootPath
 
+# @dataclass
+# class StepDescription:
 
-@dataclass
-class StepDescription:
+#     inputs = {"dict1.subdict2": }
 
-    inputs = {"dict1.subdict2": }
 
 class Summary(TypedDict):
-    wave_min_k: Float
-    wave_max_k: Float
-    dlambda: Float
-    hole_left_k: Float
-    hole_right_k: Float
+    wave_min_k: float
+    wave_max_k: float
+    dlambda: float
+    hole_left_k: float
+    hole_right_k: float
     static_grid: Optional[NFArray]  #: size of size of the spectrum?
-    wave_min: NFArray  #: vector length is number of spectra
+    wave_min: N  #: vector length is number of spectra
     berv: NFArray  #: vector length is number of spectra
     lamp: NFArray  #: vector length is number of spectra
     plx_mas: NFArray  #: vector length is number of spectra
@@ -99,9 +97,9 @@ class Task(RassineConfigBeforeStack):
     verify_rv_magnitude: Annotated[bool, Param.store(types.bool_, default_value="True")]
 
 
-def load(pickle_file: Path) -> preprocess.OutputDict:
+def load(pickle_file: Path) -> preprocess_import.OutputDict:
     with open(pickle_file, "rb") as f:
-        return cast(preprocess.OutputDict, pickle.load(f))
+        return cast(preprocess_import.OutputDict, pickle.load(f))
 
 
 def run(t: Task) -> Summary:
@@ -180,8 +178,8 @@ def run(t: Task) -> Summary:
             mask = grouping(np.diff(null_flux), 0.5, 0)[-1]
             highest = mask[mask[:, 2].argmax()]
             if highest[2] > 1000:
-                left = wave[int(null_flux[highest[0]])]
-                right = wave[int(null_flux[highest[1]])]
+                left = wave[int(null_flux[highest[0]])]  # store left or -99
+                right = wave[int(null_flux[highest[1]])]  # store right or -99
                 hole_left = np.append(hole_left, find_nearest(wave, doppler_r(left, shift)[1])[1])
                 hole_right = np.append(
                     hole_right, find_nearest(wave, doppler_r(right, shift)[1])[1]

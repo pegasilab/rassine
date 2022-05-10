@@ -2,13 +2,14 @@ from typing import Tuple
 
 import numpy as np
 import numpy.typing as npt
+from numpy.typing import NDArray
 
 from .types import *
 
 c_lum = 299.792e6
 
 
-def create_grid(wave_min: Float, dwave: Float, nb_bins: int) -> npt.NDArray[np.float64]:
+def create_grid(wave_min: float, dwave: float, nb_bins: int) -> NDArray[np.float64]:
     """
     Create an equidistant wavelength vector.
 
@@ -26,7 +27,7 @@ def create_grid(wave_min: Float, dwave: Float, nb_bins: int) -> npt.NDArray[np.f
     )  # the grid of wavelength of your spectrum (assumed equidistant in lambda)
 
 
-def doppler_r(lamb: Float, v: Float) -> Tuple[Float, Float]:
+def doppler_r(lamb: float, v: float) -> Tuple[float, float]:
     """
     Relativistic doppler shift of a wavelength by a velocity v in kms.
 

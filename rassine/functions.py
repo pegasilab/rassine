@@ -14,7 +14,8 @@ import pandas as pd
 from astropy.io import fits
 from astropy.time import Time
 from colorama import Fore
-from matplotlib.widgets import Button, RadioButtons, Slider
+from matplotlib.widgets import Button, Slider
+from numpy.typing import NDArray
 from scipy.interpolate import interp1d
 from scipy.signal import savgol_filter
 from scipy.stats import norm
@@ -22,7 +23,6 @@ from scipy.stats import norm
 from .analysis import clustering, find_nearest, grouping, match_nearest, rolling_iq
 from .io import open_pickle, save_pickle
 from .math import create_grid, doppler_r, gaussian
-from .types import *
 
 # =============================================================================
 # FUNCTIONS LIBRARY
@@ -43,9 +43,9 @@ def my_input(text):
 
 
 def ccf(
-    wave: NFArray,
-    spec1: NFArray,
-    spec2: NFArray,
+    wave: NDArray[np.float64],
+    spec1: NDArray[np.float64],
+    spec2: NDArray[np.float64],
     extended: int = 1500,
 ):
     """
@@ -310,7 +310,6 @@ def intersect_all_continuum_sphinx(
 
     snr = np.array(snr)
 
-    
     if master_spectrum is not None:
         if copies_master == 0:
             print(
@@ -1189,180 +1188,180 @@ def make_sound(sentence):
     pass
 
 
-def preprocess_prematch_stellar_frame(files_to_process, rv=0, dlambda=None):
-    """
-    Define the wavelength vector on which all the spectra will be reinterpolated (common wavelength vector) and detect CDD gap.
+# def preprocess_prematch_stellar_frame(files_to_process, rv=0, dlambda=None):
+#     """
+#     Define the wavelength vector on which all the spectra will be reinterpolated (common wavelength vector) and detect CDD gap.
 
-    The wavelength vector is defined from the maximum of all the spectra minimum wavelength and minimum of all the spectra maximum wavelength.
-    A RV shift can be applied on all the spectra during the reinterpolation stage.
+#     The wavelength vector is defined from the maximum of all the spectra minimum wavelength and minimum of all the spectra maximum wavelength.
+#     A RV shift can be applied on all the spectra during the reinterpolation stage.
 
-    Parameters
-    ----------
-    files_to_process : array_like
-        List of s1d .p preprocessed spectra.
-    rv : array_like
-        RV shift in kms to apply on the spectra (e.g binary, large trend).
-    dlambda : float
-        Wavelength step in angstrom used to produce the equidistant wavelength vector.
+#     Parameters
+#     ----------
+#     files_to_process : array_like
+#         List of s1d .p preprocessed spectra.
+#     rv : array_like
+#         RV shift in kms to apply on the spectra (e.g binary, large trend).
+#     dlambda : float
+#         Wavelength step in angstrom used to produce the equidistant wavelength vector.
 
-    Returns
-    -------
+#     Returns
+#     -------
 
-    """
+#     """
 
-    files_to_process = np.sort(files_to_process)
+#     files_to_process = np.sort(files_to_process)
 
-    emergency = 1
+#     emergency = 1
 
-    if np.max(abs(rv)) > 300:
-        make_sound("Warning")
-        print(Fore.YELLOW + "\n [WARNING] RV are certainly is m/s instead of km/s ! " + Fore.WHITE)
-        rep = sphinx(
-            "Are you sure your RV are in km/s ? Purchase with these RV ? (y/n)", rep=["y", "n"]
-        )
-        if rep == "n":
-            emergency = 0
+#     if np.max(abs(rv)) > 300:
+#         make_sound("Warning")
+#         print(Fore.YELLOW + "\n [WARNING] RV are certainly is m/s instead of km/s ! " + Fore.WHITE)
+#         rep = sphinx(
+#             "Are you sure your RV are in km/s ? Purchase with these RV ? (y/n)", rep=["y", "n"]
+#         )
+#         if rep == "n":
+#             emergency = 0
 
-    rv_mean = np.median(rv)
-    rv -= rv_mean
+#     rv_mean = np.median(rv)
+#     rv -= rv_mean
 
-    if type(rv) != np.array:
-        rv = np.hstack([rv])
-        if len(rv) == 1:
-            rv = np.ones(len(files_to_process)) * rv
+#     if type(rv) != np.array:
+#         rv = np.hstack([rv])
+#         if len(rv) == 1:
+#             rv = np.ones(len(files_to_process)) * rv
 
-    if len(rv) != len(files_to_process):
-        make_sound("Warning")
-        print(
-            Fore.YELLOW
-            + "\n [WARNING] RV vector is not the same size than the number of files (%.0f vs. %.0f) ! "
-            % (len(rv), len(files_to_process))
-            + Fore.WHITE
-        )
-        emergency = 0
+#     if len(rv) != len(files_to_process):
+#         make_sound("Warning")
+#         print(
+#             Fore.YELLOW
+#             + "\n [WARNING] RV vector is not the same size than the number of files (%.0f vs. %.0f) ! "
+#             % (len(rv), len(files_to_process))
+#             + Fore.WHITE
+#         )
+#         emergency = 0
 
-    if emergency:
-        all_length = []
-        wave_min = []
-        wave_max = []
-        hole_left = []
-        hole_right = []
-        diff = []
-        berv = []
-        lamp = []
-        plx_mas = []
-        acc_sec = []
+#     if emergency:
+#         all_length = []
+#         wave_min = []
+#         wave_max = []
+#         hole_left = []
+#         hole_right = []
+#         diff = []
+#         berv = []
+#         lamp = []
+#         plx_mas = []
+#         acc_sec = []
 
-        i = -1
-        print("Loading the data, wait... \n")
-        nb_total = len(files_to_process)
-        for j in files_to_process:
-            i += 1
-            if not (i % 250):
-                print(
-                    " [INFO] Number of files processed : %s/%.0f (%.1f %%)"
-                    % (str(i).zfill(len(str(nb_total))), nb_total, 100 * i / nb_total)
-                )
-            f = open_pickle(j)
+#         i = -1
+#         print("Loading the data, wait... \n")
+#         nb_total = len(files_to_process)
+#         for j in files_to_process:
+#             i += 1
+#             if not (i % 250):
+#                 print(
+#                     " [INFO] Number of files processed : %s/%.0f (%.1f %%)"
+#                     % (str(i).zfill(len(str(nb_total))), nb_total, 100 * i / nb_total)
+#                 )
+#             f = open_pickle(j)
 
-            shift = rv[i] * (len(np.ravel(rv)) != 1)
+#             shift = rv[i] * (len(np.ravel(rv)) != 1)
 
-            flux = f["flux"]
-            try:
-                wave = f["wave"]
-                if dlambda is None:
-                    diff.append(np.unique(np.diff(wave)))
-            except KeyError:
-                wave = create_grid(f["wave_min"], f["dwave"], len(flux))
-                diff.append(f["dwave"])
-            wave_min.append(f["wave_min"])
-            wave_max.append(f["wave_max"])
-            all_length.append(len(wave))
-            berv.append(f["berv"])
-            lamp.append(f["lamp_offset"])
-            plx_mas.append(f["plx_mas"])
-            acc_sec.append(f["acc_sec"])
+#             flux = f["flux"]
+#             try:
+#                 wave = f["wave"]
+#                 if dlambda is None:
+#                     diff.append(np.unique(np.diff(wave)))
+#             except KeyError:
+#                 wave = create_grid(f["wave_min"], f["dwave"], len(flux))
+#                 diff.append(f["dwave"])
+#             wave_min.append(f["wave_min"])
+#             wave_max.append(f["wave_max"])
+#             all_length.append(len(wave))
+#             berv.append(f["berv"])
+#             lamp.append(f["lamp_offset"])
+#             plx_mas.append(f["plx_mas"])
+#             acc_sec.append(f["acc_sec"])
 
-            null_flux = np.where(flux == 0)[0]  # criterion to detect gap between ccd
-            if len(null_flux):
-                mask = grouping(np.diff(null_flux), 0.5, 0)[-1]
-                highest = mask[mask[:, 2].argmax()]
-                if highest[2] > 1000:
-                    left = wave[int(null_flux[highest[0]])]
-                    right = wave[int(null_flux[highest[1]])]
-                    hole_left.append(find_nearest(wave, doppler_r(left, shift)[1])[1])
-                    hole_right.append(find_nearest(wave, doppler_r(right, shift)[1])[1])
+#             null_flux = np.where(flux == 0)[0]  # criterion to detect gap between ccd
+#             if len(null_flux):
+#                 mask = grouping(np.diff(null_flux), 0.5, 0)[-1]
+#                 highest = mask[mask[:, 2].argmax()]
+#                 if highest[2] > 1000:
+#                     left = wave[int(null_flux[highest[0]])]
+#                     right = wave[int(null_flux[highest[1]])]
+#                     hole_left.append(find_nearest(wave, doppler_r(left, shift)[1])[1])
+#                     hole_right.append(find_nearest(wave, doppler_r(right, shift)[1])[1])
 
-        if len(hole_left) != 0:
-            hole_left_k = np.min(hole_left) - 0.5  # increase of 0.5 the gap limit by security
-            hole_right_k = np.max(hole_right) + 0.5  # increase of 0.5 the gap limit by security
-            make_sound("Warning")
-            print(
-                Fore.YELLOW
-                + "\n [WARNING] GAP detected in s1d between : %.2f and %.2f ! "
-                % (hole_left_k, hole_right_k)
-                + Fore.WHITE
-            )
-            # rep = sphinx('Do you confirm these limit for the CCD gap ? (y/n)',rep=['y','n'])
-            # if rep=='n':
-            #    hole_left_k = -99.9
-            #    hole_right_k = -99.9
-        else:
-            hole_left_k = -99.9
-            hole_right_k = -99.9
+#         if len(hole_left) != 0:
+#             hole_left_k = np.min(hole_left) - 0.5  # increase of 0.5 the gap limit by security
+#             hole_right_k = np.max(hole_right) + 0.5  # increase of 0.5 the gap limit by security
+#             make_sound("Warning")
+#             print(
+#                 Fore.YELLOW
+#                 + "\n [WARNING] GAP detected in s1d between : %.2f and %.2f ! "
+#                 % (hole_left_k, hole_right_k)
+#                 + Fore.WHITE
+#             )
+#             # rep = sphinx('Do you confirm these limit for the CCD gap ? (y/n)',rep=['y','n'])
+#             # if rep=='n':
+#             #    hole_left_k = -99.9
+#             #    hole_right_k = -99.9
+#         else:
+#             hole_left_k = -99.9
+#             hole_right_k = -99.9
 
-        berv = np.array(berv)
-        lamp = np.array(lamp)
-        plx_mas = np.array(plx_mas)
-        acc_sec = np.array(acc_sec)
+#         berv = np.array(berv)
+#         lamp = np.array(lamp)
+#         plx_mas = np.array(plx_mas)
+#         acc_sec = np.array(acc_sec)
 
-        wave_min = np.round(wave_min, 8)  # to take into account float32
-        wave_max = np.round(wave_max, 8)  # to take into account float32
-        wave_min_k = np.array(wave_min).max()
-        wave_max_k = np.array(wave_max).min()
-        print(
-            "\n [INFO] Spectra borders are found between : %.4f and %.4f"
-            % (wave_min_k, wave_max_k)
-        )
+#         wave_min = np.round(wave_min, 8)  # to take into account float32
+#         wave_max = np.round(wave_max, 8)  # to take into account float32
+#         wave_min_k = np.array(wave_min).max()
+#         wave_max_k = np.array(wave_max).min()
+#         print(
+#             "\n [INFO] Spectra borders are found between : %.4f and %.4f"
+#             % (wave_min_k, wave_max_k)
+#         )
 
-        if dlambda is None:
-            value = np.unique(np.round(np.hstack(diff), 8))
+#         if dlambda is None:
+#             value = np.unique(np.round(np.hstack(diff), 8))
 
-            if len(value) == 1:
-                dlambda = value[0]
-                print("\n [INFO] Spectra dwave is : %.4f \n" % (dlambda))
-            else:
-                make_sound("Warning")
-                print(
-                    Fore.YELLOW
-                    + "\n [WARNING] The algorithm has not managed to determine the dlambda value of your spectral wavelength grid"
-                    + Fore.WHITE
-                )
-                dlambda = sphinx("Which dlambda value are you selecting for the wavelength grid ?")
-                dlambda = np.round(float(dlambda), 8)
-        else:
-            value = np.array([69, 69])
+#             if len(value) == 1:
+#                 dlambda = value[0]
+#                 print("\n [INFO] Spectra dwave is : %.4f \n" % (dlambda))
+#             else:
+#                 make_sound("Warning")
+#                 print(
+#                     Fore.YELLOW
+#                     + "\n [WARNING] The algorithm has not managed to determine the dlambda value of your spectral wavelength grid"
+#                     + Fore.WHITE
+#                 )
+#                 dlambda = sphinx("Which dlambda value are you selecting for the wavelength grid ?")
+#                 dlambda = np.round(float(dlambda), 8)
+#         else:
+#             value = np.array([69, 69])
 
-        if len(value) == 1:  # case with static wavelength grid
-            static_grid = None
-        else:
-            static_grid = np.arange(wave_min_k, wave_max_k + dlambda, dlambda)
+#         if len(value) == 1:  # case with static wavelength grid
+#             static_grid = None
+#         else:
+#             static_grid = np.arange(wave_min_k, wave_max_k + dlambda, dlambda)
 
-        return (
-            wave_min_k,
-            wave_max_k,
-            dlambda,
-            hole_left_k,
-            hole_right_k,
-            static_grid,
-            wave_min,
-            berv,
-            lamp,
-            plx_mas,
-            acc_sec,
-            rv,
-            rv_mean,
-        )
+#         return (
+#             wave_min_k,
+#             wave_max_k,
+#             dlambda,
+#             hole_left_k,
+#             hole_right_k,
+#             static_grid,
+#             wave_min,
+#             berv,
+#             lamp,
+#             plx_mas,
+#             acc_sec,
+#             rv,
+#             rv_mean,
+#         )
 
 
 def preprocess_match_stellar_frame(

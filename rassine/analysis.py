@@ -1,15 +1,15 @@
-from typing import Any, List, Tuple
+from typing import Any, List, Tuple, Union
 
 import numpy as np
-import numpy.typing as npt
 import pandas as pd
+from numpy.typing import NDArray
 
 from .types import *
 
 
-def grouping(array: NFArray, tresh: Float, num: int):
+def grouping(array: NDArray[np.float64], threshold: float, num: int):
     difference = abs(np.diff(array))
-    cluster = difference < tresh
+    cluster = difference < threshold
     indices = np.arange(len(cluster))[cluster]
 
     j = 0
@@ -33,29 +33,22 @@ def grouping(array: NFArray, tresh: Float, num: int):
     return np.array(kept, dtype="object"), border
 
 
-def clustering(array: npt.NDArray[np.float64], tresh: Float, num: Float):
-
+def clustering(
+    array: NDArray[np.float64], threshold: float, num: int
+) -> Union[List[np.ndarray], np.ndarray]:
     """
-    Detect and form 1D-cluster on an array. A new cluster is formed once the next vector value is farther than a treshold value.
+    Detect and form 1D-cluster on an array. A new cluster is formed once the next vector value is farther than a threshold value.
 
-    Parameters
-    ----------
-    array : array_like
-        The vector used to create the clustering (1D)
-    tresh : float
-        Threshold value distance used to define a new cluster.
-    num : float
-        The minimum number of elements to consider a cluster
+    Args:
+        array: The vector used to create the clustering (1D)
+        threshold: Threshold value distance used to define a new cluster.
+        num: The minimum number of elements to consider a cluster
 
-    Returns
-    -------
-    cluster_matrix : array_like
-        The matrix containing the left indice, right indice and the length of the 1D cluster
-
+    Returns:
+        The matrix containing the left index, right index and the length of the 1D cluster
     """
-
     difference = np.diff(array)
-    cluster = difference < tresh
+    cluster = difference < threshold
     indice = np.arange(len(cluster))[cluster]
     if sum(cluster):
         j = 0
@@ -162,8 +155,8 @@ def match_nearest(array1, array2):
 
 
 def rolling_iq(
-    array: NFArray, window: int = 1, min_periods: int = 1
-) -> Tuple[NFArray, NFArray, NFArray]:
+    array: NDArray[np.float64], window: int = 1, min_periods: int = 1
+) -> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
     """
     Perform a rolling IQ statistic in a fixed window.
 

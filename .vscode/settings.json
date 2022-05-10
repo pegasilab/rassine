@@ -6,15 +6,8 @@
     "python.analysis.indexing": true,
     "editor.formatOnSave": true,
     "python.formatting.provider": "black",
-    "python.formatting.blackArgs": [
-        "--line-length=99"
-    ],
-    "python.sortImports.args": [
-        "--profile",
-        "black",
-        "--line-length",
-        "99",
-    ],
+    "autoDocstring.guessTypes": false,
+    "autoDocstring.customTemplatePath": ".vscode/google-notypes.mustache",
     "[python]": {
         "editor.codeActionsOnSave": {
             "source.organizeImports": true
@@ -134,5 +127,5 @@
             "gutterIcon": true
         },
     },
-    "esbonio.sphinx.confDir": "",
+    "esbonio.server.enabled": false,
 }

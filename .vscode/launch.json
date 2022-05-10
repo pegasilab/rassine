@@ -26,6 +26,25 @@
             "args": [
                 "HARPS.2005-11-16T07:05:03.095_s1d_A.fits",
             ]
+        },
+        {
+            "name": "reorder_individual1",
+            "type": "python",
+            "request": "launch",
+            "program": ".venv/bin/reorder_csv",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "RASSINE_CONFIG": "harps03.ini",
+                "RASSINE_ROOT": "${workspaceFolder}/spectra_library/HD23249/data/s1d/HARPS03"
+            },
+            "args": [
+                "-c",
+                "name",
+                "-r",
+                "individual_table.csv",
+                "individual1_table.csv"
+            ]
         }
     ]
 }

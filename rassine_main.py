@@ -21,7 +21,7 @@ import getopt
 import os
 import sys
 import time
-from typing import List, Literal, Tuple, Union
+from typing import List, Literal, Optional, Tuple, Union
 
 import matplotlib
 import matplotlib.pylab as plt
@@ -161,20 +161,24 @@ filename = spectrum_name.split("/")[-1]
 cut_extension = len(filename.split(".")[-1]) + 1
 new_file = filename[:-cut_extension]
 
+# TODO: what is that random thing?
 random_number = np.sum([ord(a) for a in filename.split("RASSINE_")[-1]])
+
 
 # to ignite the variable present after preprocessing
 
-mjd = None
-jdb = None
-hole_left = None
-hole_right = None
-RV_shift = None
-acc_sec = None
-berv = None
-lamp_offset = None
-nb_spectra_stacked = None
-arcfiles = None
+mjd: Optional[np.float64] = None
+jdb: Optional[np.float64] = None
+hole_left: Optional[np.float64] = None
+hole_right: Optional[np.float64] = None
+RV_shift: Optional[np.float64] = None
+acc_sec: Optional[np.float64] = None
+berv: Optional[np.float64] = None
+lamp_offset: Optional[np.float64] = None
+nb_spectra_stacked: Optional[int] = None
+
+# list of files part of the current stack
+arcfiles: Optional[str] = None
 
 if not os.path.exists(anchor_file):
     anchor_file = ""
@@ -194,6 +198,7 @@ if anchor_file != "":
 spectrei_err = None
 
 if spectrum_name.split(".")[-1] == "fits":  # to load a fits file
+    # TODO: remove FITS support
     header = fits.getheader(spectrum_name)  # load the fits header
     spectre_step = fits.getheader(spectrum_name)["CDELT1"]
     spectrei = fits.getdata(spectrum_name).astype("float64")  # the flux of your spectrum
@@ -202,11 +207,15 @@ if spectrum_name.split(".")[-1] == "fits":  # to load a fits file
     )  # the grid of wavelength of your spectrum (assumed equidistant in lambda)
 else:  # to load a pickle dictionnary, csv file or txt file
     if spectrum_name.split(".")[-1] == "csv":
+        # TODO: remove CSV support
         data = pd.read_csv(spectrum_name)  # load the pickle dictionnary
         spectrei = np.array(data[column_flux])  # the flux of your spectrum
         grid = np.array(data[column_wave])  # the grid of wavelength of your spectrum
     elif spectrum_name.split(".")[-1] == "p":
+        # TODO: only keep this
         data = ras.open_pickle(spectrum_name)  # load the pickle dictionnary
+
+        # TODO: remove the flexibility in dictionary keys
         spectrei = np.array(data[column_flux])  # the flux of your spectrum
         try:
             spectrei_err = np.array(data[column_flux + "_err"])  # the error flux of your spectrum
@@ -427,6 +436,7 @@ if par_fwhm == "auto":
     )(log_grid)
 
     if CCF_mask != "master":
+        # TODO: mask_harps should be mask_ccf
         mask_harps = np.genfromtxt(CCF_mask + ".txt")
         line_center = ras.doppler_r(0.5 * (mask_harps[:, 0] + mask_harps[:, 1]), RV_sys)[0]
         distance = np.abs(grid - line_center[:, np.newaxis])

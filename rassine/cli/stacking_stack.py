@@ -3,123 +3,109 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, List, Optional, Sequence, Tuple, TypedDict, cast
+from typing import List, Sequence, TypedDict
 
 import configpile as cp
 import numpy as np
 import numpy.typing as npt
 import tybles as tb
+from astropy.time import Time
 from filelock import FileLock
-from numpy.typing import NDArray
-from scipy.interpolate import interp1d
+from numpy.typing import ArrayLike, NDArray
 from typing_extensions import Annotated
 
-from rassine.cli.preprocess_import import IndividualImportedRow
-from rassine.io import open_pickle, save_pickle
-from rassine.math import create_grid, doppler_r
-
 from ..analysis import find_nearest
-from ..data import absurd_minus_99_9
+from ..io import open_pickle, save_pickle
+from ..math import create_grid
 from .data import LoggingLevel, PickleProtocol
-from .preprocess_import import IndividualImportedRow, PickledIndividualSpectrum
+from .reinterpolate import IndividualReinterpolatedRow, PickledReinterpolatedSpectrum
+from .stacking_create_groups import IndividualGroupRow
 from .util import log_task_name_and_time
 
 
-# TODO: rename to Reinterpolated
 @dataclass(frozen=True)
-class IndividualReinterpolatedRow:
+class StackedBasicRow:
     """
-    Describes the scalar data associated
-    Returns:
-
+    Describes the scalar data associated with a stacked spectrum
     """
 
-    #: Spectrum name without path and extension
+    #: Stacked spectrum name without path and extension
     name: str
-
     #: Instrument name
     instrument: str
-
-    #: Observation date/time in MJD
+    #: mjd weighted average
     mjd: np.float64
-
-    #: Optional RV shift correction in km/s
-    model: np.float64
-
-    #: Median value of model (same for all spectra) in km/s
+    #: Average rv correction (median), same for all spectra
     rv_mean: np.float64
-
-    #: Difference model - rv_mean in km/s
+    #: RV correction, shift compared to the median, weighted average
     rv_shift: np.float64
-
+    #: Corresponds to the square root of the 95th percentile for 100 bins around the wavelength=5500
     SNR_5500: np.float64
-
+    #: jdb weighted average
     jdb: np.float64
-
+    #: berv, weighted average
     berv: np.float64
-
+    #: min(berv) for the individual spectra in the group
+    berv_min: np.float64
+    #: max(berv) for the individual spectra in the group
+    berv_max: np.float64
+    #: lamp_offset, weighted average
     lamp_offset: np.float64
-
-    plx_mas: np.float64
-
+    #: acc_sec, taken from first spectrum
     acc_sec: np.float64
-
-    # same for all spectra
+    #: Left boundary of hole, or -99.9 if not present
+    hole_left: np.float64
+    #: Right boundary of hole, or -99.9 if not present
+    hole_right: np.float64
+    #: Minimum wavelength
     wave_min: np.float64
-
-    # same for all spectra
+    #: Maximum wavelength, not necessarily equal to np.max(static_grid)
     wave_max: np.float64
-
-    # same for all spectra
+    #: delta between two bins, synonym dlambda
     dwave: np.float64
-
-    # same for all spectra, len(pickled_spectrum.flux)
+    #: Number of days using for the stacking
+    stacking_length: np.int64
+    #: Number of individual spectra using for this individual spectrum
+    nb_spectra_stacked: np.int64
+    # same for all spectra, len(flux)
     nb_bins: np.int64
 
-    # same for all spectra
-    hole_left: np.float64
-
-    # same for all spectra
-    hole_right: np.float64
-
     @staticmethod
-    def schema() -> tb.Schema[IndividualReinterpolatedRow]:
+    def schema() -> tb.Schema[StackedBasicRow]:
         return tb.schema(
-            IndividualReinterpolatedRow,
+            StackedBasicRow,
             order_columns=True,
             missing_columns="error",
             extra_columns="drop",
         )
 
 
-class PickledReinterpolatedSpectrum(TypedDict):
+class StackedPickle(TypedDict):
     """
-    Data format of the pickle files produced by the reinterpolation step
+    Data format of the pickle files produced by the stacking step
+
+    All the weighted averages are made using the bolometric flux
     """
 
-    #: Flux
+    #: Flux, stacked
     flux: npt.NDArray[np.float64]
-    #: Flux error
+    #: Flux error, stacked (square of this is the sum of squares of individual spectra)
     flux_err: npt.NDArray[np.float64]
     #: Average rv correction (median), same for all spectra
     RV_sys: np.float64
-    #: RV correction, shift compared to the median
+    #: RV correction, shift compared to the median, weighted average
     RV_shift: np.float64
     #: Corresponds to the square root of the 95th percentile for 100 bins around the wavelength=5500
     SNR_5500: np.float64
-    #: what is berv?
+    #: berv, weighted average
     berv: np.float64
-    #: what is lamp offset?
+    #: lamp_offset, weighted average
     lamp_offset: np.float64
-    #: what is plx_mas?
-    plx_mas: np.float64
-    #: what is acc_sec?
+    #: acc_sec, taken from first spectrum
     acc_sec: np.float64
-    #: instrument name
-    instrument: str
-    #: observation time in mjd
+    #: mjd weighted average
     mjd: np.float64
-    #: what is jdb?
+    #: jdb weighted average
     jdb: np.float64
     #: Left boundary of hole, or -99.9 if not present
     hole_left: np.float64
@@ -127,16 +113,21 @@ class PickledReinterpolatedSpectrum(TypedDict):
     hole_right: np.float64
     #: Minimum wavelength
     wave_min: np.float64
-    # TOCHECK: here
     #: Maximum wavelength, not necessarily equal to np.max(static_grid)
     wave_max: np.float64
     #: delta between two bins, synonym dlambda
     dwave: np.float64
+    #: Number of days using for the stacking
+    stacking_length: int
+    #: Number of individual spectra using for this individual spectrum
+    nb_spectra_stacked: int
+    #: Paths of files used in this stacked spectrum
+    arcfiles: Sequence[str]
 
 
 @dataclass(frozen=True)
 class Task(cp.Config):
-    """Reinterpolates the spectra to match the stellar frame"""
+    """Stacks spectra"""
 
     #
     # Common information
@@ -173,22 +164,25 @@ class Task(cp.Config):
 
     ini_strict_sections_ = [Path(__file__).stem.split("_")[0]]
 
-    #: Input spectrum table
+    #: Input reinterpolated table
     input_table: Annotated[Path, cp.Param.store(cp.parsers.path_parser, short_flag_name="-I")]
 
-    #: Output spectrum table
+    #: Group description table
+    group_table: Annotated[Path, cp.Param.store(cp.parsers.path_parser, short_flag_name="-G")]
+
+    #: Output stacked table
     output_table: Annotated[Path, cp.Param.store(cp.parsers.path_parser, short_flag_name="-O")]
 
-    #: Relative path to the folder containing the raw spectra
+    #: Relative path to the folder containing the reinterpolated spectra
     input_folder: Annotated[Path, cp.Param.store(cp.parsers.path_parser, short_flag_name="-i")]
 
-    #: Name of the output directory. If None, the output directory is created at the same location than the spectra.
+    #: Name of the output directory
     output_folder: Annotated[Path, cp.Param.store(cp.parsers.path_parser, short_flag_name="-o")]
 
-    #: Indices of spectrum to process
+    #: Group indices to process
     #:
-    #: If not provided, all spectra are processed
-    inputs: Annotated[
+    #: If not provided, all groups are processed
+    groups: Annotated[
         Sequence[int],
         cp.Param.append1(
             cp.parsers.int_parser,
@@ -198,155 +192,108 @@ class Task(cp.Config):
         ),
     ]
 
-    #: Wavelength step in angstrom used to produce the equidistant wavelength vector
-    dlambda: Annotated[float, cp.Param.store(cp.parsers.float_parser)]
 
-    def validate_output_folder(self) -> Optional[cp.Err]:
-        return cp.Err.check(
-            (self.root / self.output_folder).is_dir(), "The output directory needs to exist"
-        )
+def stack(
+    t: Task, rows: Sequence[IndividualReinterpolatedRow], bin_length: int, dbin: np.float64
+) -> StackedBasicRow:
 
+    nb_spectra_stacked = len(rows)
 
-@dataclass(frozen=True)
-class ReinterpolationSettings:
-    wave_min_k: np.float64
-    wave_max_k: np.float64
-    hole_left_k: np.float64
-    hole_right_k: np.float64
-    dlambda: np.float64
-    nb_bins: int
-    static_grid: NDArray[np.float64]
-    wave_ref: int
+    def input_path(row: IndividualReinterpolatedRow) -> Path:
+        return t.root / t.input_folder / (row.name + ".p")
 
-    @staticmethod
-    def make(
-        wave_min_k: np.float64,
-        wave_max_k: np.float64,
-        hole_left_k: np.float64,
-        hole_right_k: np.float64,
-        dlambda: np.float64,
-        nb_bins: int,
-    ) -> ReinterpolationSettings:
-        static_grid = create_grid(wave_min_k, dlambda, nb_bins)
-        wave_ref = find_nearest(static_grid, 5500)[0]
-        return ReinterpolationSettings(
-            wave_min_k=wave_min_k,
-            wave_max_k=wave_max_k,
-            hole_left_k=hole_left_k,
-            hole_right_k=hole_right_k,
-            dlambda=dlambda,
-            nb_bins=nb_bins,
-            static_grid=static_grid,
-            wave_ref=wave_ref,
-        )
+    file = input_path(rows[0])
+    data = open_pickle(file, PickledReinterpolatedSpectrum)
+    nb_bins = rows[0].nb_bins
+    flux = data["flux"]
+    wave_min = data["wave_min"]
+    wave_max = data["wave_max"]
+    dwave = data["dwave"]
+    grid = create_grid(wave_min, dwave, len(flux))
+    RV_sys = data["RV_sys"]
+    instrument = data["instrument"]
+    hole_left = data["hole_left"]
+    hole_right = data["hole_right"]
+    acc_sec = data["acc_sec"]
 
-    @staticmethod
-    def from_spectrum_data(
-        wave_min: NDArray[np.float64],
-        wave_max: NDArray[np.float64],
-        hole_left: NDArray[np.float64],
-        hole_right: NDArray[np.float64],
-        dlambda: np.float64,
-    ) -> ReinterpolationSettings:
-        hole_left = hole_left[hole_left != absurd_minus_99_9]
-        hole_right = hole_right[hole_right != absurd_minus_99_9]
+    stack = flux
+    stack_err2 = data["flux_err"] ** 2
 
-        if len(hole_left) != 0 and len(hole_right) != 0:
-            hole_left_k = np.min(hole_left) - 0.5  # increase of 0.5 the gap limit by security
-            hole_right_k = np.max(hole_right) + 0.5  # increase of 0.5 the gap limit by security
-        else:
-            hole_left_k = absurd_minus_99_9
-            hole_right_k = absurd_minus_99_9
-        wave_min_k = wave_min.max()
-        wave_max_k = wave_max.min()
-        nb_bins: int = int(np.ceil((wave_max_k - wave_min_k) / dlambda))
-        return ReinterpolationSettings.make(
-            wave_min_k=wave_min_k,
-            wave_max_k=wave_max_k,
-            hole_left_k=hole_left_k,
-            hole_right_k=hole_right_k,
-            dlambda=dlambda,
-            nb_bins=nb_bins,
-        )
+    def compute_bolo(f: NDArray[np.float64]) -> np.float64:
+        return np.nansum(f) / len(f)
 
+    name_root_files = [str(file)]
+    bolo_ = [compute_bolo(flux)]
+    for row in rows[1:]:
+        file = input_path(row)
+        data = open_pickle(file, PickledReinterpolatedSpectrum)
+        flux = data["flux"]
+        stack += flux
+        stack_err2 += data["flux_err"] ** 2
+        bolo_.append(compute_bolo(flux))
+        name_root_files.append(str(file))
 
-def reinterpolate(
-    t: Task, row: IndividualImportedRow, s: ReinterpolationSettings
-) -> IndividualReinterpolatedRow:
-    input_file = t.root / t.input_folder / (row.name + ".p")
-    output_file = t.root / t.output_folder / (row.name + ".p")
-    spectrum = open_pickle(input_file, PickledIndividualSpectrum)
+    bolo = np.array(bolo_)
 
-    # raw spectrum
-    wave = spectrum["wave"]
-    flux = spectrum["flux"]
-    flux_err = spectrum["flux_err"]
+    def weighted_average(values: ArrayLike) -> np.float64:
+        """Computes the bolometric average of a value"""
+        return np.sum(np.asarray(values) * bolo) / np.sum(bolo)
 
-    # reinterpolated using static_grid
-    static_grid = s.static_grid
-    new_flux = interp1d(
-        doppler_r(wave, row.rv_shift)[1],
-        flux,
-        kind="cubic",
-        bounds_error=False,
-        fill_value="extrapolate",
-    )(static_grid)
-    new_flux_err = interp1d(
-        doppler_r(wave, row.rv_shift)[1],
-        flux_err,
-        kind="linear",
-        bounds_error=False,
-        fill_value="extrapolate",
-    )(static_grid)
-
-    mask2 = (static_grid >= (s.hole_left_k - s.dlambda / 2.0)) & (
-        static_grid <= (s.hole_right_k + s.dlambda / 2.0)
-    )
-    new_flux[mask2] = 0
-    new_flux_err[mask2] = 1
-
-    continuum_5500 = np.nanpercentile(new_flux[s.wave_ref - 50 : s.wave_ref + 50], 95)
+    jdb_w = weighted_average([r.jdb - dbin for r in rows])
+    date_name = Time(jdb_w - 0.5, format="mjd").isot
+    berv = [r.berv for r in rows]
+    berv_w = weighted_average(berv)
+    lamp_w = weighted_average([r.lamp_offset for r in rows])
+    rv_shift_w = weighted_average([r.rv_shift for r in rows])
+    wave_ref = int(find_nearest(grid, 5500)[0])
+    continuum_5500 = np.nanpercentile(stack[wave_ref - 50 : wave_ref + 50], 95)
     SNR = np.sqrt(continuum_5500)
-
-    out: PickledReinterpolatedSpectrum = {
-        "flux": new_flux,
-        "flux_err": new_flux_err,
-        "RV_sys": row.rv_mean,
-        "RV_shift": row.rv_shift,
+    mjd_w = jdb_w - 0.5
+    out: StackedPickle = {
+        "flux": stack,
+        "flux_err": np.sqrt(np.abs(stack_err2)),
+        "jdb": jdb_w,
+        "mjd": mjd_w,
+        "berv": berv_w,
+        "lamp_offset": lamp_w,
+        "acc_sec": acc_sec,
+        "RV_shift": rv_shift_w,
+        "RV_sys": RV_sys,
         "SNR_5500": SNR,
-        "berv": row.berv,
-        "lamp_offset": row.lamp_offset,
-        "plx_mas": row.plx_mas,
-        "acc_sec": row.acc_sec,
-        "instrument": row.instrument,
-        "mjd": row.mjd,
-        "jdb": row.jdb,
-        "hole_left": s.hole_left_k,
-        "hole_right": s.hole_right_k,
-        "wave_min": s.wave_min_k,
-        "wave_max": s.wave_max_k,
-        "dwave": s.dlambda,
+        "hole_left": hole_left,
+        "hole_right": hole_right,
+        "wave_min": wave_min,
+        "wave_max": wave_max,
+        "dwave": dwave,
+        "stacking_length": int(bin_length),
+        "nb_spectra_stacked": int(nb_spectra_stacked),
+        "arcfiles": name_root_files,
     }
+    name = f"Stacked_spectrum_bin_{bin_length}.{date_name}"
+    output_file = t.root / t.output_folder / f"{name}.p"
     save_pickle(output_file, out)
-    return IndividualReinterpolatedRow(
-        name=row.name,
-        instrument=row.instrument,
-        mjd=row.mjd,
-        jdb=row.jdb,
-        model=row.model,
-        rv_mean=row.rv_mean,
-        rv_shift=row.rv_shift,
+
+    return StackedBasicRow(
+        name=name,
+        instrument=instrument,
+        rv_mean=RV_sys,
+        rv_shift=rv_shift_w,
         SNR_5500=SNR,
-        berv=row.berv,
-        lamp_offset=row.lamp_offset,
-        plx_mas=row.plx_mas,
-        acc_sec=row.acc_sec,
-        wave_min=s.wave_min_k,
-        wave_max=s.wave_max_k,
-        dwave=s.dlambda,
-        nb_bins=np.int64(s.nb_bins),
-        hole_left=s.hole_left_k,
-        hole_right=s.hole_right_k,
+        berv=berv_w,
+        berv_min=np.min(berv),
+        berv_max=np.max(berv),
+        lamp_offset=lamp_w,
+        acc_sec=acc_sec,
+        mjd=mjd_w,
+        jdb=jdb_w,
+        hole_left=hole_left,
+        hole_right=hole_right,
+        wave_min=wave_min,
+        wave_max=wave_max,
+        dwave=dwave,
+        stacking_length=np.int64(bin_length),
+        nb_spectra_stacked=np.int64(nb_spectra_stacked),
+        nb_bins=nb_bins,
     )
 
 
@@ -354,35 +301,46 @@ def reinterpolate(
 def run(t: Task) -> None:
     t.logging_level.set()
     t.pickle_protocol.set()
+    (t.root / t.output_folder).mkdir(parents=True, exist_ok=True)
+    (t.root / t.output_table).parent.mkdir(parents=True, exist_ok=True)
 
     logging.debug(f"Reading {t.root/t.input_table}")
-    tyble = IndividualImportedRow.schema().read_csv(t.root / t.input_table, return_type="Tyble")
-    df = tyble.data_frame
-
-    # compute hole boundaries
-    settings = ReinterpolationSettings.from_spectrum_data(
-        wave_min=np.round(df["wave_min"].to_numpy(), 8),  # to take into account float32
-        wave_max=np.round(df["wave_max"].to_numpy(), 8),  # to take into account float32
-        hole_left=df["hole_left"].to_numpy(),
-        hole_right=df["hole_right"].to_numpy(),
-        dlambda=np.float64(t.dlambda),
+    input_tyble = IndividualReinterpolatedRow.schema().read_csv(
+        t.root / t.input_table, return_type="Tyble"
     )
+    input_df = input_tyble.data_frame
 
-    inputs: Sequence[int] = t.inputs
-    if not inputs:
-        inputs = list(range(len(df)))
+    logging.debug(f"Reading {t.root/t.group_table}")
+    group_tyble = IndividualGroupRow.schema().read_csv(t.root / t.group_table, return_type="Tyble")
+    group_df = group_tyble.data_frame
 
-    output_rows: List[IndividualReinterpolatedRow] = []
-    for i in inputs:
-        r = tyble[i]
-        output_rows.append(reinterpolate(t, r, settings))
+    bin_length = group_df["stacking_length"][0]
+    assert np.all(group_df["stacking_length"] == bin_length), "stacking_length must be uniform"
+
+    dbin = group_df["dbin"][0]
+    assert np.all(group_df["dbin"] == dbin), "dbin must be uniform"
+
+    assert input_df["name"].equals(
+        group_df["name"]
+    ), "The input and the group tables must be consistent"
+
+    if not t.groups:
+        groups: Sequence[int] = list(group_df["group"].unique())
+    else:
+        groups = t.groups
+
+    stacked_rows: List[StackedBasicRow] = []
+    for group in groups:
+        rows = [input_tyble[i] for i in group_df.index[group_df["group"] == group]]
+        assert rows, "A group must have at least one spectrum in it"
+        stacked_rows.append(stack(t, rows, bin_length, dbin))
 
     output_table = t.root / t.output_table
     output_table_lockfile = output_table.with_suffix(output_table.suffix + ".lock")
 
     logging.debug(f"Appending to output table {output_table}")
     with FileLock(output_table_lockfile):
-        df = IndividualReinterpolatedRow.schema().from_rows(output_rows, return_type="DataFrame")
+        df = StackedBasicRow.schema().from_rows(stacked_rows, return_type="DataFrame")
         df.to_csv(output_table, header=not output_table.exists(), mode="a", index=False)
 
 

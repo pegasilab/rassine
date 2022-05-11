@@ -42,6 +42,8 @@ def preprocess_stack(files_to_process, bin_length=1, dbin=0, make_master=True):
 
     num = -1
 
+    # TOCHECK: berv is the same as all_berv
+
     all_snr = []
     all_stack = []
     all_berv = []
@@ -58,8 +60,8 @@ def preprocess_stack(files_to_process, bin_length=1, dbin=0, make_master=True):
         hole_left = file_arbitrary["hole_left"]
         hole_right = file_arbitrary["hole_right"]
         acc_sec = file_arbitrary["acc_sec"]
-        stack = 0
-        stack_err = 0
+        stack = file_arbitrary["flux"]
+        stack_err = file_arbitrary["flux_err"]
         bolo = []
         rv_shift = []
         name_root_files = []

@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import List, Sequence, Set
 
 import configpile as cp
+import numpy as np
 import tybles as tb
 from typing_extensions import Annotated
 
@@ -13,8 +14,6 @@ from ..types import Float
 from .data import LoggingLevel, PickleProtocol
 from .reinterpolate import IndividualReinterpolatedRow
 from .util import log_task_name_and_time
-
-# CHECKME: how to sort spectra?
 
 
 @dataclass(frozen=True)
@@ -26,6 +25,12 @@ class IndividualGroupRow:
 
     #: Group index
     group: int
+
+    #: Number of days used for stacking
+    stacking_length: int
+
+    #: dbin to shift the binning (0.5 for solar data)
+    dbin: np.float64
 
     @staticmethod
     def schema() -> tb.Schema[IndividualGroupRow]:
@@ -96,21 +101,32 @@ class Task(cp.Config):
 @log_task_name_and_time(name=Path(__file__).stem)
 def run(t: Task) -> None:
     t.logging_level.set()
+
+    (t.root / t.output_table).parent.mkdir(parents=True, exist_ok=True)
+
     input_table_path = t.root / t.input_table
 
     logging.info(f"Reaading table {input_table_path}")
     rows = IndividualReinterpolatedRow.schema().read_csv(input_table_path, return_type="Tyble")
 
     if t.bin_length == 0:
-        group_info = [IndividualGroupRow(r.name, i) for i, r in enumerate(rows)]
+        group_info = [
+            IndividualGroupRow(r.name, i, t.bin_length, np.float64(t.dbin))
+            for i, r in enumerate(rows)
+        ]
     else:
 
         def compute_group(jdb: Float) -> int:
             return int(jdb // t.bin_length)
 
-        group_info = [IndividualGroupRow(r.name, compute_group(r.jdb)) for r in rows]
+        group_info = [
+            IndividualGroupRow(r.name, compute_group(r.jdb), t.bin_length, np.float64(t.dbin))
+            for r in rows
+        ]
 
-    IndividualGroupRow.schema().from_rows(group_info, "DataFrame").to_csv(t.root / t.output_table)
+    IndividualGroupRow.schema().from_rows(group_info, "DataFrame").to_csv(
+        t.root / t.output_table, index=False
+    )
 
 
 def cli() -> None:

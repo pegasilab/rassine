@@ -433,6 +433,9 @@ def preprocess_fits_espresso_express(t: Task, row: IndividualBasicRow) -> Indivi
 def run(t: Task) -> None:
     t.logging_level.set()
     t.pickle_protocol.set()
+    # create output folder if not existing
+    (t.root / t.output_folder).mkdir(parents=True,exist_ok=True)
+    (t.root/t.output_table).parent.mkdir(parents=True,exist_ok=True)
     tyble = IndividualBasicRow.schema().read_csv(t.root / t.input_table, return_type="Tyble")
     inputs: Sequence[int] = t.inputs
 

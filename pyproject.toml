@@ -37,6 +37,8 @@ reorder_csv = "rassine.cli.reorder_csv:cli"
 spectrum_csv2pickle = "rassine.cli.spectrum_csv2pickle:cli"
 spectrum_pickle2csv = "rassine.cli.spectrum_pickle2csv:cli"
 stacking_create_groups = "rassine.cli.stacking_create_groups:cli"
+stacking_master_spectrum = "rassine.cli.stacking_master_spectrum:cli"
+stacking_stack = "rassine.cli.stacking_stack:cli"
 
 [tool.poetry.dependencies]
 PyQt5 = "^5.15.6"

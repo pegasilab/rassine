@@ -68,7 +68,31 @@
                 "individual2_table.csv",
                 "320"
             ]
+        },
+        {
+            "name": "stacking",
+            "type": "python",
+            "request": "launch",
+            "program": ".venv/bin/stacking_stack",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "RASSINE_CONFIG": "harps03.ini",
+                "RASSINE_ROOT": "${workspaceFolder}/spectra_library/HD23249/data/s1d/HARPS03"
+            },
+            "args": [
+                "-i",
+                "PREPROCESSED",
+                "-o",
+                "STACKED",
+                "-I",
+                "individual_reinterpolated.csv",
+                "-G",
+                "individual_group.csv",
+                "-O",
+                "stacked_basic.csv",
+                "53690"
+            ]
         }
     ]
 }
-// reinterpolate 

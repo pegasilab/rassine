@@ -65,6 +65,12 @@ class IndividualReinterpolatedRow:
     acc_sec: np.float64
 
     # same for all spectra
+    hole_left: np.float64
+
+    # same for all spectra
+    hole_right: np.float64
+
+    # same for all spectra
     wave_min: np.float64
 
     # same for all spectra
@@ -75,12 +81,6 @@ class IndividualReinterpolatedRow:
 
     # same for all spectra, len(pickled_spectrum.flux)
     nb_bins: np.int64
-
-    # same for all spectra
-    hole_left: np.float64
-
-    # same for all spectra
-    hole_right: np.float64
 
     @staticmethod
     def schema() -> tb.Schema[IndividualReinterpolatedRow]:
@@ -354,6 +354,8 @@ def reinterpolate(
 def run(t: Task) -> None:
     t.logging_level.set()
     t.pickle_protocol.set()
+    (t.root / t.output_folder).mkdir(parents=True, exist_ok=True)
+    (t.root / t.output_table).parent.mkdir(parents=True, exist_ok=True)
 
     logging.debug(f"Reading {t.root/t.input_table}")
     tyble = IndividualImportedRow.schema().read_csv(t.root / t.input_table, return_type="Tyble")

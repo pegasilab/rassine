@@ -5,10 +5,11 @@ script_path=$(realpath "${BASH_SOURCE[-1]}")
 script_folder=$(dirname "$script_path")
 export RASSINE_ROOT=$script_folder/spectra_library/HD23249/data/s1d/HARPS03
 export RASSINE_CONFIG=$script_folder/harps03.ini
-export RASSINE_LOGGING_LEVEL=DEBUG
+export RASSINE_LOGGING_LEVEL=INFO
 nthreads=4 # number of concurrent jobs
 nchunks=40 # number of spectra per Python script invocation
 
+PARALLEL_OPTIONS="--will-cite --verbose -N$nchunks --jobs $nthreads --keep-order"
 ## Preprocess
 # Step 1: we read the FITS files in the format of a particular instrument and output files in the format
 # expected by RASSINE. The data is reformatted, and a few parameters are extracted
@@ -22,14 +23,14 @@ preprocess_table -I DACE_TABLE/Dace_extracted_table.csv -i raw -O individual_bas
 # if the summary table exists, remove it
 individual_imported=$RASSINE_ROOT/individual_imported.csv
 [ -f $individual_imported ] && rm $individual_imported 
-enumerate_table_rows individual_basic.csv | parallel --will-cite --verbose -N$nchunks --jobs $nthreads --keep-order \
+enumerate_table_rows individual_basic.csv | parallel $PARALLEL_OPTIONS \
   preprocess_import -i raw -o PREPROCESSED -I individual_basic.csv -O individual_imported.csv
 reorder_csv --column name --reference individual_basic.csv individual_imported.csv 
 
 # if the summary table exists, remove it
 individual_reinterpolated=$RASSINE_ROOT/individual_reinterpolated.csv
 [ -f $individual_reinterpolated ] && rm $individual_reinterpolated 
-enumerate_table_rows individual_imported.csv | parallel --will-cite --verbose -N$nchunks --jobs $nthreads --keep-order \
+enumerate_table_rows individual_imported.csv | parallel $PARALLEL_OPTIONS \
   reinterpolate -i PREPROCESSED -o PREPROCESSED -I individual_imported.csv -O individual_reinterpolated.csv
 reorder_csv --column name --reference individual_imported.csv individual_reinterpolated.csv 
 
@@ -41,10 +42,16 @@ reorder_csv --column name --reference individual_imported.csv individual_reinter
 # The output files are written in /STACKED
 
 stacking_create_groups -I individual_reinterpolated.csv -O individual_group.csv
-enumerate_table_column_unique_values -c group individual_group.csv
+stacked_basic=$RASSINE_ROOT/stacked_basic.csv
+[ -f $stacked_basic ] && rm $stacked_basic 
+
+enumerate_table_column_unique_values -c group individual_group.csv | parallel $PARALLEL_OPTIONS \
+  stacking_stack -I individual_reinterpolated.csv -G individual_group.csv -O stacked_basic.csv -i PREPROCESSED -o STACKED
 #mkdir -p /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/MASTER
 #python rassine_stacking.py --input_directory /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/PREPROCESSED
 
+master_table="Master_spectrum_$(date +%Y-%m-%dT%H:%M:%S).p"
+stacking_master_spectrum -I stacked_basic.csv -O master_spectrum.csv -i STACKED -o STACKED/$master_table
 exit
 
 # get the latest master file

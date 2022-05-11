@@ -139,6 +139,9 @@ class Task(cp.Config):
 @log_task_name_and_time(name=Path(__file__).stem)
 def run(t: Task) -> None:
     t.logging_level.set()
+
+    (t.root / t.output_table).parent.mkdir(parents=True, exist_ok=True)
+
     dace_path = t.root / t.dace_table
 
     logging.info(f"Reaading DACE table {dace_path}")
@@ -176,7 +179,7 @@ def run(t: Task) -> None:
         for r in rows
     ]
     IndividualBasicRow.schema().from_rows(individual_rows, "DataFrame").to_csv(
-        t.root / t.output_table
+        t.root / t.output_table, index=False
     )
 
 

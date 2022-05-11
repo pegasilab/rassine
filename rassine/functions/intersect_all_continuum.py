@@ -1,40 +1,22 @@
 import glob as glob
-import multiprocessing as multicpu
 import os
-import pickle
-import sys
-import time
 import typing
-from itertools import repeat
 
-import matplotlib.pylab as plt
 import numpy as np
-import numpy.typing as npt
 import pandas as pd
-from astropy.io import fits
-from astropy.time import Time
-from colorama import Fore
-from matplotlib.widgets import Button, Slider
-from numpy.typing import NDArray
-from scipy.interpolate import interp1d
-from scipy.signal import savgol_filter
-from scipy.stats import norm
 
-from ..analysis import clustering, find_nearest1, grouping, match_nearest, rolling_iq
+from ..analysis import match_nearest
 from ..io import open_pickle, save_pickle
-from ..math import create_grid, doppler_r, gaussian
+from .misc import local_max, make_continuum
 
 
-def intersect_all_continuum(names, add_new=True):
+def intersect_all_continuum(names_: typing.Sequence[str], add_new: bool = True):
     """
     Perform the intersection of the RASSINE files by using the anchor location saved in the master RASSINE spectrum.
 
-    Parameters
-    ----------
-    names : array_like
-        List of RASSINE files.
-    add_new : bool
-        Add anchor points that were not detected.
+    Args:
+        names: List of RASSINE files.
+        add_new: Add anchor points that were not detected.
 
     Returns
     -------
@@ -43,7 +25,7 @@ def intersect_all_continuum(names, add_new=True):
 
     print("Extraction of the new continua, wait... \n")
 
-    names = np.sort(names)
+    names = np.sort(names_)
     sub_dico = "output"
 
     directory, dustbin = os.path.split(names[0])

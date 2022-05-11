@@ -213,11 +213,6 @@ class Task(cp.Config):
         cp.Param.store(cp.parsers.float_parser, default_value="0.0"),
     ]
 
-    def validate_output_folder(self) -> Optional[cp.Err]:
-        return cp.Err.check(
-            (self.root / self.output_folder).is_dir(), "The output directory needs to exist"
-        )
-
 
 def find_hole(wave: NDArray[np.float64], flux: NDArray[np.float64]) -> Tuple[float, float]:
     null_flux = np.where(flux == 0)[0]  # criterion to detect gap between ccd
@@ -434,8 +429,8 @@ def run(t: Task) -> None:
     t.logging_level.set()
     t.pickle_protocol.set()
     # create output folder if not existing
-    (t.root / t.output_folder).mkdir(parents=True,exist_ok=True)
-    (t.root/t.output_table).parent.mkdir(parents=True,exist_ok=True)
+    (t.root / t.output_folder).mkdir(parents=True, exist_ok=True)
+    (t.root / t.output_table).parent.mkdir(parents=True, exist_ok=True)
     tyble = IndividualBasicRow.schema().read_csv(t.root / t.input_table, return_type="Tyble")
     inputs: Sequence[int] = t.inputs
 

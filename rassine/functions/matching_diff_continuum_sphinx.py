@@ -1,53 +1,33 @@
-import glob as glob
-import multiprocessing as multicpu
-import os
-import pickle
-import sys
 import time
-import typing
-from itertools import repeat
+from typing import Sequence
 
 import matplotlib.pylab as plt
 import numpy as np
-import numpy.typing as npt
-import pandas as pd
-from astropy.io import fits
-from astropy.time import Time
-from colorama import Fore
 from matplotlib.widgets import Button, Slider
-from numpy.typing import NDArray
-from scipy.interpolate import interp1d
-from scipy.signal import savgol_filter
-from scipy.stats import norm
 
-from ..analysis import clustering, find_nearest1, grouping, match_nearest, rolling_iq
+from ..analysis import rolling_iq
 from ..io import open_pickle, save_pickle
-from ..math import create_grid, doppler_r, gaussian
+from .misc import make_sound, smooth, sphinx
 
 
 def matching_diff_continuum_sphinx(
-    names, sub_dico="matching_anchors", master=None, savgol_window=200, zero_point=False
+    names_: Sequence[str],
+    sub_dico="matching_anchors",
+    master=None,
+    savgol_window: int = 200,
+    zero_point: bool = False,
 ):
     """
     Match the continuum of individual spectra to a reference spectrum with a savgol filtering on the spectra difference. The savgol window parameter can be selected by the GUI interface.
 
-    Parameters
-    ----------
-    names : array_like
-        List of RASSINE files.
-    sub_dico : str
-        Name of the continuum to use. Either 'output' (RASSINE individual) or 'matching_anchors' (RASSINE time-series)
-    master : str
-        Name of the RASSINE master spectrum file.
-    savgol window : int
-        Length of the window for the savgol filtering.
-    zero_point : bool
-        No more used ?
-
-    Returns
-    -------
-
+    Args:
+        names_: List of RASSINE files.
+        sub_dico : Name of the continuum to use. Either 'output' (RASSINE individual) or 'matching_anchors' (RASSINE time-series)
+        master :  Name of the RASSINE master spectrum file.
+        savgol window : Length of the window for the savgol filtering.
+        zero_point : No more used ?
     """
+    names = np.array(names_)
 
     snr = []
     for j in names:
@@ -111,10 +91,10 @@ def matching_diff_continuum_sphinx(
     plt.ylabel(r"$F - F_{ref}$ [normalized flux units]", fontsize=14)
     plt.legend()
     axcolor = "whitesmoke"
-    axsmoothing = plt.axes([0.2, 0.1, 0.40, 0.03], facecolor=axcolor)
+    axsmoothing = plt.axes((0.2, 0.1, 0.40, 0.03), facecolor=axcolor)
     ssmoothing = Slider(axsmoothing, "Kernel length", 1, 500, valinit=savgol_window, valstep=1)
 
-    resetax = plt.axes([0.8, 0.05, 0.1, 0.1])
+    resetax = plt.axes((0.8, 0.05, 0.1, 0.1))
     button = Button(resetax, "Reset", color=axcolor, hovercolor="0.975")
 
     class Index:

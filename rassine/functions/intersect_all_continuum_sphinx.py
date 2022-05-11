@@ -3,27 +3,47 @@ import multiprocessing as multicpu
 import os
 import time
 from itertools import repeat
+from pathlib import Path
+from typing import Optional, Sequence
 
 import matplotlib.pylab as plt
 import numpy as np
 from colorama import Fore
 from matplotlib.widgets import Button, Slider
 
+from rassine.functions.misc import make_sound, sphinx
+
 from ..analysis import grouping
 from ..io import open_pickle, save_pickle
 
 
+def import_files_mcpu_wrapper(args):
+    return import_files_mcpu(*args)
+
+
+def import_files_mcpu(file_liste, kind):
+    file_liste = file_liste.tolist()
+    # print(file_liste)
+    sub = []
+    snr = []
+    for j in file_liste:
+        file = open_pickle(j)
+        snr.append(file["parameters"]["SNR_5500"])
+        sub.append(file["output"][kind])
+    return sub, snr
+
+
 def intersect_all_continuum_sphinx(
-    names,
-    master_spectrum=None,
-    copies_master=0,
-    kind="anchor_index",
-    nthreads=6,
-    fraction=0.2,
-    threshold=0.66,
-    tolerance=0.5,
-    add_new=True,
-    feedback=True,
+    names_: Sequence[str],
+    master_spectrum: Optional[str] = None,
+    copies_master: int = 0,
+    kind: str = "anchor_index",
+    nthreads: int = 6,
+    fraction: float = 0.2,
+    threshold: float = 0.66,
+    tolerance: float = 0.5,
+    add_new: bool = True,
+    feedback: bool = True,
 ):
     """
     Search for the intersection of all the anchors points in a list of filename and update the selection of anchor points in the same files.
@@ -33,37 +53,21 @@ def intersect_all_continuum_sphinx(
     Possible to use multiprocessing with nthreads cpu.
     If you want to fix the anchors points, enter a master spectrum path and the number of copies you want of it.
 
-    Parameters
-    ----------
-    names : array_like
-        List of RASSINE files.
-    master_spectrum : str
-        Name of the RASSINE master spectrum file.
-    copies_master : int
-        Number of copy of the master. If 0 value is specified, copies_master is set to 2*N with N the number of RASSINE files.
-    kind : str
-        Entry kw of the vector to select in the RASSINE files
-    nthreads : int
-        Number of threads for multiprocessing
-    fraction : float
-        Parameter of the model between 0 and 1
-    treshold : float
-        Parameter of the model between 0 and 1
-    tolerance : float
-        Parameter of the model between 0 and 1
-    add_new : bool
-        Add anchor points that were not detected.
-    feedback : bool
-        Activate the GUI matplotlib interface
-
-
-    Returns
-    -------
-
+    Args:
+        names_: List of RASSINE files.
+        master_spectrum: Name of the RASSINE master spectrum file.
+        copies_master: Number of copy of the master. If 0 value is specified, copies_master is set to 2*N with N the number of RASSINE files.
+        kind: Entry kw of the vector to select in the RASSINE files
+        nthreads: Number of threads for multiprocessing
+        fraction: Parameter of the model between 0 and 1
+        treshold: Parameter of the model between 0 and 1
+        tolerance: Parameter of the model between 0 and 1
+        add_new: Add anchor points that were not detected.
+        feedback: Activate the GUI matplotlib interface
     """
 
     print("Loading of the files, wait ... \n")
-    names = np.sort(names)
+    names = np.sort(names_)
     sub_dico = "output"
 
     directory, dustbin = os.path.split(names[0])
@@ -110,7 +114,7 @@ def intersect_all_continuum_sphinx(
                 + "[WARNING] Default value of master copies fixed at %.0f." % (copies_master)
                 + Fore.WHITE
             )
-        file = open_pickle(master_spectrum)
+        file = open_pickle(Path(master_spectrum))
         for j in range(copies_master):
             names = np.hstack([names, master_spectrum])
             save.append(file[sub_dico][kind])
@@ -274,18 +278,18 @@ def intersect_all_continuum_sphinx(
     gri = file_to_plot["wave"]
     (l1,) = plt.plot(gri, stack_vert3, color="k", lw=2)
     (l2,) = plt.plot([gri.min(), gri.max()], [len(names) * threshold] * 2, color="b")
-    plt.axes([0.37, 0.57, 0.05, 0.05])
+    plt.axes((0.37, 0.57, 0.05, 0.05))
     plt.axis("off")
     l3 = plt.text(0, 0, "Nb of cluster detected : %.0f" % (nb_cluster), fontsize=14)
     axcolor = "whitesmoke"
 
-    axtresh = plt.axes([0.1, 0.12, 0.30, 0.03], facecolor=axcolor)
+    axtresh = plt.axes((0.1, 0.12, 0.30, 0.03), facecolor=axcolor)
     stresh = Slider(axtresh, "Threshold", 0, 1, valinit=threshold, valstep=0.05)
 
-    axtolerance = plt.axes([0.1, 0.05, 0.30, 0.03], facecolor=axcolor)
+    axtolerance = plt.axes((0.1, 0.05, 0.30, 0.03), facecolor=axcolor)
     stolerance = Slider(axtolerance, "Tolerance", 0, 1, valinit=tolerance, valstep=0.05)
 
-    resetax = plt.axes([0.8, 0.05, 0.1, 0.1])
+    resetax = plt.axes((0.8, 0.05, 0.1, 0.1))
     button = Button(resetax, "Reset", color=axcolor, hovercolor="0.975")
 
     class Index:
@@ -385,9 +389,9 @@ def intersect_all_continuum_sphinx(
         "nb_copies_master": copies_master,
         "master_filename": master_spectrum,
     }
-
-    save_pickle("", output_cluster)
+    # TOCHECK: why???
+    # save_pickle("", output_cluster)
 
     tool_name = "Master_tool_%s.p" % (time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime()))
 
-    save_pickle(directory + "/" + tool_name, output_cluster)
+    save_pickle(Path(directory + "/" + tool_name), output_cluster)

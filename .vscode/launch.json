@@ -45,6 +45,30 @@
                 "individual_table.csv",
                 "individual1_table.csv"
             ]
+        },
+        {
+            "name": "reinterpolate",
+            "type": "python",
+            "request": "launch",
+            "program": ".venv/bin/reinterpolate",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "RASSINE_CONFIG": "harps03.ini",
+                "RASSINE_ROOT": "${workspaceFolder}/spectra_library/HD23249/data/s1d/HARPS03"
+            },
+            "args": [
+                "-i",
+                "PREPROCESSED",
+                "-o",
+                "PREPROCESSED",
+                "-I",
+                "individual1_table.csv",
+                "-O",
+                "individual2_table.csv",
+                "320"
+            ]
         }
     ]
 }
+// reinterpolate 

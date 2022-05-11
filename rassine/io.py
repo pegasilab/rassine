@@ -1,5 +1,8 @@
+import logging
 import pickle
+from enum import Enum
 from pathlib import Path
+from typing import Any, Dict, Type, TypeVar, Union, overload
 
 import numpy.typing as npt
 import pandas as pd
@@ -7,60 +10,56 @@ from astropy.io import fits
 
 default_pickle_protocol: int = 3
 
+from typeguard import check_type
 
-def read_rv(file: Path) -> npt.ArrayLike:
+
+class NoCheck(Enum):
+    TOKEN = 0
+
+
+_T = TypeVar("_T")
+
+
+@overload
+def open_pickle(filename: Path, expected_type: Type[_T]) -> _T:
+    pass
+
+
+@overload
+def open_pickle(filename: Path, expected_type: NoCheck = NoCheck.TOKEN) -> Any:
+    pass
+
+
+def open_pickle(filename: Path, expected_type: Any = NoCheck.TOKEN) -> Any:
     """
-    Reads the RV values
+    Load information from a pickle
 
-    TODO: document this
+    Args:
+        filename: Pickle to read
+        expected_type: Optional type to validate the data read from
 
-    Parameters
-    ----------
-    file
+    Raises:
+        TypeError: if there is a type mismatch
 
-    Returns
-    -------
-    Read values
+    Returns:
+        Information read
     """
-
-    if file.suffix == ".csv":
-        # RV time-series to remove in kms, (binary  or known planets) otherwise give the systemic velocity
-        rv = pd.read_csv(file)["model"]
-    elif file.suffix == ".p":
-        rv = pd.read_pickle(file)["model"]
-    else:
-        raise ValueError("Cannot read this file format")
-
-    return rv
+    logging.debug(f"Reading pickle {filename}")
+    res = pd.read_pickle(filename)
+    if not isinstance(expected_type, NoCheck):
+        check_type("pickle", res, expected_type)
+    return res
 
 
-def open_pickle(filename):
-    if filename.split(".")[-1] == "p":
-        a = pd.read_pickle(filename)
-        return a
-    elif filename.split(".")[-1] == "fits":
-        data = fits.getdata(filename)
-        header = fits.getheader(filename)
-        return data, header
-
-
-def save_pickle(filename: str, output: dict, protocol: int = default_pickle_protocol):
-
+def save_pickle(filename: Path, output: Any, protocol: int = default_pickle_protocol):
     """
     Save a pickle file with the proper protocol pickle version.
 
-    Parameters
-    ----------
-    filename : str
-        Name of the output pickle file.
-    output : dict
-        Output dictionnary table to save.
-
-    Returns
-    -------
-
+    Args:
+        filename: Name of the output pickle file.
+        output: Data to save
+        protocol:
     """
-    if filename.split(".")[-1] == "p":
-        pickle.dump(output, open(filename, "wb"), protocol=protocol)
-    if filename.split(".")[-1] == "fits":  # TODO: for future work
-        pass
+    logging.debug(f"Writing pickle {filename}")
+    with open(filename, "wb") as f:
+        pickle.dump(output, f, protocol=protocol)

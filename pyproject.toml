@@ -28,13 +28,15 @@ version = "0.1.0"
 # borders_scan = "rassine.cli.borders_scan:cli"
 # check_and_enumerate = "rassine.cli.check_and_enumerate:cli"
 # rassine_preprocess = "rassine.cli.preprocess:cli"
-enumerate_table = "rassine.cli.enumerate_table:cli"
+enumerate_table_column_unique_values = "rassine.cli.enumerate_table_column_unique_values:cli"
+enumerate_table_rows = "rassine.cli.enumerate_table_rows:cli"
 preprocess_import = "rassine.cli.preprocess_import:cli"
 preprocess_table = "rassine.cli.preprocess_table:cli"
+reinterpolate = "rassine.cli.reinterpolate:cli"
 reorder_csv = "rassine.cli.reorder_csv:cli"
-
 spectrum_csv2pickle = "rassine.cli.spectrum_csv2pickle:cli"
 spectrum_pickle2csv = "rassine.cli.spectrum_pickle2csv:cli"
+stacking_create_groups = "rassine.cli.stacking_create_groups:cli"
 
 [tool.poetry.dependencies]
 PyQt5 = "^5.15.6"

@@ -1,33 +1,41 @@
-from typing import Tuple
+from typing import NamedTuple
 
 import numpy as np
 import numpy.typing as npt
 from numpy.typing import NDArray
 
-from .types import *
+from .types import Float
 
 c_lum = 299.792e6
 
 
-def create_grid(wave_min: float, dwave: float, nb_bins: int) -> NDArray[np.float64]:
+def create_grid(wave_min: Float, dwave: Float, nb_bins: int) -> NDArray[np.float64]:
     """
-    Create an equidistant wavelength vector.
+    Create an equidistant wavelength vector
 
     Args:
-        wave_min: Minimum wavelength value.
-        dwave: Wavelength step.
-        nb_bins: Length of the wavelength vector.
+        wave_min: Minimum wavelength value
+        dwave: Wavelength step
+        nb_bins: Length of the wavelength vector
 
     Returns:
         The vector containing the equidistant values.
     """
 
     return np.linspace(
-        wave_min, wave_min + (nb_bins - 1) * dwave, nb_bins
+        wave_min, wave_min + (nb_bins - 1) * dwave, nb_bins, dtype=np.float64
     )  # the grid of wavelength of your spectrum (assumed equidistant in lambda)
 
 
-def doppler_r(lamb: float, v: float) -> Tuple[float, float]:
+class DopplerResult(NamedTuple):
+    plus_v: NDArray[np.float64]
+    minus_v: NDArray[np.float64]
+
+
+def doppler_r(
+    lamb: NDArray[np.float64],
+    v: Float,
+) -> DopplerResult:
     """
     Relativistic doppler shift of a wavelength by a velocity v in kms.
 
@@ -35,18 +43,14 @@ def doppler_r(lamb: float, v: float) -> Tuple[float, float]:
         lamb: Wavelength
         v: Velocity in km/s
 
-    Returns
-    -------
-    new_wave1:
-        Wavelength Doppler shifted with +v
-    new_wave2:
-        Wavelength Doppler shifted with -v
+    Returns:
+        A tuple of shifted wavelengths
     """
 
     factor = np.sqrt((1 + 1000 * v / c_lum) / (1 - 1000 * v / c_lum))
     lambo = lamb * factor
     lambs = lamb * factor ** (-1)
-    return lambo, lambs
+    return DopplerResult(lambo, lambs)
 
 
 def gaussian(x, cen, amp, offset, wid):

@@ -46,7 +46,7 @@ class Task(cp.Config):
     #
     # Task specific information
     #
-    prog_ = "reorder_csv"
+    prog_ = Path(__file__).stem
 
     #: Column to order by
     column: Annotated[str, cp.Param.store(cp.parsers.stripped_str_parser, short_flag_name="-c")]
@@ -66,7 +66,7 @@ class Task(cp.Config):
     ]
 
 
-@log_task_name_and_time(name="reorder_csv")
+@log_task_name_and_time(name=Path(__file__).stem)
 def run(t: Task) -> None:
     t.logging_level.set()
     col = t.column

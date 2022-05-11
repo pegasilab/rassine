@@ -7,9 +7,8 @@ import configpile as cp
 import pandas as pd
 from typing_extensions import Annotated
 
-from rassine.cli.util import log_task_name_and_time
-
 from .data import LoggingLevel
+from .util import log_task_name_and_time
 
 
 @dataclass(frozen=True)
@@ -47,13 +46,21 @@ class Task(cp.Config):
     # Task specific information
     #
 
-    prog_ = "enumerate_table"
+    prog_ = Path(__file__).stem
 
     #: Input table to enumerate the row indices of
-    input_table: Annotated[Path, cp.Param.store(cp.parsers.path_parser, short_flag_name="-i")]
+    input_table: Annotated[
+        Path,
+        cp.Param.store(
+            cp.parsers.path_parser,
+            long_flag_name=None,
+            short_flag_name=None,
+            positional=cp.Positional.ONCE,
+        ),
+    ]
 
 
-@log_task_name_and_time(name="enumerate_table")
+@log_task_name_and_time(name=Path(__file__).stem)
 def run(t: Task) -> None:
     t.logging_level.set()
     table_path = t.root / t.input_table

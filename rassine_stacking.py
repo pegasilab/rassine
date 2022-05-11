@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 
-import rassine.functions as rasfun
+from rassine.functions.preprocess_stack import preprocess_stack
 
 
 def get_parser():
@@ -38,6 +38,6 @@ if __name__ == "__main__":
     parser = get_parser()
     args = parser.parse_args()
     files = args.input_directory.glob("*.p")
-    master_name = rasfun.preprocess_stack(
+    master_name = preprocess_stack(
         list(map(str, files)), bin_length=args.bin_length_stack, dbin=args.dbin, make_master=True
     )

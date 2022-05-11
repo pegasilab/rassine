@@ -16,49 +16,36 @@ nchunks=40 # number of spectra per Python script invocation
 # This step did correspond to
 # python Rassine_multiprocessed.py -v PREPROCESS -s "$dace_table" -n $nthreads_preprocess -i HARPS -o "$output_dir"
 mkdir -p $RASSINE_ROOT/PREPROCESSED
-preprocess_table -I DACE_TABLE/Dace_extracted_table.csv -i raw -O individual_table.csv
+preprocess_table -I DACE_TABLE/Dace_extracted_table.csv -i raw -O individual_basic.csv
 
-individual1_table=$RASSINE_ROOT/individual1_table.csv
+
 # if the summary table exists, remove it
-[ -f $individual1_table ] && rm $individual1_table 
-enumerate_table -i individual_table.csv | parallel --will-cite --verbose -N$nchunks --jobs $nthreads --keep-order \
-  preprocess_import -i raw -o PREPROCESSED -I individual_table.csv -O individual1_table.csv
+individual_imported=$RASSINE_ROOT/individual_imported.csv
+[ -f $individual_imported ] && rm $individual_imported 
+enumerate_table_rows individual_basic.csv | parallel --will-cite --verbose -N$nchunks --jobs $nthreads --keep-order \
+  preprocess_import -i raw -o PREPROCESSED -I individual_basic.csv -O individual_imported.csv
+reorder_csv --column name --reference individual_basic.csv individual_imported.csv 
 
-reorder_csv -c name -r individual_table.csv individual1_table.csv
+# if the summary table exists, remove it
+individual_reinterpolated=$RASSINE_ROOT/individual_reinterpolated.csv
+[ -f $individual_reinterpolated ] && rm $individual_reinterpolated 
+enumerate_table_rows individual_imported.csv | parallel --will-cite --verbose -N$nchunks --jobs $nthreads --keep-order \
+  reinterpolate -i PREPROCESSED -o PREPROCESSED -I individual_imported.csv -O individual_reinterpolated.csv
+reorder_csv --column name --reference individual_imported.csv individual_reinterpolated.csv 
 
-exit
-
-check_and_enumerate -i raw/ | parallel --will-cite --verbose -N$nchunks --jobs $nthreads --keep-order \
-  rassine_preprocess --input-folder raw/ --output-folder PREPROCESSED/
-
-
-borders_scan -i PREPROCESSED/ -o matching.h5 --dlambda 0.01 --apply-rv-shift true
-## Match frame (Borders)
-# This was python Rassine_multiprocessed.py -v MATCHING -s /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/PREPROCESSED/ -n $nthreads_matching -d $dlambda -k /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/DACE_TABLE/Dace_extracted_table.csv
-# Steo 2A we extract the frame parameters and write them to a file
-matching_parameters=/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/matching.h5
-preprocessed_dir=/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/PREPROCESSED
-
-# TODO: -> rassine_borders_scan.py
-# TODO: -> rassine_borders_reinterpolate.py
-#dace_table=/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/DACE_TABLE/Dace_extracted_table.csv
-# python rassine_borders_scan.py --input-dir "$preprocessed_dir" --dlambda 0.01 -k "$dace_table" --output-file "$matching_parameters"
-# Step 2B we process each spectrum in parallel
-# files are overwritten
-
-nchunks_matching=10
-nthreads_matching=4
-
-nspectra=$(ls "$preprocessed_dir"/*.p | wc -l)
-seq 0 $(($nspectra - 1)) | parallel --will-cite -N$nchunks_matching --jobs $nthreads_matching --keep-order python rassine_borders_reinterpolate.py --parameter-file "$matching_parameters" --input-dir "$preprocessed_dir"
 
 ## Stacking
 # Step 3
 # this is a temporal summation to reduce the noise; sum instead of average as to keep the error estimation
 # this creates the MASTER file which sums all the spectra
 # The output files are written in /STACKED
-mkdir -p /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/MASTER
-python rassine_stacking.py --input_directory /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/PREPROCESSED
+
+stacking_create_groups -I individual_reinterpolated.csv -O individual_group.csv
+enumerate_table_column_unique_values -c group individual_group.csv
+#mkdir -p /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/MASTER
+#python rassine_stacking.py --input_directory /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/PREPROCESSED
+
+exit
 
 # get the latest master file
 master=$(ls -t /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED/Master*.p | head -n 1)

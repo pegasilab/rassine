@@ -117,7 +117,7 @@ def run(t: Task) -> None:
     else:
 
         def compute_group(jdb: Float) -> int:
-            return int(jdb // t.bin_length)
+            return int((jdb + t.dbin) // t.bin_length)
 
         group_info = [
             IndividualGroupRow(r.name, compute_group(r.jdb), t.bin_length, np.float64(t.dbin))

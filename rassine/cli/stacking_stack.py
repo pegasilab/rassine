@@ -239,7 +239,7 @@ def stack(
         """Computes the bolometric average of a value"""
         return np.sum(np.asarray(values) * bolo) / np.sum(bolo)
 
-    jdb_w = weighted_average([r.jdb - dbin for r in rows])
+    jdb_w = weighted_average([r.jdb for r in rows])
     date_name = Time(jdb_w - 0.5, format="mjd").isot
     berv = [r.berv for r in rows]
     berv_w = weighted_average(berv)

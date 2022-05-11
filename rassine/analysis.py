@@ -98,78 +98,78 @@ def find_nearest1(
     return idx, array[idx], distance
 
 
-# def match_nearest(array1, array2):
-#     """
-#     Match the closest elements of two arrays vectors and return the matching matrix.
+def match_nearest(array1, array2):
+    """
+    Match the closest elements of two arrays vectors and return the matching matrix.
 
-#     Parameters
-#     ----------
-#     array1 : array_like
-#         First vector.
-#     array2 : array_like
-#         Second vector.
+    Parameters
+    ----------
+    array1 : array_like
+        First vector.
+    array2 : array_like
+        Second vector.
 
-#     Returns
-#     -------
+    Returns
+    -------
 
-#     matching_matrix : array_like
-#         Matrix where each column contain :
-#         1) the indices in the first vector
-#         2) the indices in the second vector
-#         3) the values in the first vector
-#         4) the values in the second vector
-#         5) the distance between the closest elements
+    matching_matrix : array_like
+        Matrix where each column contain :
+        1) the indices in the first vector
+        2) the indices in the second vector
+        3) the values in the first vector
+        4) the values in the second vector
+        5) the distance between the closest elements
 
-#     """
+    """
 
-#     dmin = np.diff(np.sort(array1)).min()
-#     dmin2 = np.diff(np.sort(array2)).min()
-#     array1_r = array1 + 0.001 * dmin * np.random.randn(len(array1))
-#     array2_r = array2 + 0.001 * dmin2 * np.random.randn(len(array2))
-#     m = abs(array2_r - array1_r[:, np.newaxis])
-#     arg1 = np.argmin(m, axis=0)
-#     arg2 = np.argmin(m, axis=1)
-#     mask = np.arange(len(arg1)) == arg2[arg1]
-#     liste_idx1 = arg1[mask]
-#     liste_idx2 = arg2[arg1[mask]]
-#     array1_k = array1[liste_idx1]
-#     array2_k = array2[liste_idx2]
-#     return np.hstack(
-#         [
-#             liste_idx1[:, np.newaxis],
-#             liste_idx2[:, np.newaxis],
-#             array1_k[:, np.newaxis],
-#             array2_k[:, np.newaxis],
-#             (array1_k - array2_k)[:, np.newaxis],
-#         ]
-#     )
+    dmin = np.diff(np.sort(array1)).min()
+    dmin2 = np.diff(np.sort(array2)).min()
+    array1_r = array1 + 0.001 * dmin * np.random.randn(len(array1))
+    array2_r = array2 + 0.001 * dmin2 * np.random.randn(len(array2))
+    m = abs(array2_r - array1_r[:, np.newaxis])
+    arg1 = np.argmin(m, axis=0)
+    arg2 = np.argmin(m, axis=1)
+    mask = np.arange(len(arg1)) == arg2[arg1]
+    liste_idx1 = arg1[mask]
+    liste_idx2 = arg2[arg1[mask]]
+    array1_k = array1[liste_idx1]
+    array2_k = array2[liste_idx2]
+    return np.hstack(
+        [
+            liste_idx1[:, np.newaxis],
+            liste_idx2[:, np.newaxis],
+            array1_k[:, np.newaxis],
+            array2_k[:, np.newaxis],
+            (array1_k - array2_k)[:, np.newaxis],
+        ]
+    )
 
 
-# def rolling_iq(
-#     array: NDArray[np.float64], window: int = 1, min_periods: int = 1
-# ) -> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
-#     """
-#     Perform a rolling IQ statistic in a fixed window.
+def rolling_iq(
+    array: NDArray[np.float64], window: int = 1, min_periods: int = 1
+) -> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
+    """
+    Perform a rolling IQ statistic in a fixed window.
 
-#     Args:
-#         array: The vector to investigate.
-#         window: The window used for the rolling statistic.
-#         min_periods: Computation of the statistics up to the min_periods border value
+    Args:
+        array: The vector to investigate.
+        window: The window used for the rolling statistic.
+        min_periods: Computation of the statistics up to the min_periods border value
 
-#     Returns
-#     -------
-#     rolling_Q1S:
-#         The rolling 25th percentile.
-#     rolling_Q3:
-#         The rolling 75th percentile.
-#     rolling_IQ:
-#         The rolling IQ (Q3-Q1).
-#     """
-#     roll_Q1 = np.ravel(
-#         pd.DataFrame(array).rolling(window, min_periods=min_periods, center=True).quantile(0.25)
-#     )
-#     roll_Q3 = np.ravel(
-#         pd.DataFrame(array).rolling(window, min_periods=min_periods, center=True).quantile(0.75)
-#     )
-#     roll_IQ = roll_Q3 - roll_Q1
-#     return roll_Q1, roll_Q3, roll_IQ
+    Returns
+    -------
+    rolling_Q1S:
+        The rolling 25th percentile.
+    rolling_Q3:
+        The rolling 75th percentile.
+    rolling_IQ:
+        The rolling IQ (Q3-Q1).
+    """
+    roll_Q1 = np.ravel(
+        pd.DataFrame(array).rolling(window, min_periods=min_periods, center=True).quantile(0.25)
+    )
+    roll_Q3 = np.ravel(
+        pd.DataFrame(array).rolling(window, min_periods=min_periods, center=True).quantile(0.75)
+    )
+    roll_IQ = roll_Q3 - roll_Q1  # type: ignore
+    return roll_Q1, roll_Q3, roll_IQ

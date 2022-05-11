@@ -20,7 +20,7 @@ from scipy.interpolate import interp1d
 from scipy.signal import savgol_filter
 from scipy.stats import norm
 
-from ..analysis import clustering, find_nearest, grouping, match_nearest, rolling_iq
+from ..analysis import clustering, find_nearest1, grouping, match_nearest, rolling_iq
 from ..io import open_pickle, save_pickle
 from ..math import create_grid, doppler_r, gaussian
 

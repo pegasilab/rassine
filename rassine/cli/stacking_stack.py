@@ -14,7 +14,7 @@ from filelock import FileLock
 from numpy.typing import ArrayLike, NDArray
 from typing_extensions import Annotated
 
-from ..analysis import find_nearest
+from ..analysis import find_nearest1
 from ..io import open_pickle, save_pickle
 from ..math import create_grid
 from .data import LoggingLevel, PickleProtocol
@@ -245,7 +245,7 @@ def stack(
     berv_w = weighted_average(berv)
     lamp_w = weighted_average([r.lamp_offset for r in rows])
     rv_shift_w = weighted_average([r.rv_shift for r in rows])
-    wave_ref = int(find_nearest(grid, 5500)[0])
+    wave_ref = int(find_nearest1(grid, 5500)[0])
     continuum_5500 = np.nanpercentile(stack[wave_ref - 50 : wave_ref + 50], 95)
     SNR = np.sqrt(continuum_5500)
     mjd_w = jdb_w - 0.5

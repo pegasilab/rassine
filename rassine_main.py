@@ -34,7 +34,7 @@ from scipy.interpolate import interp1d
 from scipy.optimize import curve_fit
 from scipy.special import erf
 
-import rassine.functions as ras
+from rassine import ras
 
 matplotlib.use("Qt5Agg", force=True)
 
@@ -79,6 +79,8 @@ plot_end = config["plot_end"]
 save_last_plot = config["save_last_plot"]
 spectrum_name = config["spectrum_name"]
 speedup = config["speedup"]
+
+
 synthetic_spectrum = config["synthetic_spectrum"]
 
 # =============================================================================
@@ -183,6 +185,7 @@ arcfiles: Optional[str] = None
 if not os.path.exists(anchor_file):
     anchor_file = ""
 
+# TODO: all the anchor parameters are scalar, and they correspond to command line arguments
 if anchor_file != "":
     anchor_file = ras.open_pickle(anchor_file)
     par_stretching = anchor_file["parameters"]["axes_stretching"]
@@ -333,7 +336,7 @@ maxy = np.nanpercentile(spectrei, 0.999)
 len_x = maxx - minx
 len_y = np.max(spectrei) - np.min(spectrei)
 
-wave_5500 = int(ras.find_nearest(grid, 5500)[0])
+wave_5500 = int(ras.find_nearest1(grid, 5500)[0])
 continuum_5500 = np.nanpercentile(spectrei[wave_5500 - 50 : wave_5500 + 50], 95)
 SNR_0 = np.sqrt(continuum_5500)
 if np.isnan(SNR_0):
@@ -1967,7 +1970,7 @@ if feedback:
                 self.vecy = np.append(self.vecy, self.iniy[dist_min1[1]])
                 self.vecz = np.append(self.vecz, self.iniz[dist_min1[1]])
             else:
-                where = ras.find_nearest(self.vecx, self.vecx[dist_min2[1]])[0]
+                where = ras.find_nearest1(self.vecx, self.vecx[dist_min2[1]])[0]
                 self.vecx = np.delete(self.vecx, where)
                 self.vecy = np.delete(self.vecy, where)
                 self.vecz = np.delete(self.vecz, where)
@@ -2103,9 +2106,9 @@ if (feedback) | (plot_end) | (save_last_plot):
 # =============================================================================
 
 if (hole_left is not None) & (hole_left != -99.9):
-    hole_left = ras.find_nearest(grid, ras.doppler_r(hole_left, -30)[0])[1][0]
+    hole_left = ras.find_nearest1(grid, ras.doppler_r(hole_left, -30)[0])[1]
 if (hole_right is not None) & (hole_right != -99.9):
-    hole_right = ras.find_nearest(grid, ras.doppler_r(hole_right, 30)[0])[1][0]
+    hole_right = ras.find_nearest1(grid, ras.doppler_r(hole_right, 30)[0])[1]
 
 parameters = {
     "number_iteration": count_iter,

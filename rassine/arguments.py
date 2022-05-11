@@ -188,7 +188,7 @@ class SpectrumAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, values)
         spectrum_name = values
-        setattr(namespace, "output_dir", os.path.dirname(spectrum_name) + "/")
+        setattr(namespace, "output_dir", os.path.dirname(spectrum_name) + "/")  # type: ignore
 
 
 def argument_parser(cwd: str = "") -> argparse.ArgumentParser:

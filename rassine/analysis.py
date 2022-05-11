@@ -33,52 +33,55 @@ def grouping(
     return kept, border
 
 
-# def clustering(
-#     array: NDArray[np.float64], threshold: float, num: int
-# ) -> Union[List[np.ndarray], np.ndarray]:
-#     """
-#     Detect and form 1D-cluster on an array. A new cluster is formed once the next vector value is farther than a threshold value.
+def clustering(
+    array: NDArray[np.float64], threshold: float, num: int
+) -> Union[List[np.ndarray], np.ndarray]:
+    """
+    Detect and form 1D-cluster on an array. A new cluster is formed once the next vector value is farther than a threshold value.
 
-#     Args:
-#         array: The vector used to create the clustering (1D)
-#         threshold: Threshold value distance used to define a new cluster.
-#         num: The minimum number of elements to consider a cluster
+    Args:
+        array: The vector used to create the clustering (1D)
+        threshold: Threshold value distance used to define a new cluster.
+        num: The minimum number of elements to consider a cluster
 
-#     Returns:
-#         The matrix containing the left index, right index and the length of the 1D cluster
-#     """
-#     difference = np.diff(array)
-#     cluster = difference < threshold
-#     indice = np.arange(len(cluster))[cluster]
-#     if sum(cluster):
-#         j = 0
-#         border_left = [indice[0]]
-#         border_right = []
-#         while j < len(indice) - 1:
-#             if indice[j] == indice[j + 1] - 1:
-#                 j += 1
-#             else:
-#                 border_right.append(indice[j])
-#                 border_left.append(indice[j + 1])
-#                 j += 1
-#         border_right.append(indice[-1])
-#         border = np.array([border_left, border_right]).T
-#         border = np.hstack([border, (1 + border[:, 1] - border[:, 0])[:, np.newaxis]])
+    Returns:
+        The matrix containing the left index, right index and the length of the 1D cluster
+    """
+    difference = np.diff(array)
+    cluster = difference < threshold
+    indice = np.arange(len(cluster))[cluster]
+    if sum(cluster):
+        j = 0
+        border_left = [indice[0]]
+        border_right = []
+        while j < len(indice) - 1:
+            if indice[j] == indice[j + 1] - 1:
+                j += 1
+            else:
+                border_right.append(indice[j])
+                border_left.append(indice[j + 1])
+                j += 1
+        border_right.append(indice[-1])
+        border = np.array([border_left, border_right]).T
+        border = np.hstack([border, (1 + border[:, 1] - border[:, 0])[:, np.newaxis]])
 
-#         kept: List[Any] = []
-#         for j in range(len(border)):
-#             if border[j, -1] >= num:
-#                 kept.append(array[border[j, 0] : border[j, 1] + 2])
-#         return np.array(kept, dtype="object")
-#     else:
-#         return [np.array([j]) for j in array]
+        kept: List[Any] = []
+        for j in range(len(border)):
+            if border[j, -1] >= num:
+                kept.append(array[border[j, 0] : border[j, 1] + 2])
+        return np.array(kept, dtype="object")
+    else:
+        return [np.array([j]) for j in array]
 
 
-def find_nearest(
+def find_nearest1(
     array: NDArray[np.float64], value: float, dist_abs: bool = True
 ) -> Tuple[int, float, float]:
     """
     Find the closest element of a vector
+
+    Note:
+        Compared to the original find_nearest, it takes a scalar "value"
 
     Args:
         array: Vector

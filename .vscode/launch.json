@@ -93,6 +93,24 @@
                 "stacked_basic.csv",
                 "53690"
             ]
+        },
+        {
+            "name": "rassine_master",
+            "type": "python",
+            "request": "launch",
+            "program": "rassine_main.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "-s",
+                "/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/MASTER/Master_spectrum_2022-05-11T16:29:46.p",
+                "-a",
+                "1",
+                "-S",
+                "True",
+                "-e",
+                "1",
+            ]
         }
     ]
 }

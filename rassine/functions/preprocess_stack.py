@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 from astropy.time import Time
 
-from ..analysis import find_nearest
+from ..analysis import find_nearest1
 from ..io import open_pickle, save_pickle
 from ..math import create_grid
 from .preprocess_prestacking import preprocess_prestacking
@@ -77,7 +77,7 @@ def preprocess_stack(files_to_process, bin_length=1, dbin=0, make_master=True):
 
         bolo = np.array(bolo)
         rv_shift = np.array(rv_shift)
-        wave_ref = int(find_nearest(grid, 5500)[0])
+        wave_ref = int(find_nearest1(grid, 5500)[0])
         continuum_5500 = np.nanpercentile(stack[wave_ref - 50 : wave_ref + 50], 95)
         SNR = np.sqrt(continuum_5500)
         all_snr.append(SNR)

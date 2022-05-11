@@ -10,17 +10,16 @@ nthreads=4 # number of concurrent jobs
 nchunks=40 # number of spectra per Python script invocation
 
 PARALLEL_OPTIONS="--will-cite --verbose -N$nchunks --jobs $nthreads --keep-order"
+
+##
 ## Preprocess
-# Step 1: we read the FITS files in the format of a particular instrument and output files in the format
+##
+# We read the FITS files in the format of a particular instrument and output files in the format
 # expected by RASSINE. The data is reformatted, and a few parameters are extracted
-#
-# This step did correspond to
-# python Rassine_multiprocessed.py -v PREPROCESS -s "$dace_table" -n $nthreads_preprocess -i HARPS -o "$output_dir"
-mkdir -p $RASSINE_ROOT/PREPROCESSED
+
 preprocess_table -I DACE_TABLE/Dace_extracted_table.csv -i raw -O individual_basic.csv
 
-
-# if the summary table exists, remove it
+# delete the produced table if it exists already
 individual_imported=$RASSINE_ROOT/individual_imported.csv
 [ -f $individual_imported ] && rm $individual_imported 
 enumerate_table_rows individual_basic.csv | parallel $PARALLEL_OPTIONS \
@@ -51,15 +50,8 @@ enumerate_table_column_unique_values -c group individual_group.csv | parallel $P
 #python rassine_stacking.py --input_directory /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/PREPROCESSED
 
 master_table="Master_spectrum_$(date +%Y-%m-%dT%H:%M:%S).p"
-stacking_master_spectrum -I stacked_basic.csv -O master_spectrum.csv -i STACKED -o STACKED/$master_table
-exit
+stacking_master_spectrum -I stacked_basic.csv -O master_spectrum.csv -i STACKED -o MASTER/$master_table
 
-# get the latest master file
-master=$(ls -t /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED/Master*.p | head -n 1)
-# TODO: safe Bash practices
-rm /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/MASTER/*Master_spectrum*.p
-mv $master /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/MASTER/
-rm /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/PREPROCESSED/*
 
 ## RASSINE normalization
 # This was python Rassine_multiprocessed.py -v RASSINE -s /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED/Stacked -n $nthreads_rassine -l "$rassine_master" -P True -e False
@@ -68,12 +60,21 @@ rm /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/PREPROCESSED/
 
 # TODO: -> rassine.py
 
+##
+## RASSINE main processing on master file
+##
+
 not_full_auto=1 # we get different results by using the GUI and just pressing ENTER vs. full auto mode, is that bad?
 master=$(ls -t /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/MASTER/Master*.p | head -n 1)
 python rassine_main.py -s $master -a $not_full_auto -S True -e $not_full_auto
+# RASSINE_Master has additional stuff
 rassine_master=$(ls -t /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/MASTER/RASSINE_Master_spectrum*.p | head -n 1)
-
+exit
 nthreads_rassine=4
+
+##
+## 
+##
 # Step 4B Normalisation frame, done in parallel
 output_dir=/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED
 ls /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED/Stacked*.p | parallel --will-cite --jobs $nthreads_rassine --keep-order python rassine_main.py -o $output_dir -a False -P True -e False -l $rassine_master -s

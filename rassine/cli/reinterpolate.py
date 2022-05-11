@@ -18,7 +18,7 @@ from rassine.cli.preprocess_import import IndividualImportedRow
 from rassine.io import open_pickle, save_pickle
 from rassine.math import create_grid, doppler_r
 
-from ..analysis import find_nearest
+from ..analysis import find_nearest1
 from ..data import absurd_minus_99_9
 from .data import LoggingLevel, PickleProtocol
 from .preprocess_import import IndividualImportedRow, PickledIndividualSpectrum
@@ -228,7 +228,7 @@ class ReinterpolationSettings:
         nb_bins: int,
     ) -> ReinterpolationSettings:
         static_grid = create_grid(wave_min_k, dlambda, nb_bins)
-        wave_ref = find_nearest(static_grid, 5500)[0]
+        wave_ref = find_nearest1(static_grid, 5500)[0]
         return ReinterpolationSettings(
             wave_min_k=wave_min_k,
             wave_max_k=wave_max_k,

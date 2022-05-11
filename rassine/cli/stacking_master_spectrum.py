@@ -14,7 +14,7 @@ from filelock import FileLock
 from numpy.typing import ArrayLike, NDArray
 from typing_extensions import Annotated
 
-from ..analysis import find_nearest
+from ..analysis import find_nearest1
 from ..io import open_pickle, save_pickle
 from ..math import create_grid
 from .data import LoggingLevel, PickleProtocol
@@ -190,7 +190,7 @@ def run(t: Task) -> None:
         stack += data["flux"]
 
     stack[stack <= 0.0] = 0.0
-    wave_ref = int(find_nearest(grid, 5500)[0])
+    wave_ref = int(find_nearest1(grid, 5500)[0])
     continuum_5500 = np.nanpercentile(stack[wave_ref - 50 : wave_ref + 50], 95)
     SNR = np.sqrt(continuum_5500)
     BERV = np.sum(all_berv * all_snr**2) / np.sum(all_snr**2)

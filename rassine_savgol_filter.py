@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 
-import rassine.functions as rasfun
+from rassine.functions.matching_diff_continuum import matching_diff_continuum
 
 
 def get_parser():
@@ -24,10 +24,10 @@ def get_parser():
 if __name__ == "__main__":
     parser = get_parser()
     args = parser.parse_args()
-    rasfun.matching_diff_continuum(
+    matching_diff_continuum(
         list(map(str, args.inputfiles)),
         sub_dico="matching_anchors",
-        master=str(args.anchor_file),
+        master_=str(args.anchor_file),
         savgol_window=args.savgol_window,
         zero_point=False,
     )

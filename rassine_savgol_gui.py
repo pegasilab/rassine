@@ -1,10 +1,7 @@
 import argparse
-import glob
-import os
-import textwrap
 from pathlib import Path
 
-import rassine.functions as rasfun
+from rassine.functions.matching_diff_continuum_sphinx import matching_diff_continuum_sphinx
 
 
 def get_parser():
@@ -54,7 +51,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     # preprocess_stack wants strings
     files = [str(path) for path in args.input_directory.glob("RASSINE*.p")]
-    master, savgol_window = rasfun.matching_diff_continuum_sphinx(
+    master, savgol_window = matching_diff_continuum_sphinx(
         files,
         sub_dico=args.sub_dico,
         master=args.master,

@@ -68,8 +68,7 @@ def matching_diff_continuum(
 
         if valid:
             print(
-                "Modification of file (%.0f/%.0f) : %s (SNR : %.0f)"
-                % (i + 1, len(names), j, snr[i])
+                f"Modification of file ({i + 1:.0f}/{len(names):.0f}) : {j} (SNR : {snr[i]:.0f})"
             )
             spectre = file["flux_used"]
 

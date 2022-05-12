@@ -82,8 +82,7 @@ def intersect_all_continuum_sphinx(
 
     if nthreads >= multicpu.cpu_count():
         print(
-            "Your number of cpu (%s) is smaller than the number your entered (%s), enter a smaller value please"
-            % (multicpu.cpu_count(), nthreads)
+            f"Your number of cpu ({multicpu.cpu_count()}) is smaller than the number your entered ({nthreads}), enter a smaller value please"
         )
     else:
         if (
@@ -111,7 +110,7 @@ def intersect_all_continuum_sphinx(
             copies_master = 2 * len(names)
             print(
                 Fore.YELLOW
-                + "[WARNING] Default value of master copies fixed at %.0f." % (copies_master)
+                + f"[WARNING] Default value of master copies fixed at {copies_master:.0f}."
                 + Fore.WHITE
             )
         file = open_pickle(Path(master_spectrum))
@@ -280,7 +279,7 @@ def intersect_all_continuum_sphinx(
     (l2,) = plt.plot([gri.min(), gri.max()], [len(names) * threshold] * 2, color="b")
     plt.axes((0.37, 0.57, 0.05, 0.05))
     plt.axis("off")
-    l3 = plt.text(0, 0, "Nb of cluster detected : %.0f" % (nb_cluster), fontsize=14)
+    l3 = plt.text(0, 0, f"Nb of cluster detected : {nb_cluster:.0f}", fontsize=14)
     axcolor = "whitesmoke"
 
     axtresh = plt.axes((0.1, 0.12, 0.30, 0.03), facecolor=axcolor)
@@ -334,7 +333,7 @@ def intersect_all_continuum_sphinx(
 
             nb_cluster = np.sum(border[:, -1] != 0)
 
-            l3.set_text("Nb of cluster detected : %.0f" % (nb_cluster))
+            l3.set_text(f"Nb of cluster detected : {nb_cluster:.0f}")
             l1.set_ydata(stack_vert3)
             l2.set_ydata([len(names) * tresh] * 2)
 
@@ -383,15 +382,15 @@ def intersect_all_continuum_sphinx(
         "curve": curve,
         "border": border2,
         "wave": gri,
-        "threshold": "%.2f" % (threshold),
-        "tolerance": "%.2f" % (tolerance),
-        "fraction": "%.2f" % (fraction),
+        "threshold": f"{threshold:.2f}",
+        "tolerance": f"{tolerance:.2f}",
+        "fraction": f"{fraction:.2f}",
         "nb_copies_master": copies_master,
         "master_filename": master_spectrum,
     }
     # TOCHECK: why???
     # save_pickle("", output_cluster)
 
-    tool_name = "Master_tool_%s.p" % (time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime()))
+    tool_name = f"Master_tool_{time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime())}.p"
 
     save_pickle(Path(directory + "/" + tool_name), output_cluster)

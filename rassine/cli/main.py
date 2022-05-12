@@ -416,8 +416,7 @@ def cli():
             )
 
         logging.info(
-            "Number of cosmic peaks removed : %.0f"
-            % (np.sum((spectre > sup_fast) & (spectre > maxi_roll_fast)))
+            f"Number of cosmic peaks removed : {np.sum((spectre > sup_fast) & (spectre > maxi_roll_fast)):.0f}"
         )
 
         mask = (spectre > sup_fast) & (spectre > maxi_roll_fast)
@@ -492,9 +491,7 @@ def cli():
         vrad = vrad[vrad.argsort()]
         popt, pcov = curve_fit(ras.gaussian, vrad / 1000, ccf, p0=[0, -0.5, 0.9, 3])
         errors_fit = np.sqrt(np.diag(pcov))
-        logging.info(
-            f"[AUTO] FWHM computed from the CCF is about : {popt[-1] * 2.35:.2f} [km/s]"
-        )
+        logging.info(f"[AUTO] FWHM computed from the CCF is about : {popt[-1] * 2.35:.2f} [km/s]")
         if errors_fit[-1] / popt[-1] > 0.2:
             logging.warning(
                 "Error on the FWHM of the CCF > 20%! Check the CCF and/or enter you own mask"
@@ -671,8 +668,7 @@ def cli():
     calib_high = np.polyval([-0.38532535, 20.17699949], par_fwhm / conversion_fwhm_sig)
 
     logging.info(
-        " Suggestion of a streching parameter to try : %.0f +/- %.0f"
-        % (calib_low + (calib_high - calib_low) * 0.5, (calib_high - calib_low) * 0.25)
+        f" Suggestion of a streching parameter to try : {calib_low + (calib_high - calib_low) * 0.5:.0f} +/- {(calib_high - calib_low) * 0.25:.0f}"
     )
 
     out_of_calibration = False
@@ -975,8 +971,7 @@ def cli():
                     par_Rmax = par_R
             # TOCHECK: removed the if threshold < 0.2 logic
             logging.info(
-                " [AUTO] Rmax found around %.0f AA and fixed : %.0f"
-                % (cluster_length[largest_cluster, 5], par_Rmax)
+                f" [AUTO] Rmax found around {cluster_length[largest_cluster, 5]:.0f} AA and fixed : {par_Rmax:.0f}"
             )
             if par_Rmax > 150:
                 logging.warning(" [WARNING] Rmax larger than 150, Rmax fixed at 150")
@@ -1290,9 +1285,7 @@ def cli():
             color="b",
             alpha=0.3,
         )
-        plt.scatter(
-            wave, flux, color="k", label=f"anchor points ({int(len(wave))})", zorder=100
-        )
+        plt.scatter(wave, flux, color="k", label=f"anchor points ({int(len(wave))})", zorder=100)
 
     if (plot_end) | (save_last_plot):
         plt.plot(grid[::jump_point], conti[::jump_point], label="continuum", zorder=101, color="r")
@@ -1532,8 +1525,8 @@ def cli():
 
     output["parameters"]["filename"] = "RASSINE_" + new_file + ".p"
 
-    ras.save_pickle(output_dir + "RASSINE_" + new_file + ".p", output)
+    output_file = output_dir + "RASSINE_" + new_file + ".p"
+    ras.save_pickle(output_file, output)
     print(
-        "Output file saved under : %s (SNR at 5500 : %.0f)"
-        % (output_dir + "RASSINE_" + new_file + ".p", output["parameters"]["SNR_5500"])
+        f"Output file saved under : {output_file} (SNR at 5500 : {output['parameters']['SNR_5500']:.0f})"
     )

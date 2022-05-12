@@ -363,7 +363,7 @@ def cli():
     if np.isnan(SNR_0):
         SNR_0 = -99
 
-    logging.info("Spectrum SNR at 5500 : %.0f" % (SNR_0))
+    logging.info(f"Spectrum SNR at 5500 : {SNR_0:.0f}")
 
     normalisation = float(len_y) / float(len_x)  # stretch the y axis to scale the x and y axis
     spectre = spectrei / normalisation
@@ -493,7 +493,7 @@ def cli():
         popt, pcov = curve_fit(ras.gaussian, vrad / 1000, ccf, p0=[0, -0.5, 0.9, 3])
         errors_fit = np.sqrt(np.diag(pcov))
         logging.info(
-            "[AUTO] FWHM computed from the CCF is about : %.2f [km/s]" % (popt[-1] * 2.35)
+            f"[AUTO] FWHM computed from the CCF is about : {popt[-1] * 2.35:.2f} [km/s]"
         )
         if errors_fit[-1] / popt[-1] > 0.2:
             logging.warning(
@@ -656,7 +656,7 @@ def cli():
     median[np.isnan(median)] = spectre.max()
     mask = flux > median + 20 * IQ
     # plt.show()
-    logging.info(" Number of cosmic peaks removed : %.0f" % (np.sum(mask)))
+    logging.info(f" Number of cosmic peaks removed : {np.sum(mask):.0f}")
     wave = wave[~mask]
     flux = flux[~mask]
     index = index[~mask]
@@ -686,7 +686,7 @@ def cli():
                 par_stretching.split("_")[1]
             )
             # par_stretching = 20*computed_parameters #old calibration
-            logging.info(" [AUTO] par_stretching fixed : %.2f" % (par_stretching))
+            logging.info(f" [AUTO] par_stretching fixed : {par_stretching:.2f}")
         else:
             print(" [AUTO] par_stretching out of the calibration range, value fixed at 7")
             par_stretching = 7
@@ -703,7 +703,7 @@ def cli():
 
     loc_max_time = time.time()
 
-    logging.info(" Time of the step : %.2f" % (loc_max_time - begin))
+    logging.info(f" Time of the step : {loc_max_time - begin:.2f}")
 
     waves = wave - wave[:, np.newaxis]
     distance = np.sign(waves) * np.sqrt((waves) ** 2 + (flux - flux[:, np.newaxis]) ** 2)
@@ -735,7 +735,7 @@ def cli():
 
     if par_R == "auto":
         par_R = np.round(10 * par_fwhm, 1)
-        logging.info("[AUTO] R fixed : %.1f" % (par_R))
+        logging.info(f"[AUTO] R fixed : {par_R:.1f}")
         if par_R > 5:
             logging.warning("R larger than 5, R fixed at 5")
             par_R = 5
@@ -1005,7 +1005,7 @@ def cli():
 
     loc_penality_time = time.time()
 
-    logging.info("Time of the step : %.2f" % (loc_penality_time - loc_max_time))
+    logging.info(f"Time of the step : {loc_penality_time - loc_max_time:.2f}")
 
     # =============================================================================
     #  ROLLING PIN
@@ -1069,7 +1069,7 @@ def cli():
 
     loc_rolling_time = time.time()
 
-    logging.info(" Time of the step : %.2f" % (loc_rolling_time - loc_penality_time))
+    logging.info(f" Time of the step : {loc_rolling_time - loc_penality_time:.2f}")
 
     # =============================================================================
     # EDGE CUTTING
@@ -1090,7 +1090,7 @@ def cli():
 
     loc_cutting_time = time.time()
 
-    logging.info("Time of the step : %.2f" % (loc_cutting_time - loc_rolling_time))
+    logging.info(f"Time of the step : {loc_cutting_time - loc_rolling_time:.2f}")
 
     # =============================================================================
     # CAII MASKING
@@ -1126,7 +1126,7 @@ def cli():
 
     loc_outliers_time = time.time()
 
-    logging.info("Time of the step : %.2f" % (loc_outliers_time - loc_cutting_time))
+    logging.info(f"Time of the step : {loc_outliers_time - loc_cutting_time:.2f}")
 
     # =============================================================================
     # EQUIDISTANT GRID FORMATION
@@ -1237,7 +1237,7 @@ def cli():
     end = time.time()
 
     logging.info(
-        "[END] RASSINE has finished to compute your continuum in %.2f seconds \n" % (end - begin)
+        f"[END] RASSINE has finished to compute your continuum in {end - begin:.2f} seconds \n"
     )
 
     jump_point = 1  # make lighter figure for article
@@ -1280,7 +1280,7 @@ def cli():
         plt.plot(
             grid[::jump_point],
             spectrei[::jump_point],
-            label="spectrum (SNR=%.0f)" % (int(SNR_0)),
+            label=f"spectrum (SNR={int(SNR_0):.0f})",
             color="g",
         )
         plt.plot(
@@ -1291,7 +1291,7 @@ def cli():
             alpha=0.3,
         )
         plt.scatter(
-            wave, flux, color="k", label="anchor points (%s)" % (int(len(wave))), zorder=100
+            wave, flux, color="k", label=f"anchor points ({int(len(wave))})", zorder=100
         )
 
     if (plot_end) | (save_last_plot):

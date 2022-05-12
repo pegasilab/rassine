@@ -14,7 +14,7 @@
     "editor.formatOnSave": true,
     "python.formatting.provider": "black",
     "autoDocstring.guessTypes": false,
-    "autoDocstring.customTemplatePath": ".vscode/google-notypes.mustache",
+    "autoDocstring.docstringFormat": "google-notypes",
     "[python]": {
         "editor.codeActionsOnSave": {
             "source.organizeImports": true

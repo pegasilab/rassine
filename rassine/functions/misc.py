@@ -13,6 +13,7 @@ from scipy.stats import norm
 from ..analysis import grouping
 from ..io import open_pickle
 from ..math import doppler_r
+from ..types import Float
 from ..util import assert_never
 from . import c_lum
 
@@ -102,8 +103,8 @@ def check_none_negative_values(array: NDArray[np.float64]) -> NDArray[np.float64
 def empty_ccd_gap(
     wave: NDArray[np.float64],
     flux: NDArray[np.float64],
-    left: Optional[float] = None,
-    right: Optional[float] = None,
+    left: Optional[Float] = None,
+    right: Optional[Float] = None,
     extended: float = 30.0,
 ) -> NDArray[np.float64]:
     """
@@ -124,13 +125,13 @@ def empty_ccd_gap(
 
     if left is not None:
         left_ = np.array(left).astype("float64")
-        left = cast(float, doppler_r(left_, -extended)[0])  # 30 km/s supression
+        left = doppler_r(left_, -extended)[0]  # 30 km/s supression
     else:
         left = wave.max()
 
     if right is not None:
         right_ = np.array(right).astype("float64")
-        right = cast(float, doppler_r(right_, extended)[0])  # 30 km/s supression
+        right = doppler_r(right_, extended)[0]  # 30 km/s supression
     else:
         right = wave.min()
 

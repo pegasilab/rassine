@@ -69,7 +69,6 @@ master=$(ls -t /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/M
 python rassine_main.py -s $master -a $not_full_auto -S True -e $not_full_auto
 # RASSINE_Master has additional stuff
 rassine_master=$(ls -t /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/MASTER/RASSINE_Master_spectrum*.p | head -n 1)
-exit
 nthreads_rassine=4
 
 ##

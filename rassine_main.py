@@ -21,7 +21,7 @@ import getopt
 import os
 import sys
 import time
-from typing import List, Literal, Optional, Tuple, Union
+from typing import List, Literal, Optional, Sequence, Tuple, Union
 
 import matplotlib
 import matplotlib.pylab as plt
@@ -159,6 +159,7 @@ if len(sys.argv) > 1:
     else:
         save_last_plot = False
 
+assert interpol in ["cubic", "linear"]  # TODO: add this to parser
 filename = spectrum_name.split("/")[-1]
 cut_extension = len(filename.split(".")[-1]) + 1
 new_file = filename[:-cut_extension]
@@ -180,7 +181,7 @@ lamp_offset: Optional[np.float64] = None
 nb_spectra_stacked: Optional[int] = None
 
 # list of files part of the current stack
-arcfiles: Optional[str] = None
+arcfiles: Optional[Sequence[str]] = None
 
 if not os.path.exists(anchor_file):
     anchor_file = ""
@@ -255,6 +256,8 @@ else:  # to load a pickle dictionnary, csv file or txt file
             data = data[1:, :]
         spectrei = data[:, 1]  # the flux of your spectrum
         grid = data[:, 0]  # the grid of wavelength of your spectrum
+    else:
+        raise NotImplementedError
 
 
 if output_dir != "":
@@ -267,7 +270,7 @@ else:
     output_dir = os.path.dirname(spectrum_name) + "/"
 
 
-if type(par_stretching) != str:
+if not isinstance(par_stretching, str):
     if par_stretching < 0:
         print("[WARNING] par_stretching is smaller than 0, please enter a higher value")
         print("[WARNING] par_stretching value fixed at 3")
@@ -382,7 +385,7 @@ for iteration in range(5):  # k-sigma clipping 5 times
         .rolling(int(5 / dgrid / speedup), min_periods=1, center=True)
         .quantile(0.25)
     )
-    IQ_fast = 2 * (Q3_fast - Q2_fast)
+    IQ_fast = 2 * (Q3_fast - Q2_fast)  # type: ignore
     sup_fast = Q3_fast + 1.5 * IQ_fast
 
     if speedup > 1:
@@ -517,18 +520,18 @@ if (feedback) & (par_smoothing_box != "auto"):
     )
     plt.legend(loc=1)
     axcolor = "whitesmoke"
-    axsmoothing = plt.axes([0.14, 0.1, 0.40, 0.02], facecolor=axcolor)
+    axsmoothing = plt.axes((0.14, 0.1, 0.40, 0.02), facecolor=axcolor)
     ssmoothing = Slider(
         axsmoothing, "Kernel length", 1, 10, valinit=int(par_smoothing_box), valstep=1
     )
 
-    resetax = plt.axes([0.8, 0.05, 0.1, 0.1])
+    resetax = plt.axes((0.8, 0.05, 0.1, 0.1))
     button = Button(resetax, "Reset", color=axcolor, hovercolor="0.975")
 
-    rax = plt.axes([0.65, 0.05, 0.10, 0.10], facecolor=axcolor)
+    rax = plt.axes((0.65, 0.05, 0.10, 0.10), facecolor=axcolor)
     radio = RadioButtons(rax, ("rectangular", "gaussian", "savgol"), active=active_b)
 
-    class Index:
+    class LocalMaximaIndex:
         shape = par_smoothing_kernel
 
         def update(self, val):
@@ -539,7 +542,7 @@ if (feedback) & (par_smoothing_box != "auto"):
         def change_kernel(self, label):
             self.shape = label
 
-    callback = Index()
+    callback = LocalMaximaIndex()
     ssmoothing.on_changed(callback.update)
     radio.on_clicked(callback.change_kernel)
     radio.on_clicked(callback.update)
@@ -580,6 +583,7 @@ else:
                 )
                 print(" The kernel is fixed by default to erf kernel")
             par_smoothing_kernel = "erf"
+        assert par_smoothing_kernel == "erf" or par_smoothing_kernel == "hat_exp"
         grid_vrad = (
             (grid - minx) / grid * ras.c_lum / 1000
         )  # grille en vitesse radiale (unités km/s)
@@ -609,7 +613,8 @@ else:
                 )
             )  # using the calibration curve calibration
             alpha2 = np.polyval(np.array([-0.06031564, -0.45155956, 0.67704286]), SNR_0)
-
+        else:
+            raise NotImplementedError
         fourier_center = alpha1 / sig1
         fourier_delta = alpha2 / sig1
         cond = abs(freq) < fourier_center
@@ -624,6 +629,8 @@ else:
                 -(abs(freq) - fourier_center) / fourier_delta
             )  # Top hat with an exp
             smoothing_shape = "hat_exp"
+        else:
+            raise NotImplementedError
 
         fourier_filter = fourier_filter / fourier_filter.max()
 
@@ -954,6 +961,7 @@ if (par_Rmax != par_R) | (par_Rmax == "auto"):
     threshold = 0.75
     loop = True
     if par_Rmax == "auto":
+        cluster_length = np.zeros(())  # TODO: added
         while (loop) & (threshold > 0.2):
             difference = (continuum_large_win < continuum_small_win).astype("int")
             cluster_broad_line = ras.grouping(difference, 0.5, 0)[-1]
@@ -1041,6 +1049,8 @@ if (par_Rmax != par_R) | (par_Rmax == "auto"):
             alpha2 = 1
             actif = 1
             ini = float(reg.split("_")[-2])
+        else:
+            raise NotImplementedError
         radius2 = (
             grid
             / minx
@@ -1086,15 +1096,15 @@ if (par_Rmax != par_R) | (par_Rmax == "auto"):
         plt.tick_params(direction="in", top=True, right=True)
 
         axcolor = "whitesmoke"
-        axexponent = plt.axes([0.55, 0.25, 0.35, 0.03], facecolor=axcolor)
+        axexponent = plt.axes((0.55, 0.25, 0.35, 0.03), facecolor=axcolor)
         sexponent = Slider(
             axexponent, "Nu", 0.1, 5.0, valinit=float(reg.split("_")[-1]), valstep=0.05
         )
-        axexponent2 = plt.axes([0.55, 0.20, 0.35, 0.03], facecolor=axcolor)
+        axexponent2 = plt.axes((0.55, 0.20, 0.35, 0.03), facecolor=axcolor)
         sexponent2 = Slider(axexponent2, "Mu", 0, 1, valinit=ini, valstep=0.05)
-        axrmin = plt.axes([0.55, 0.3, 0.35, 0.03], facecolor=axcolor)
+        axrmin = plt.axes((0.55, 0.3, 0.35, 0.03), facecolor=axcolor)
         srmin = Slider(axrmin, "R", 1.0, 10.0, valinit=par_R, valstep=0.1)
-        axrmax = plt.axes([0.55, 0.35, 0.35, 0.03], facecolor=axcolor)
+        axrmax = plt.axes((0.55, 0.35, 0.35, 0.03), facecolor=axcolor)
         srmax = Slider(axrmax, "Rmax", par_R, 150, valinit=par_Rmax, valstep=1)
         plt.subplot(2, 2, 2)
         plt.title("Selection of the penalty-radius law", fontsize=14)
@@ -1104,10 +1114,10 @@ if (par_Rmax != par_R) | (par_Rmax == "auto"):
         plt.ylabel(r"Radius [$\AA$]", fontsize=13)
         ax2 = plt.gca()
 
-        rax = plt.axes([0.55, 0.05, 0.15, 0.10], facecolor=axcolor)
+        rax = plt.axes((0.55, 0.05, 0.15, 0.10), facecolor=axcolor)
         radio = RadioButtons(rax, ("poly", "sigmoid"), active=actif)
 
-        class Index:
+        class PenaltyIndex:
             model = reg.split("_")[0]
 
             def update(self, val):
@@ -1165,7 +1175,7 @@ if (par_Rmax != par_R) | (par_Rmax == "auto"):
                     l4.set_alpha(1)
                 fig.canvas.draw_idle()
 
-        callback = Index()
+        callback = PenaltyIndex()
         radio.on_clicked(callback.change_model)
         radio.on_clicked(callback.update)
         sexponent.on_changed(callback.update)
@@ -1173,7 +1183,7 @@ if (par_Rmax != par_R) | (par_Rmax == "auto"):
         srmin.on_changed(callback.update)
         srmax.on_changed(callback.update)
 
-        resetax = plt.axes([0.8, 0.05, 0.1, 0.1])
+        resetax = plt.axes((0.8, 0.05, 0.1, 0.1))
         button = Button(resetax, "Reset", color=axcolor, hovercolor="0.975")
 
         def reset(event):
@@ -1378,7 +1388,7 @@ if feedback:
     plt.ylim(None, spectre[-int(len(grid) / 10.0) :].max())
     plt.show(block=False)
 
-    class Index(object):
+    class EdgeCuttingIndex(object):
         ind = 0
         flux_backup = [flux.copy()]
 
@@ -1420,11 +1430,11 @@ if feedback:
                 plt.draw()
                 fig.canvas.draw_idle()
 
-    callback = Index()
-    axnext = plt.axes([0.2, 0.05, 0.1, 0.075])
+    callback = EdgeCuttingIndex()
+    axnext = plt.axes((0.2, 0.05, 0.1, 0.075))
     bnext = Button(axnext, "Cut")
     bnext.on_clicked(callback.update)
-    axprev = plt.axes([0.75, 0.05, 0.1, 0.075])
+    axprev = plt.axes((0.75, 0.05, 0.1, 0.075))
     anext = Button(axprev, "Cancel")
     anext.on_clicked(callback.backup)
     loop = ras.sphinx("Press Enter to move on the last step")
@@ -1559,7 +1569,7 @@ if feedback:
     plt.legend(loc=1)
     plt.show(block=False)
 
-    class Index(object):
+    class OutliersRemovingIndex(object):
         ind = 0
         wave_backup = [wave]
         flux_backup = [flux]
@@ -1790,26 +1800,26 @@ if feedback:
                 plt.draw()
                 fig.canvas.draw_idle()
 
-    callback = Index()
-    axdelete = plt.axes([0.1, 0.05, 0.15, 0.075])
+    callback = OutliersRemovingIndex()
+    axdelete = plt.axes((0.1, 0.05, 0.15, 0.075))
     bdelete = Button(axdelete, "Delete all")
     bdelete.on_clicked(callback.rm_all)
     bdelete.on_clicked(callback.update)
 
-    axnext = plt.axes([0.475, 0.05, 0.1, 0.075])
+    axnext = plt.axes((0.475, 0.05, 0.1, 0.075))
     bnext = Button(axnext, "Next")
     bnext.on_clicked(callback.next_line)
 
-    axprev = plt.axes([0.35, 0.05, 0.1, 0.075])
+    axprev = plt.axes((0.35, 0.05, 0.1, 0.075))
     bprev = Button(axprev, "Prev")
     bprev.on_clicked(callback.prev_line)
 
-    axdel = plt.axes([0.60, 0.05, 0.1, 0.075])
+    axdel = plt.axes((0.60, 0.05, 0.1, 0.075))
     bdel = Button(axdel, "Delete")
     bdel.on_clicked(callback.rm_one)
     bdel.on_clicked(callback.update)
 
-    axcancel = plt.axes([0.8, 0.05, 0.1, 0.075])
+    axcancel = plt.axes((0.8, 0.05, 0.1, 0.075))
     bcancel = Button(axcancel, "Cancel")
     bcancel.on_clicked(callback.backup)
     loop = ras.sphinx("Press Enter to move on the last step")
@@ -1845,7 +1855,7 @@ wave_backup = wave.copy()
 flux_backup = flux.copy()
 index_backup = index.copy()
 criterion = 1
-
+parameter = np.zeros(())  # TODO: initialize
 for j in range(5):
     diff_x = np.log10(
         np.min(np.vstack([abs(np.diff(wave)[1:]), abs(np.diff(wave)[0:-1])]), axis=0)
@@ -1943,7 +1953,7 @@ if feedback:
     plt.legend(loc=1)
     plt.show(block=False)
 
-    class Index:
+    class ManualAddSubIndex:
 
         inix = locmaxx
         iniy = locmaxy
@@ -1990,7 +2000,7 @@ if feedback:
             l2.set_ydata(self.vecy)
             plt.gcf().canvas.draw_idle()
 
-    t = Index()
+    t = ManualAddSubIndex()
 
     def onclick(event):
         newx = event.xdata
@@ -2064,6 +2074,8 @@ elif interpol == "linear":
         wave, flux, flux_denoised, grid, spectrei, continuum_to_produce=[interpol, "undenoised"]
     )
     conti = continuum1
+else:
+    raise NotImplementedError  # TODO: handle
 
 continuum1, continuum3, continuum1_denoised, continuum3_denoised = ras.make_continuum(
     wave,

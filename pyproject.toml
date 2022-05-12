@@ -32,6 +32,7 @@ enumerate_table_column_unique_values = "rassine.cli.enumerate_table_column_uniqu
 enumerate_table_rows = "rassine.cli.enumerate_table_rows:cli"
 preprocess_import = "rassine.cli.preprocess_import:cli"
 preprocess_table = "rassine.cli.preprocess_table:cli"
+rassine = "rassine.cli.main:cli"
 reinterpolate = "rassine.cli.reinterpolate:cli"
 reorder_csv = "rassine.cli.reorder_csv:cli"
 spectrum_csv2pickle = "rassine.cli.spectrum_csv2pickle:cli"
@@ -39,7 +40,6 @@ spectrum_pickle2csv = "rassine.cli.spectrum_pickle2csv:cli"
 stacking_create_groups = "rassine.cli.stacking_create_groups:cli"
 stacking_master_spectrum = "rassine.cli.stacking_master_spectrum:cli"
 stacking_stack = "rassine.cli.stacking_stack:cli"
-
 [tool.poetry.dependencies]
 PyQt5 = "^5.15.6"
 PyQt5-Qt = "^5.15.2"

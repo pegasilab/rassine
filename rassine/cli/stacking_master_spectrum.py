@@ -63,11 +63,11 @@ class MasterPickle(TypedDict):
     #: Average rv correction (median), same for all spectra
     RV_sys: np.float64
     #: RV correction, shift compared to the median, weighted average
-    RV_shift: Literal[0]
+    RV_shift: Annotated[np.float64, np.float64(0.0)]
     #: Corresponds to the square root of the 95th percentile for 100 bins around the wavelength=5500
     SNR_5500: np.float64
     #: lamp_offset, weighted average
-    lamp_offset: Literal[0]
+    lamp_offset: Annotated[np.float64, np.float64(0.0)]
     #: acc_sec, taken from first spectrum
     acc_sec: np.float64
     #: berv, weighted average according to SNR
@@ -79,9 +79,9 @@ class MasterPickle(TypedDict):
     #: Instrument
     instrument: str
     #: mjd weighted average
-    mjd: Literal[0]
+    mjd: Annotated[np.float64, np.float64(0.0)]
     #: jdb weighted average
-    jdb: Literal[0]
+    jdb: Annotated[np.float64, np.float64(0.0)]
     #: Left boundary of hole, or -99.9 if not present
     hole_left: np.float64
     #: Right boundary of hole, or -99.9 if not present
@@ -200,16 +200,16 @@ def run(t: Task) -> None:
         "flux": stack,
         "master_spectrum": True,
         "RV_sys": first.rv_mean,
-        "RV_shift": 0,
+        "RV_shift": np.float64(0.0),
         "SNR_5500": SNR,
-        "lamp_offset": 0,
+        "lamp_offset": np.float64(0.0),
         "acc_sec": first.acc_sec,
         "berv": BERV,
         "berv_min": BERV_MIN,
         "berv_max": BERV_MAX,
         "instrument": first.instrument,
-        "mjd": 0,
-        "jdb": 0,
+        "mjd": np.float64(0.0),
+        "jdb": np.float64(0.0),
         "hole_left": first.hole_left,
         "hole_right": first.hole_right,
         "wave_min": first.wave_min,

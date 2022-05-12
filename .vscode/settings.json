@@ -10,6 +10,7 @@
         "reportGeneralTypeIssues": "error",
     },
     "python.analysis.diagnosticMode": "openFilesOnly",
+    "python.analysis.useLibraryCodeForTypes": false,
     //    "python.linting.mypyEnabled": true,
     "editor.formatOnSave": true,
     "python.formatting.provider": "black",
@@ -124,13 +125,20 @@
         "XXX",
         "[ ]",
         "[x]",
-        "CHECKME"
+        "CHECKME",
+        "DONE"
     ],
     "todo-tree.highlights.customHighlight": {
         "CHECKME": {
             "icon": "flame",
             "foreground": "#000000",
             "iconColour": "#800000",
+            "gutterIcon": true
+        },
+        "DONE": {
+            "icon": "flame",
+            "foreground": "#000000",
+            "iconColour": "#00FF00",
             "gutterIcon": true
         },
     },

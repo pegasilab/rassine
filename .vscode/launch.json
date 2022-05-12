@@ -104,8 +104,6 @@
             "args": [
                 "-s",
                 "/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/MASTER/Master_spectrum_2022-05-12T09:42:17.p",
-                "-a",
-                "1",
                 "-S",
                 "True",
                 "-e",

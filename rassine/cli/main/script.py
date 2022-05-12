@@ -1,120 +1,32 @@
-from __future__ import print_function
+from __future__ import annotations
 
-import argparse
+import dataclasses
 import getopt
 import logging
 import os
 import sys
 import time
-from typing import List, Literal, Optional, Sequence, Tuple, Union
+from typing import Literal, Optional, Sequence, Tuple, Union, cast
 
 import matplotlib
 import matplotlib.pylab as plt
 import numpy as np
 import pandas as pd
-from astropy.io import fits
 from matplotlib.ticker import MultipleLocator
-from matplotlib.widgets import Button, RadioButtons, Slider
 from numpy.typing import ArrayLike, NDArray
 from scipy.interpolate import interp1d
 from scipy.optimize import curve_fit
 from scipy.special import erf
+from typing_extensions import Annotated, TypeAlias
 
-from .. import ras
-from .reinterpolate import PickledReinterpolatedSpectrum
-from .stacking_master_spectrum import MasterPickle
+from ... import ras
+from ...util import assert_never
+from ..reinterpolate import PickledReinterpolatedSpectrum
+from ..stacking_master_spectrum import MasterPickle
+from .config import Auto, Config, RegPoly, RegSigmoid, update_using_anchor_file
 
 # TODO: "auto" -> "erf"
 logging.getLogger().setLevel("INFO")
-
-
-def get_config():
-    cwd = os.getcwd()
-
-    spectrum_name = (
-        cwd + "/spectra_library/spectrum_cenB.csv"
-    )  # full path of your spectrum pickle/csv file
-    output_dir = cwd + "/output/"  # directory where output files are written
-
-    synthetic_spectrum = False  # True if working with a noisy-free synthetic spectra
-    anchor_file: Optional[
-        str
-    ] = None  # Put a RASSINE output file that will fix the value of the 7 parameters to the same value than in the anchor file
-
-    # general initial parameters
-
-    par_stretching = "auto_0.5"  # stretch the x and y axes ratio ('auto' available)                            <--- PARAMETER 1
-    par_vicinity = 7  # half-window to find a local maxima
-
-    par_smoothing_box = 6  # half-window of the box used to smooth (1 => no smoothing, 'auto' available)  <--- PARAMETER 2
-    par_smoothing_kernel = (
-        "savgol"  # 'rectangular','gaussian','savgol' if a value is specified in smoothig_kernel
-    )
-    # 'erf','hat_exp' if 'auto' is given in smoothing box
-
-    par_fwhm = "auto"  # FWHM of the CCF in km/s ('auto' available)                                   <--- PARAMETER 3
-    CCF_mask = "master"  # only needed if par_fwhm is in 'auto'
-    RV_sys = (
-        0  # RV systemic in kms, only needed if par_fwhm is in 'auto' and CCF different of 'master'
-    )
-    mask_telluric: Sequence[Tuple[float, float]] = [
-        (6275.0, 6330.0),  # a list of left and right borders to eliminate from the mask of the CCF
-        (6470.0, 6577.0),  # only if CCF = 'master' and par_fwhm = 'auto'
-        (6866.0, 8000.0),
-    ]
-
-    par_R = "auto"  # minimum radius of the rolling pin in angstrom ('auto' available)                  <--- PARAMETER 4
-    par_Rmax = "auto"  # maximum radius of the rolling pin in angstrom ('auto' available)                  <--- PARAMETER 5
-    par_reg_nu = "poly_1.0"  # penality-radius law                                                               <--- PARAMETER 6
-    # poly_d (d the degree of the polynome x**d)
-    # or sigmoid_c_s where c is the center and s the steepness
-
-    denoising_dist = 5  # half window of the area used to average the number of point around the local max for the continuum
-    count_cut_lim = 3  # number of border cut in automatic mode (put at least 3 if Automatic mode)
-    count_out_lim = (
-        1  # number of outliers clipping in automatic mode (put at least 1 if Automatic mode)
-    )
-
-    interpolation = (
-        "cubic"  # define the interpolation for the continuum displayed in the subproducts
-    )
-    # note that at the end a cubic and linear interpolation are saved in 'output' regardless this value
-
-    plot_end = True  # display the final product in the graphic
-    save_last_plot = False  # save the last graphical output (final output)
-
-    outputs_interpolation_saved = "all"  # to only save a specific continuum (output files are lighter), either 'linear','cubic' or 'all'
-    outputs_denoising_saved = "undenoised"  # to only save a specific continuum (output files are lighter), either 'denoised','undenoised' or 'all'
-
-    light_version = True  # to save only the vital output
-
-    return {
-        "spectrum_name": spectrum_name,
-        "synthetic_spectrum": synthetic_spectrum,
-        "output_dir": output_dir,
-        "anchor_file": anchor_file,
-        "axes_stretching": par_stretching,
-        "vicinity_local_max": par_vicinity,
-        "smoothing_box": par_smoothing_box,
-        "smoothing_kernel": par_smoothing_kernel,
-        "fwhm_ccf": par_fwhm,
-        "CCF_mask": CCF_mask,
-        "RV_sys": RV_sys,
-        "mask_telluric": mask_telluric,
-        "min_radius": par_R,
-        "max_radius": par_Rmax,
-        "model_penality_radius": par_reg_nu,
-        "denoising_dist": denoising_dist,
-        "interpol": interpolation,
-        "number_of_cut": count_cut_lim,
-        "number_of_cut_outliers": count_out_lim,
-        "plot_end": plot_end,
-        "save_last_plot": save_last_plot,
-        "outputs_interpolation_save": outputs_interpolation_saved,
-        "outputs_denoising_save": outputs_denoising_saved,
-        "light_file": light_version,
-        "speedup": 1,
-    }
 
 
 def cli():
@@ -124,37 +36,45 @@ def cli():
 
     python_version = sys.version[0]
 
-    config = get_config()
+    cfg: Config = Config.from_command_line_()
 
-    spectrum_name = config["spectrum_name"]
-    output_dir = config["output_dir"]
-    synthetic_spectrum = config["synthetic_spectrum"]
-    anchor_file = config["anchor_file"]
+    spectrum_name = cfg.spectrum_name
+    output_dir = cfg.output_dir
+    synthetic_spectrum = cfg.synthetic_spectrum
 
-    par_stretching = config["axes_stretching"]
-    par_vicinity = config["vicinity_local_max"]
-    par_smoothing_box = config["smoothing_box"]
-    par_smoothing_kernel = config["smoothing_kernel"]
-    par_fwhm = config["fwhm_ccf"]
-    CCF_mask = config["CCF_mask"]
-    RV_sys = config["RV_sys"]
-    mask_telluric = config["mask_telluric"]
-    par_R = config["min_radius"]
-    par_Rmax = config["max_radius"]
-    par_reg_nu = config["model_penality_radius"]
+    par_stretching = cfg.par_stretching  # was called axes_stretching
+    par_vicinity = cfg.par_vicinity  # was vicinity_local_max
+    par_smoothing_box = cfg.par_smoothing_box  # was smoothing_box
+    par_smoothing_kernel = cfg.par_smoothing_kernel  # was smoothing_kernel
+    par_fwhm = cfg.par_fwhm  # was fwhm_ccf
+    CCF_mask = cfg.CCF_mask
+    RV_sys = cfg.RV_sys
+    mask_telluric = cfg.mask_telluric
+    par_R = cfg.par_R  # was min_radius
+    par_Rmax = cfg.par_Rmax  # was max_radius
+    par_reg_nu = cfg.par_reg_nu  # was model_penality_radius
 
-    denoising_dist = config["denoising_dist"]
-    count_cut_lim = config["number_of_cut"]
-    count_out_lim = config["number_of_cut_outliers"]
+    denoising_dist = cfg.denoising_dist
+    count_cut_lim = cfg.count_cut_lim  # was number_of_cut
+    count_out_lim = cfg.count_out_lim  # was number_of_cut_outliers
 
-    interpol = config["interpol"]
-    plot_end = config["plot_end"]
-    save_last_plot = config["save_last_plot"]
+    interpol = cfg.interpolation  # was interpol
+    plot_end = cfg.plot_end
+    save_last_plot = cfg.save_last_plot
 
-    outputs_interpolation_saved = config["outputs_interpolation_save"]
-    outputs_denoising_saved = config["outputs_denoising_save"]
-    light_version = config["light_file"]
-    speedup = config["speedup"]
+    outputs_interpolation_saved = cfg.outputs_interpolation_saved  # was outputs_interpolation_save
+    outputs_denoising_saved = cfg.outputs_denoising_saved  # was outputs_denoising_saved
+    speedup: int = 1
+
+    if cfg.anchor_file is not None:
+        assert cfg.anchor_file.exists(), "Anchor file, if provided, must exist"
+        update_using_anchor_file(cfg, cfg.anchor_file)
+
+    # DONE: revamped output_dir support, it always mkdirs stuff
+    if output_dir is None:
+        output_dir = spectrum_name.parent
+
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     # =============================================================================
     # TAKE THE DATA
@@ -162,82 +82,19 @@ def cli():
 
     plt.close("all")
 
-    if speedup < 1:
-        speedup = 1
-
-    if len(sys.argv) > 1:
-        optlist, args = getopt.getopt(sys.argv[1:], "f:s:o:r:R:a:w:l:p:P:e:S:")
-        for j in optlist:
-            if j[0] == "-s":  # spectrum file
-                spectrum_name = j[1]
-                output_dir = os.path.dirname(spectrum_name) + "/"
-            if j[0] == "-o":  # output directory
-                if j[1] != "unspecified":
-                    output_dir = j[1]
-            if j[0] == "-l":  # anchor file
-                anchor_file = j[1]
-                if anchor_file == "":
-                    anchor_file = None
-            if j[0] == "-r":  # Radius minimum
-                par_R = j[1]
-                par_R = float(par_R)
-            if j[0] == "-R":  # Radius maximum
-                par_Rmax = j[1]
-                par_Rmax = float(par_Rmax)
-            if j[0] == "-p":  # par_stretching
-                par_stretching = j[1]
-                par_stretching = float(par_stretching)
-            if j[0] == "-e":  # only print end
-                plot_end = j[1]
-            if j[0] == "-S":  # only print end
-                save_last_plot = j[1]
-
-        if (plot_end == "True") | (plot_end == "true") | (plot_end == "1") | (plot_end == True):
-            plot_end = True
-        else:
-            plot_end = False
-
-        if (
-            (save_last_plot == "True")
-            | (save_last_plot == "true")
-            | (save_last_plot == "1")
-            | (save_last_plot == True)
-        ):
-            save_last_plot = True
-        else:
-            save_last_plot = False
-
-    assert interpol in ["cubic", "linear"]  # TODO: add this to parser
-    filename = spectrum_name.split("/")[-1]
+    # TODO: move to pathlib
+    filename = str(spectrum_name).split("/")[-1]
     cut_extension = len(filename.split(".")[-1]) + 1
     new_file = filename[:-cut_extension]
 
     # TODO: what is that random thing?
     random_number = np.sum([ord(a) for a in filename.split("RASSINE_")[-1]])
 
-
-    assert anchor_file is None or os.path.exists(
-        anchor_file
-    ), "Anchor file, if provided, must exist"
-
-    # TODO: all the anchor parameters are scalar, and they correspond to command line arguments
-    if anchor_file is not None:
-        anchor_file = ras.open_pickle(anchor_file)
-        par_stretching = anchor_file["parameters"]["axes_stretching"]
-        par_vicinity = anchor_file["parameters"]["vicinity_local_max"]
-        par_smoothing_box = anchor_file["parameters"]["smoothing_box"]
-        par_smoothing_kernel = anchor_file["parameters"]["smoothing_kernel"]
-        par_fwhm = anchor_file["parameters"]["fwhm_ccf"]
-        par_R = anchor_file["parameters"]["min_radius"]
-        par_Rmax = anchor_file["parameters"]["max_radius"]
-        par_reg_nu = anchor_file["parameters"]["model_penality_radius"]
-        count_cut_lim = anchor_file["parameters"]["number of cut"]
-
     spectrei_err = None
     # CHECKME: we standardize the input format
     data: Union[PickledReinterpolatedSpectrum, MasterPickle] = ras.open_pickle(
         spectrum_name
-    )  # load the pickle dictionnary
+    )  # load the pickle dictionary
 
     # TODO: remove the flexibility in dictionary keys
     spectrei = data["flux"]  # the flux of your spectrum
@@ -258,37 +115,17 @@ def cli():
     RV_sys = data["RV_sys"]
 
     RV_shift = data["RV_shift"]
-    mjd : np.float64= data["mjd"]
+    mjd: np.float64 = data["mjd"]
     jdb: np.float64 = data["jdb"]
-    hole_left :np.float64= data["hole_left"]
-    hole_right :np.float64= data["hole_right"]
-    berv :np.float64= data["berv"]
-    lamp_offset :np.float64= data["lamp_offset"]
-    acc_sec:np.float64 = data["acc_sec"]
+    hole_left: np.float64 = data["hole_left"]
+    hole_right: np.float64 = data["hole_right"]
+    berv: np.float64 = data["berv"]
+    lamp_offset: np.float64 = data["lamp_offset"]
+    acc_sec: np.float64 = data["acc_sec"]
     # TODO: the type of this
     nb_spectra_stacked = ras.try_field(data, "nb_spectra_stacked")
     # TODO: the type of this
     arcfiles = ras.try_field(data, "arcfiles")
-
-    if output_dir != "":
-        if output_dir.split("/")[-1] != "":
-            output_dir += "/"
-        if not os.path.isdir(output_dir):
-            print("The directory does not exist yet, creation of the directory")
-            os.system("mkdir " + output_dir)
-    else:
-        output_dir = os.path.dirname(spectrum_name) + "/"
-
-    if not isinstance(par_stretching, str):
-        if par_stretching < 0:
-            logging.warning("par_stretching is smaller than 0, please enter a higher value")
-            logging.warning("par_stretching value fixed at 3")
-            par_stretching = 3.0
-    else:
-        if (float(par_stretching.split("_")[1]) > 1) | (float(par_stretching.split("_")[1]) < 0):
-            logging.warning("par_stretching automatic value should be between 0 and 1")
-            logging.warning("par_stretching value fixed at 0.5")
-            par_stretching = "auto_0.5"
 
     # =============================================================================
     # LOCAL MAXIMA
@@ -361,47 +198,36 @@ def cli():
             np.random.randn(len(spectre)) * 1e-5 * np.min(np.diff(spectre)[np.diff(spectre) != 0])
         )  # to avoid to same value of flux in synthetic spectra
 
+        # TODO: can be simplified
     # Do the rolling sigma clipping on a grid smaller to increase the speed
     np.random.seed(random_number)
     subset = np.sort(
-        np.random.choice(np.arange(len(spectre)), size=int(len(spectre) / speedup), replace=False)
+        np.random.choice(np.arange(len(spectre)), size=int(len(spectre) / 1), replace=False)
     )  # take randomly 1 point over 10 to speed process
 
     for iteration in range(5):  # k-sigma clipping 5 times
-
         maxi_roll_fast = np.ravel(
             pd.DataFrame(spectre[subset])
-            .rolling(int(100 / dgrid / speedup), min_periods=1, center=True)
+            .rolling(int(100 / dgrid / 1), min_periods=1, center=True)
             .quantile(0.99)
         )
         Q3_fast = np.ravel(
             pd.DataFrame(spectre[subset])
-            .rolling(int(5 / dgrid / speedup), min_periods=1, center=True)
+            .rolling(int(5 / dgrid / 1), min_periods=1, center=True)
             .quantile(0.75)
         )  # sigma clipping on 5 \AA range
         Q2_fast = np.ravel(
             pd.DataFrame(spectre[subset])
-            .rolling(int(5 / dgrid / speedup), min_periods=1, center=True)
+            .rolling(int(5 / dgrid / 1), min_periods=1, center=True)
             .quantile(0.50)
         )
         Q1_fast = np.ravel(
             pd.DataFrame(spectre[subset])
-            .rolling(int(5 / dgrid / speedup), min_periods=1, center=True)
+            .rolling(int(5 / dgrid / 1), min_periods=1, center=True)
             .quantile(0.25)
         )
         IQ_fast = 2 * (Q3_fast - Q2_fast)  # type: ignore
         sup_fast = Q3_fast + 1.5 * IQ_fast
-
-        if speedup > 1:
-            maxi_roll_fast = interp1d(
-                subset, maxi_roll_fast, bounds_error=False, fill_value="extrapolate"
-            )(np.arange(len(spectre)))
-            sup_fast = interp1d(subset, sup_fast, bounds_error=False, fill_value="extrapolate")(
-                np.arange(len(spectre))
-            )
-            Q2_fast = interp1d(subset, Q2_fast, bounds_error=False, fill_value="extrapolate")(
-                np.arange(len(spectre))
-            )
 
         logging.info(
             f"Number of cosmic peaks removed : {np.sum((spectre > sup_fast) & (spectre > maxi_roll_fast)):.0f}"
@@ -504,18 +330,14 @@ def cli():
         active_b = 0
     elif par_smoothing_kernel == "gaussian":
         active_b = 1
-    else:
+    elif par_smoothing_kernel == "savgol":
         active_b = 2
+    else:
+        raise NotImplementedError  # should not happen
 
     if True:
+        # TODO: can remove this, as this is validated during parsing
         if par_smoothing_box == "auto":
-            if par_smoothing_kernel not in ["erf", "hat_exp"]:
-                logging.warning(
-                    "Your smoothing kernel is not correctly specified, pleaser enter either : erf or hat_exp."
-                )
-                logging.warning(" The kernel is fixed by default to erf kernel")
-                par_smoothing_kernel = "erf"
-            assert par_smoothing_kernel == "erf" or par_smoothing_kernel == "hat_exp"
             grid_vrad = (
                 (grid - minx) / grid * ras.c_lum / 1000
             )  # grille en vitesse radiale (unités km/s)
@@ -598,7 +420,13 @@ def cli():
             smoothing_length = par_smoothing_box
         else:
             spectre_backup = spectre.copy()
-            spectre = ras.smooth(spectre, int(par_smoothing_box), shape=par_smoothing_kernel)
+            assert par_smoothing_kernel in ["rectangular", "gaussian", "savgol"]
+
+            spectre = ras.smooth(
+                spectre,
+                int(par_smoothing_box),
+                shape=cast(Literal["rectangular", "gaussian", "savgol"], par_smoothing_kernel),
+            )
             smoothing_shape = par_smoothing_kernel
             smoothing_length = par_smoothing_box
             median = np.median(abs(spectre_backup - spectre))
@@ -664,16 +492,15 @@ def cli():
         out_of_calibration = True
         print(" [WARNING] Star out of the FWHM calibration range")
 
-    if type(par_stretching) == str:
+    if isinstance(par_stretching, Auto):
         if not out_of_calibration:
-            par_stretching = calib_low + (calib_high - calib_low) * float(
-                par_stretching.split("_")[1]
-            )
+            par_stretching = float(calib_low + (calib_high - calib_low) * par_stretching.ratio)
+            # TODO: what about this
             # par_stretching = 20*computed_parameters #old calibration
             logging.info(f" [AUTO] par_stretching fixed : {par_stretching:.2f}")
         else:
             print(" [AUTO] par_stretching out of the calibration range, value fixed at 7")
-            par_stretching = 7
+            par_stretching = 7.0
 
     spectre = spectre / par_stretching
     flux = flux / par_stretching
@@ -714,7 +541,7 @@ def cli():
     big_windows = 100.0  # 100 typical line width scale (large window for the second continuum)
     iteration = 5
     reg = par_reg_nu
-    par_model = reg.split("_")[0]
+    par_model = reg.name
     Penalty = False
 
     if par_R == "auto":
@@ -967,22 +794,21 @@ def cli():
 
         par_R = np.round(par_R, 1)
         par_Rmax = np.round(par_Rmax, 1)
-        if True:
-            if reg.split("_")[0] == "poly":
-                expo = float(reg.split("_")[-1])
-                radius = law_chromatic * (par_R + (par_Rmax - par_R) * penalite_graph ** (expo))
-                par_model = reg
-            elif reg.split("_")[0] == "sigmoid":
-                center = float(reg.split("_")[-2])
-                width = float(reg.split("_")[-1])
-                radius = law_chromatic * (
-                    par_R
-                    + (par_Rmax - par_R) * (1 + np.exp(-width * (penalite_graph - center))) ** -1
-                )
-                par_model = reg
-            else:
-                # TODO: handle reg
-                logging.error(" the law should be either poly_d or sigmoid_c_s")
+        # TODO: par_model role
+        par_model = reg
+        if isinstance(reg, RegPoly):
+            radius = law_chromatic * (
+                par_R + (par_Rmax - par_R) * penalite_graph ** float(reg.expo)
+            )
+        elif isinstance(reg, RegSigmoid):
+            radius = law_chromatic * (
+                par_R
+                + (par_Rmax - par_R)
+                * (1 + np.exp(-reg.steepness * (penalite_graph - reg.center))) ** -1
+            )
+            par_model = reg
+        else:
+            assert_never(reg)
 
     logging.info("Computation of the penality map : DONE")
 
@@ -1115,6 +941,7 @@ def cli():
     # EQUIDISTANT GRID FORMATION
     # =============================================================================
 
+    # TODO: do we need to?
     wave_backup = wave.copy()
     flux_backup = flux.copy()
     index_backup = index.copy()
@@ -1294,14 +1121,9 @@ def cli():
         plt.tick_params(direction="in", top=True, which="both")
         plt.subplots_adjust(left=0.07, right=0.96, hspace=0, top=0.95)
         if save_last_plot:
-            plt.savefig(output_dir + new_file + "_output.png")
+            plt.savefig(output_dir / f"{new_file}_output.png")
         # TODO: remove this
-        if False:  # feedback:
-            plt.show(block=False)
-            loop = ras.sphinx("Press Enter to finish the execution and save the final product")
-            plt.close()
-        else:
-            plt.close()
+        plt.close()
 
     # =============================================================================
     # SAVE OF THE PARAMETERS
@@ -1311,6 +1133,10 @@ def cli():
         hole_left = ras.find_nearest1(grid, ras.doppler_r(hole_left, -30)[0])[1]
     if (hole_right is not None) & (hole_right != -99.9):
         hole_right = ras.find_nearest1(grid, ras.doppler_r(hole_right, 30)[0])[1]
+
+    def print_parameters_according_to_paper():
+        # TODO: move the name_parameters stuff inside here
+        pass
 
     parameters = {
         "number_iteration": count_iter,
@@ -1343,7 +1169,7 @@ def cli():
         "berv": berv,
         "lamp_offset": lamp_offset,
         "acc_sec": acc_sec,
-        "light_file": light_version,
+        "light_file": True,
         "speedup": speedup,
         "continuum_interpolated_saved": outputs_interpolation_saved,
         "continuum_denoised_saved": outputs_denoising_saved,
@@ -1489,31 +1315,21 @@ def cli():
             "anchor_index": index,
         }
 
-    if light_version:
-        output = {
-            "wave": grid,
-            "flux": spectrei,
-            "flux_used": flux_used,
-            "output": basic,
-            "parameters": parameters,
-        }
-    else:
-        output = {
-            "wave": grid,
-            "flux": spectrei,
-            "flux_used": flux_used,
-            "output": basic,
-            "penality_map": penalite_step,
-            "penality": penalite0,
-            "parameters": parameters,
-        }
+    # we assume light_version=True here
+    output = {
+        "wave": grid,
+        "flux": spectrei,
+        "flux_used": flux_used,
+        "output": basic,
+        "parameters": parameters,
+    }
 
     if spectrei_err is not None:
         output["flux_err"] = spectrei_err
 
     output["parameters"]["filename"] = "RASSINE_" + new_file + ".p"
 
-    output_file = output_dir + "RASSINE_" + new_file + ".p"
+    output_file = output_dir / f"RASSINE_{new_file}.p"
     ras.save_pickle(output_file, output)
     print(
         f"Output file saved under : {output_file} (SNR at 5500 : {output['parameters']['SNR_5500']:.0f})"

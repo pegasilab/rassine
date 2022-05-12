@@ -32,10 +32,10 @@ class PickledIndividualSpectrum(TypedDict):
     #: Wavelength in Angstroms
     wave: npt.NDArray[np.float64]
 
-    #: Flux in photon count units
+    #: Flux in photon count units, must not have NaNs
     flux: npt.NDArray[np.float64]
 
-    #: Error on flux
+    #: Error on flux, must not have NaNs
     flux_err: npt.NDArray[np.float64]
 
     #: Instrument name

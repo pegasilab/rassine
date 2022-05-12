@@ -92,7 +92,7 @@ class IndividualReinterpolatedRow:
         )
 
 
-class PickledReinterpolatedSpectrum(TypedDict):
+class ReinterpolatedSpectrumPickle(TypedDict):
     """
     Data format of the pickle files produced by the reinterpolation step
     """
@@ -308,7 +308,7 @@ def reinterpolate(
     continuum_5500 = np.nanpercentile(new_flux[s.wave_ref - 50 : s.wave_ref + 50], 95)
     SNR = np.sqrt(continuum_5500)
 
-    out: PickledReinterpolatedSpectrum = {
+    out: ReinterpolatedSpectrumPickle = {
         "flux": new_flux,
         "flux_err": new_flux_err,
         "RV_sys": row.rv_mean,

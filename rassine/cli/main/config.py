@@ -18,6 +18,7 @@ class RegPoly:
     def name(self) -> str:
         return "poly"
 
+    string: str
     expo: float
 
 
@@ -28,6 +29,7 @@ class RegSigmoid:
     def name(self) -> str:
         return "sigmoid"
 
+    string: str
     center: float
     steepness: float
 
@@ -63,10 +65,10 @@ def _reg_parse(arg: str) -> Reg:
     parts = arg.split("_")
     if parts[0] == "poly":
         assert len(parts) == 2
-        return RegPoly(expo=float(parts[1]))
+        return RegPoly(string=arg, expo=float(parts[1]))
     elif parts[0] == "sigmoid":
         assert len(parts) == 3
-        return RegSigmoid(center=float(parts[1]), steepness=float(parts[2]))
+        return RegSigmoid(string=arg, center=float(parts[1]), steepness=float(parts[2]))
     else:
         raise ValueError("Invalid reg")
 
@@ -228,9 +230,6 @@ class Config(cp.Config):
     #: only needed if par_fwhm is in 'auto'
     CCF_mask: Annotated[str, cp.Param.store(cp.parsers.str_parser, default_value="master")]
 
-    #: RV systemic in kms, only needed if par_fwhm is in 'auto' and CCF different of 'master'
-    RV_sys: Annotated[float, cp.Param.store(cp.parsers.float_parser, default_value="0.0")]
-
     #: Minimum radius of the rolling pin in angstrom ('auto' available)
     #:
     #: PARAMETER 4
@@ -304,6 +303,11 @@ class Config(cp.Config):
 
     #: Number of outliers clipping in automatic mode (put at least 1 if Automatic mode)
     count_out_lim: Annotated[int, cp.Param.store(auto_int_parser, default_value="1")]
+
+    #: Random seed, derived from spectrum name if empty
+    random_seed: Annotated[
+        Optional[int], cp.Param.store(cp.parsers.int_parser.empty_means_none(), default_value="")
+    ]
 
 
 def update_using_anchor_file(config: Config, anchor_file: Path) -> Config:

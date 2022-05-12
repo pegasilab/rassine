@@ -3,23 +3,18 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Literal, Sequence, TypedDict
+from typing import Literal, Sequence, TypedDict
 
 import configpile as cp
 import numpy as np
 import numpy.typing as npt
 import tybles as tb
-from astropy.time import Time
-from filelock import FileLock
-from numpy.typing import ArrayLike, NDArray
 from typing_extensions import Annotated
 
 from ..analysis import find_nearest1
 from ..io import open_pickle, save_pickle
 from ..math import create_grid
 from .data import LoggingLevel, PickleProtocol
-from .reinterpolate import IndividualReinterpolatedRow, PickledReinterpolatedSpectrum
-from .stacking_create_groups import IndividualGroupRow
 from .stacking_stack import StackedBasicRow, StackedPickle
 from .util import log_task_name_and_time
 
@@ -58,6 +53,8 @@ class MasterPickle(TypedDict):
 
     #: Flux, stacked
     flux: npt.NDArray[np.float64]
+    #: Flux error, not provided
+    flux_err: None
     #: Tells it is the master spectrum
     master_spectrum: Literal[True]
     #: Average rv correction (median), same for all spectra
@@ -198,6 +195,7 @@ def run(t: Task) -> None:
     BERV_MAX = np.max(berv_maxs)
     out: MasterPickle = {
         "flux": stack,
+        "flux_err": None,
         "master_spectrum": True,
         "RV_sys": first.rv_mean,
         "RV_shift": np.float64(0.0),

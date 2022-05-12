@@ -18,7 +18,7 @@ from ..analysis import find_nearest1
 from ..io import open_pickle, save_pickle
 from ..math import create_grid
 from .data import LoggingLevel, PickleProtocol
-from .reinterpolate import IndividualReinterpolatedRow, PickledReinterpolatedSpectrum
+from .reinterpolate import IndividualReinterpolatedRow, ReinterpolatedSpectrumPickle
 from .stacking_create_groups import IndividualGroupRow
 from .util import log_task_name_and_time
 
@@ -203,7 +203,7 @@ def stack(
         return t.root / t.input_folder / (row.name + ".p")
 
     file = input_path(rows[0])
-    data = open_pickle(file, PickledReinterpolatedSpectrum)
+    data = open_pickle(file, ReinterpolatedSpectrumPickle)
     nb_bins = rows[0].nb_bins
     flux = data["flux"]
     wave_min = data["wave_min"]
@@ -226,7 +226,7 @@ def stack(
     bolo_ = [compute_bolo(flux)]
     for row in rows[1:]:
         file = input_path(row)
-        data = open_pickle(file, PickledReinterpolatedSpectrum)
+        data = open_pickle(file, ReinterpolatedSpectrumPickle)
         flux = data["flux"]
         stack += flux
         stack_err2 += data["flux_err"] ** 2

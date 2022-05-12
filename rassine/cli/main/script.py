@@ -1,12 +1,8 @@
 from __future__ import annotations
 
-import dataclasses
-import getopt
 import logging
-import os
-import sys
 import time
-from typing import Literal, Optional, Sequence, Tuple, Union, cast
+from typing import Any, Literal, Mapping, Optional, Sequence, Tuple, TypedDict, Union, cast
 
 import matplotlib
 import matplotlib.pylab as plt
@@ -17,24 +13,29 @@ from numpy.typing import ArrayLike, NDArray
 from scipy.interpolate import interp1d
 from scipy.optimize import curve_fit
 from scipy.special import erf
-from typing_extensions import Annotated, TypeAlias
 
-from ... import ras
+from ...analysis import clustering, find_nearest1
+from ...functions.misc import ccf as ccf_fun
+from ...functions.misc import grouping, local_max, make_continuum, produce_line, smooth
+from ...io import open_pickle, save_pickle
+from ...math import c_lum, create_grid, doppler_r, gaussian
 from ...util import assert_never
-from ..reinterpolate import PickledReinterpolatedSpectrum
 from ..stacking_master_spectrum import MasterPickle
+from ..stacking_stack import StackedPickle
 from .config import Auto, Config, RegPoly, RegSigmoid, update_using_anchor_file
+from .formats import (
+    BasicOutput,
+    RassineParameters,
+    RassinePickle,
+    print_parameters_according_to_paper,
+)
+from .functions import empty_ccd_gap
 
-# TODO: "auto" -> "erf"
 logging.getLogger().setLevel("INFO")
 
 
 def cli():
     matplotlib.use("Qt5Agg", force=True)
-
-    # get_ipython().run_line_magic('matplotlib','qt5')
-
-    python_version = sys.version[0]
 
     cfg: Config = Config.from_command_line_()
 
@@ -46,9 +47,8 @@ def cli():
     par_vicinity = cfg.par_vicinity  # was vicinity_local_max
     par_smoothing_box = cfg.par_smoothing_box  # was smoothing_box
     par_smoothing_kernel = cfg.par_smoothing_kernel  # was smoothing_kernel
-    par_fwhm = cfg.par_fwhm  # was fwhm_ccf
+    par_fwhm_ = cfg.par_fwhm  # was fwhm_ccf
     CCF_mask = cfg.CCF_mask
-    RV_sys = cfg.RV_sys
     mask_telluric = cfg.mask_telluric
     par_R = cfg.par_R  # was min_radius
     par_Rmax = cfg.par_Rmax  # was max_radius
@@ -64,7 +64,13 @@ def cli():
 
     outputs_interpolation_saved = cfg.outputs_interpolation_saved  # was outputs_interpolation_save
     outputs_denoising_saved = cfg.outputs_denoising_saved  # was outputs_denoising_saved
-    speedup: int = 1
+
+    if cfg.random_seed is None:
+        random_seed = hash(spectrum_name.stem)
+    else:
+        random_seed = cfg.random_seed
+
+    speedup = 1
 
     if cfg.anchor_file is not None:
         assert cfg.anchor_file.exists(), "Anchor file, if provided, must exist"
@@ -82,39 +88,26 @@ def cli():
 
     plt.close("all")
 
-    # TODO: move to pathlib
-    filename = str(spectrum_name).split("/")[-1]
-    cut_extension = len(filename.split(".")[-1]) + 1
-    new_file = filename[:-cut_extension]
-
-    # TODO: what is that random thing?
-    random_number = np.sum([ord(a) for a in filename.split("RASSINE_")[-1]])
-
-    spectrei_err = None
-    # CHECKME: we standardize the input format
-    data: Union[PickledReinterpolatedSpectrum, MasterPickle] = ras.open_pickle(
+    # CHECKME: later
+    data: Union[MasterPickle, StackedPickle] = open_pickle(
         spectrum_name
     )  # load the pickle dictionary
 
-    # TODO: remove the flexibility in dictionary keys
     spectrei = data["flux"]  # the flux of your spectrum
     spectrei_err = data.get("flux_err", None)  # the error flux of your spectrum
 
-    def get_grid_from_pickle(
-        d: Union[PickledReinterpolatedSpectrum, MasterPickle]
-    ) -> NDArray[np.float64]:
+    def get_grid_and_dgrid_from_pickle(
+        d: Union[MasterPickle, StackedPickle]
+    ) -> Tuple[NDArray[np.float64], np.float64]:
         # TODO: uniform this
-        try:
-            return d["wave"]  # the grid of wavelength of your spectrum
-        except:
-            return ras.create_grid(d["wave_min"], d["dwave"], len(d["flux"]))
+        return create_grid(d["wave_min"], d["dwave"], len(d["flux"])), d["dwave"]
 
-    grid = get_grid_from_pickle(data)
+    grid, dgrid = get_grid_and_dgrid_from_pickle(data)
     # TOCHECK: can this be non?
     # if ras.try_field(data, "RV_sys") is not None:
-    RV_sys = data["RV_sys"]
+    RV_sys: np.float64 = data["RV_sys"]
 
-    RV_shift = data["RV_shift"]
+    RV_shift: np.float64 = data["RV_shift"]
     mjd: np.float64 = data["mjd"]
     jdb: np.float64 = data["jdb"]
     hole_left: np.float64 = data["hole_left"]
@@ -123,9 +116,18 @@ def cli():
     lamp_offset: np.float64 = data["lamp_offset"]
     acc_sec: np.float64 = data["acc_sec"]
     # TODO: the type of this
-    nb_spectra_stacked = ras.try_field(data, "nb_spectra_stacked")
+    nb_spectra_stacked: int = data["nb_spectra_stacked"]
     # TODO: the type of this
-    arcfiles = ras.try_field(data, "arcfiles")
+    arcfiles: Sequence[str] = data["arcfiles"]
+
+    # Preprocess spectrum
+    assert np.all(np.isfinite(grid)), "Grid points must be finite"
+    assert np.all(np.isfinite(spectrei)), "Flux values must be finite"
+    assert np.all(spectrei >= 0.0), "Flux values must be non-negative"
+
+    # clamp value to non-negative
+    spectrei[spectrei < 0] = 0
+    spectrei = empty_ccd_gap(grid, spectrei, left=hole_left, right=hole_right)
 
     # =============================================================================
     # LOCAL MAXIMA
@@ -137,119 +139,76 @@ def cli():
 
     logging.info("Computation of the local maxima : LOADING")
 
-    mask_grid = np.arange(len(grid))[(grid - grid) != 0]
-    mask_spectre = np.arange(len(grid))[(spectrei - spectrei) != 0]
+    wave_min = grid[0]
+    wave_max = grid[-1]
 
-    if len(mask_grid) > 0:
-        print(" Nan values were found, replaced by left and right average...")
-        for j in mask_grid:
-            grid[j] = (grid[j - 1] + grid[j + 1]) / 2
+    def compute_SNR() -> float:
+        wave_5500 = int(find_nearest1(grid, 5500)[0])
+        continuum_5500 = np.nanpercentile(spectrei[wave_5500 - 50 : wave_5500 + 50], 95)
+        SNR_0 = np.sqrt(continuum_5500)
+        if np.isnan(SNR_0):
+            return -99.0
+        else:
+            return float(SNR_0)
 
-    if len(mask_spectre) > 0:
-        print(" Nan values were found, replaced by left and right average...")
-        for j in mask_spectre:
-            spectrei[j] = (spectrei[j - 1] + spectrei[j + 1]) / 2
-
-    mask_grid = np.arange(len(grid))[(grid - grid) != 0]
-    mask_spectre = np.arange(len(grid))[(spectrei - spectrei) != 0]
-
-    if np.sum(np.isnan(grid)) | np.sum(np.isnan(spectrei)):
-        print(" [WARNING] There is too much NaN values, attempting to clean your data")
-        spectrei[mask_spectre] = 0
-
-    if len(np.unique(np.diff(grid))) > 1:
-        grid_backup_0 = grid.copy()
-        new_grid = np.linspace(grid.min(), grid.max(), len(grid))
-        spectrei = interp1d(
-            grid, spectrei, kind="cubic", bounds_error=False, fill_value="extrapolate"
-        )(new_grid)
-        grid = new_grid.copy()
-
-    dgrid = grid[1] - grid[0]
-
-    sorting = grid.argsort()  # sort the grid of wavelength
-    grid = grid[sorting]
-    dlambda = np.mean(np.diff(grid))
-    spectrei = spectrei[sorting]
-    spectrei[spectrei < 0] = 0
-    spectrei = ras.empty_ccd_gap(grid, spectrei, left=hole_left, right=hole_right)
-
-    minx = grid[0]
-    maxx = grid[-1]
-    miny = np.nanpercentile(spectrei, 0.001)
-    maxy = np.nanpercentile(spectrei, 0.999)
-
-    len_x = maxx - minx
-    len_y = np.max(spectrei) - np.min(spectrei)
-
-    wave_5500 = int(ras.find_nearest1(grid, 5500)[0])
-    continuum_5500 = np.nanpercentile(spectrei[wave_5500 - 50 : wave_5500 + 50], 95)
-    SNR_0 = np.sqrt(continuum_5500)
-    if np.isnan(SNR_0):
-        SNR_0 = -99
+    SNR_0 = compute_SNR()
 
     logging.info(f"Spectrum SNR at 5500 : {SNR_0:.0f}")
 
-    normalisation = float(len_y) / float(len_x)  # stretch the y axis to scale the x and y axis
-    spectre = spectrei / normalisation
+    def compute_normalisation() -> float:
+        len_x = wave_max - wave_min
+        len_y = np.max(spectrei) - np.min(spectrei)
+        return float(len_y) / float(len_x)  # stretch the y axis to scale the x and y axis
+
+    normalisation = compute_normalisation()
+    spectre: NDArray[np.float64] = spectrei / normalisation
 
     if synthetic_spectrum:
+        # to avoid to same value of flux in synthetic spectra
+        np.random.seed(random_seed)
         spectre += (
             np.random.randn(len(spectre)) * 1e-5 * np.min(np.diff(spectre)[np.diff(spectre) != 0])
-        )  # to avoid to same value of flux in synthetic spectra
-
-        # TODO: can be simplified
-    # Do the rolling sigma clipping on a grid smaller to increase the speed
-    np.random.seed(random_number)
-    subset = np.sort(
-        np.random.choice(np.arange(len(spectre)), size=int(len(spectre) / 1), replace=False)
-    )  # take randomly 1 point over 10 to speed process
-
-    for iteration in range(5):  # k-sigma clipping 5 times
-        maxi_roll_fast = np.ravel(
-            pd.DataFrame(spectre[subset])
-            .rolling(int(100 / dgrid / 1), min_periods=1, center=True)
-            .quantile(0.99)
-        )
-        Q3_fast = np.ravel(
-            pd.DataFrame(spectre[subset])
-            .rolling(int(5 / dgrid / 1), min_periods=1, center=True)
-            .quantile(0.75)
-        )  # sigma clipping on 5 \AA range
-        Q2_fast = np.ravel(
-            pd.DataFrame(spectre[subset])
-            .rolling(int(5 / dgrid / 1), min_periods=1, center=True)
-            .quantile(0.50)
-        )
-        Q1_fast = np.ravel(
-            pd.DataFrame(spectre[subset])
-            .rolling(int(5 / dgrid / 1), min_periods=1, center=True)
-            .quantile(0.25)
-        )
-        IQ_fast = 2 * (Q3_fast - Q2_fast)  # type: ignore
-        sup_fast = Q3_fast + 1.5 * IQ_fast
-
-        logging.info(
-            f"Number of cosmic peaks removed : {np.sum((spectre > sup_fast) & (spectre > maxi_roll_fast)):.0f}"
         )
 
-        mask = (spectre > sup_fast) & (spectre > maxi_roll_fast)
-        for j in range(int(par_vicinity / 2)):
-            mask = (
-                mask | np.roll(mask, -j) | np.roll(mask, j)
-            )  # supress the peak + the vicinity range
-        if sum(mask) == 0:
-            break
-        spectre[mask] = Q2_fast[mask]
+    def cosmic_sigma_clipping() -> None:
+        for iteration in range(5):  # k-sigma clipping 5 times
+            maxi_roll_fast = np.ravel(
+                pd.DataFrame(spectre)
+                .rolling(int(100 / dgrid), min_periods=1, center=True)
+                .quantile(0.99)
+            )
+            Q3_fast = np.ravel(
+                pd.DataFrame(spectre)
+                .rolling(int(5 / dgrid), min_periods=1, center=True)
+                .quantile(0.75)
+            )  # sigma clipping on 5 \AA range
+            Q2_fast = np.ravel(
+                pd.DataFrame(spectre)
+                .rolling(int(5 / dgrid), min_periods=1, center=True)
+                .quantile(0.50)
+            )
+            IQ_fast = 2 * (Q3_fast - Q2_fast)  # type: ignore
+            sup_fast = Q3_fast + 1.5 * IQ_fast
+            logging.info(
+                f"Number of cosmic peaks removed : {np.sum((spectre > sup_fast) & (spectre > maxi_roll_fast)):.0f}"
+            )
+            mask = (spectre > sup_fast) & (spectre > maxi_roll_fast)
+            for j in range(int(par_vicinity / 2)):
+                mask = (
+                    mask | np.roll(mask, -j) | np.roll(mask, j)
+                )  # supress the peak + the vicinity range
+            if sum(mask) == 0:
+                break
+            spectre[mask] = Q2_fast[mask]
 
-    conversion_fwhm_sig = 10 * minx / (2.35 * 3e5)  # 5sigma width in the blue
+    cosmic_sigma_clipping()
 
-    if par_fwhm == "auto":
+    conversion_fwhm_sig = 10 * wave_min / (2.35 * 3e5)  # 5sigma width in the blue
 
+    def compute_fwhm() -> float:
         mask = np.zeros(len(spectre))
-        continuum_right = np.ravel(
-            pd.DataFrame(spectre).rolling(int(30 / dgrid)).quantile(1)
-        )  # by default rolling maxima in a 30 angstrom window
+        # by default rolling maxima in a 30 angstrom window
+        continuum_right = np.ravel(pd.DataFrame(spectre).rolling(int(30 / dgrid)).quantile(1))
         continuum_left = np.ravel(
             pd.DataFrame(spectre[::-1]).rolling(int(30 / dgrid)).quantile(1)
         )[::-1]
@@ -258,9 +217,8 @@ def cli():
         both = np.array([continuum_right, continuum_left])
         continuum = np.min(both, axis=0)
 
-        continuum = ras.smooth(
-            continuum, int(15 / dgrid), shape="rectangular"
-        )  # smoothing of the envelop 15 anstrom to provide more accurate weight
+        # smoothing of the envelop 15 anstrom to provide more accurate weight
+        continuum = smooth(continuum, int(15 / dgrid), shape="rectangular")
 
         log_grid = np.linspace(np.log10(grid).min(), np.log10(grid).max(), len(grid))
         log_spectrum = interp1d(
@@ -274,22 +232,22 @@ def cli():
         if CCF_mask != "master":
             # TODO: mask_harps should be mask_ccf
             mask_harps = np.genfromtxt(CCF_mask + ".txt")
-            line_center = ras.doppler_r(0.5 * (mask_harps[:, 0] + mask_harps[:, 1]), RV_sys)[0]
+            line_center = doppler_r(0.5 * (mask_harps[:, 0] + mask_harps[:, 1]), RV_sys)[0]
             distance = np.abs(grid - line_center[:, np.newaxis])
-            index = np.argmin(distance, axis=1)
+            index_f = np.argmin(distance, axis=1)
             mask = np.zeros(len(spectre))
-            mask[index] = mask_harps[:, 2]
+            mask[index_f] = mask_harps[:, 2]
             log_mask = interp1d(
                 np.log10(grid), mask, kind="linear", bounds_error=False, fill_value="extrapolate"
             )(log_grid)
         else:
-            index, wave, flux = ras.produce_line(grid, spectre / continuum)
-            keep = (0.5 * (flux[:, 1] + flux[:, 2]) - flux[:, 0]) > 0.2
-            flux = flux[keep]
-            wave = wave[keep]
-            index = index[keep]
+            index_f, wave_f, flux_f = produce_line(grid, spectre / continuum)
+            keep = (0.5 * (flux_f[:, 1] + flux_f[:, 2]) - flux_f[:, 0]) > 0.2
+            flux_f = flux_f[keep]
+            wave_f = wave_f[keep]
+            index_f = index_f[keep]
             mask = np.zeros(len(spectre))
-            mask[index[:, 0]] = 0.5 * (flux[:, 1] + flux[:, 2]) - flux[:, 0]
+            mask[index_f[:, 0]] = 0.5 * (flux_f[:, 1] + flux_f[:, 2]) - flux_f[:, 0]
             log_mask = interp1d(
                 np.log10(grid), mask, kind="linear", bounds_error=False, fill_value="extrapolate"
             )(log_grid)
@@ -300,10 +258,10 @@ def cli():
                     )
                     log_mask[tellurics] = 0
 
-        vrad, ccf = ras.ccf(log_grid, log_spectrum, log_mask, extended=500)
+        vrad, ccf = ccf_fun(log_grid, log_spectrum, log_mask, extended=500)
         ccf = ccf[vrad.argsort()]
         vrad = vrad[vrad.argsort()]
-        popt, pcov = curve_fit(ras.gaussian, vrad / 1000, ccf, p0=[0, -0.5, 0.9, 3])
+        popt, pcov = curve_fit(gaussian, vrad / 1000, ccf, p0=[0, -0.5, 0.9, 3])
         errors_fit = np.sqrt(np.diag(pcov))
         logging.info(f"[AUTO] FWHM computed from the CCF is about : {popt[-1] * 2.35:.2f} [km/s]")
         if errors_fit[-1] / popt[-1] > 0.2:
@@ -314,7 +272,7 @@ def cli():
             plt.plot(vrad / 1000, ccf, label="CCF")
             plt.plot(
                 vrad / 1000,
-                ras.gaussian(vrad / 1000, popt[0], popt[1], popt[2], popt[3]),
+                gaussian(vrad / 1000, popt[0], popt[1], popt[2], popt[3]),
                 label="gaussian fit",
             )
             plt.legend()
@@ -324,48 +282,46 @@ def cli():
             plt.xlabel("Vrad [km/s]")
             plt.ylabel("CCF")
 
-        par_fwhm = popt[-1] * 2.35
+        return popt[-1] * 2.35
 
-    if par_smoothing_kernel == "rectangular":
-        active_b = 0
-    elif par_smoothing_kernel == "gaussian":
-        active_b = 1
-    elif par_smoothing_kernel == "savgol":
-        active_b = 2
+    if par_fwhm_ == "auto":
+        par_fwhm = compute_fwhm()
     else:
-        raise NotImplementedError  # should not happen
+        par_fwhm = par_fwhm_
 
-    if True:
-        # TODO: can remove this, as this is validated during parsing
-        if par_smoothing_box == "auto":
-            grid_vrad = (
-                (grid - minx) / grid * ras.c_lum / 1000
-            )  # grille en vitesse radiale (unités km/s)
-            grid_vrad_equi = np.linspace(
-                grid_vrad.min(), grid_vrad.max(), len(grid)
-            )  # new grid equidistant
-            dv = np.diff(grid_vrad_equi)[0]  ##delta velocity
+    if par_smoothing_box == "auto":
+
+        def perform_auto_smoothing() -> NDArray[np.float64]:
+            # grille en vitesse radiale (unités km/s)
+            grid_vrad = (grid - wave_min) / grid * c_lum / 1000
+            # new grid equidistant
+            grid_vrad_equi = np.linspace(grid_vrad.min(), grid_vrad.max(), len(grid))
+            # delta velocity
+            dv = np.diff(grid_vrad_equi)[0]
             spectrum_vrad = interp1d(
                 grid_vrad, spectre, kind="cubic", bounds_error=False, fill_value="extrapolate"
             )(grid_vrad_equi)
 
             sp = np.fft.fft(spectrum_vrad)
-            freq = np.fft.fftfreq(grid_vrad_equi.shape[-1]) / dv  # List of frequencies
+            # List of frequencies
+            freq: NDArray[np.float64] = np.fft.fftfreq(grid_vrad_equi.shape[-1]) / dv  # type: ignore
             sig1 = par_fwhm / 2.35  # fwhm-sigma conversion
 
             if par_smoothing_kernel == "erf":
+                # using the calibration curve calibration
                 alpha1 = np.exp(
                     np.polyval(
                         np.array([0.00210819, -0.04581559, 0.49444111, -1.78135102]), np.log(SNR_0)
                     )
-                )  # using the calibration curve calibration
+                )
                 alpha2 = np.polyval(np.array([-0.04532947, -0.42650657, 0.59564026]), SNR_0)
             elif par_smoothing_kernel == "hat_exp":
+                # using the calibration curve calibration
                 alpha1 = np.exp(
                     np.polyval(
                         np.array([0.01155214, -0.20085361, 1.34901688, -3.63863408]), np.log(SNR_0)
                     )
-                )  # using the calibration curve calibration
+                )
                 alpha2 = np.polyval(np.array([-0.06031564, -0.45155956, 0.67704286]), SNR_0)
             else:
                 raise NotImplementedError
@@ -374,22 +330,19 @@ def cli():
             cond = abs(freq) < fourier_center
 
             if par_smoothing_kernel == "erf":
-                fourier_filter = 0.5 * (
-                    erf((fourier_center - abs(freq)) / fourier_delta) + 1
-                )  # erf function
-                smoothing_shape = "erf"
+                # erf function
+                fourier_filter = 0.5 * (erf((fourier_center - abs(freq)) / fourier_delta) + 1)
             elif par_smoothing_kernel == "hat_exp":
+                # Top hat with an exp
                 fourier_filter = cond + (1 - cond) * np.exp(
                     -(abs(freq) - fourier_center) / fourier_delta
-                )  # Top hat with an exp
-                smoothing_shape = "hat_exp"
+                )
             else:
                 raise NotImplementedError
 
             fourier_filter = fourier_filter / fourier_filter.max()
 
             spectrei_ifft = np.fft.ifft(fourier_filter * (sp.real + 1j * sp.imag))
-            # spectrei_ifft *= spectre.max()/spectrei_ifft.max()
             spectrei_ifft = np.abs(spectrei_ifft)
             spectre_back = interp1d(
                 grid_vrad_equi,
@@ -401,55 +354,52 @@ def cli():
             median = np.median(abs(spectre_back - spectre))
             IQ = np.percentile(abs(spectre_back - spectre), 75) - median
             mask_out_fourier = np.where(abs(spectre_back - spectre) > (median + 20 * IQ))[0]
-            # plt.plot(grid_vrad_equi,abs(spectrei_ifft-spectrum_vrad))
-            # plt.axhline(y=median+20*IQ)
             length_oversmooth = int(1 / fourier_center / dv)
             mask_fourier = np.unique(
                 mask_out_fourier
                 + np.arange(-length_oversmooth, length_oversmooth + 1, 1)[:, np.newaxis]
             )
             mask_fourier = mask_fourier[(mask_fourier >= 0) & (mask_fourier < len(grid))]
-            spectre_back[mask_fourier] = spectre[
-                mask_fourier
-            ]  # supress the smoothing of peak to sharp which create sinc-like wiggle
-            spectre_back[0 : length_oversmooth + 1] = spectre[
-                0 : length_oversmooth + 1
-            ]  # suppression of the border which are at high frequencies
+            # supress the smoothing of peak to sharp which create sinc-like wiggle
+            spectre_back[mask_fourier] = spectre[mask_fourier]
+            # suppression of the border which are at high frequencies
+            spectre_back[0 : length_oversmooth + 1] = spectre[0 : length_oversmooth + 1]
             spectre_back[-length_oversmooth:] = spectre[-length_oversmooth:]
-            spectre = spectre_back.copy()
-            smoothing_length = par_smoothing_box
-        else:
-            spectre_backup = spectre.copy()
+            return spectre_back
+
+        spectre = perform_auto_smoothing()
+    else:
+
+        def perform_given_smoothing(
+            spectre: NDArray[np.float64], parsmooth: int
+        ) -> NDArray[np.float64]:
+            spectre_back = spectre.copy()
             assert par_smoothing_kernel in ["rectangular", "gaussian", "savgol"]
 
-            spectre = ras.smooth(
+            spectre = smooth(
                 spectre,
-                int(par_smoothing_box),
+                parsmooth,
                 shape=cast(Literal["rectangular", "gaussian", "savgol"], par_smoothing_kernel),
             )
-            smoothing_shape = par_smoothing_kernel
-            smoothing_length = par_smoothing_box
-            median = np.median(abs(spectre_backup - spectre))
-            IQ = np.percentile(abs(spectre_backup - spectre), 75) - median
-            mask_out = np.where(abs(spectre_backup - spectre) > (median + 20 * IQ))[0]
-            mask_out = np.unique(
-                mask_out + np.arange(-smoothing_length, smoothing_length + 1, 1)[:, np.newaxis]
-            )
+            median = np.median(abs(spectre_back - spectre))
+            IQ = np.percentile(abs(spectre_back - spectre), 75) - median
+            mask_out = np.where(abs(spectre_back - spectre) > (median + 20 * IQ))[0]
+            mask_out = np.unique(mask_out + np.arange(-parsmooth, parsmooth + 1, 1)[:, np.newaxis])
             mask_out = mask_out[(mask_out >= 0) & (mask_out < len(grid))]
-            spectre[mask_out.astype("int")] = spectre_backup[
-                mask_out.astype("int")
-            ]  # supress the smoothing of peak to sharp which create sinc-like wiggle
 
-    par_fwhm = (
-        par_fwhm * conversion_fwhm_sig
-    )  # conversion of the fwhm to angstrom lengthscale in the bluest part
+            # supress the smoothing of peak to sharp which create sinc-like wiggle
+            spectre[mask_out.astype("int")] = spectre_back[mask_out.astype("int")]
+            return spectre
 
-    spectre = ras.empty_ccd_gap(grid, spectre, left=hole_left, right=hole_right)
+        spectre = perform_given_smoothing(spectre, par_smoothing_box)
 
-    index, flux = ras.local_max(spectre, par_vicinity)
-    index = index.astype("int")
-    wave = grid[index]
+    # conversion of the fwhm to angstrom lengthscale in the bluest part
+    par_fwhm = par_fwhm * conversion_fwhm_sig
 
+    spectre = empty_ccd_gap(grid, spectre, left=hole_left, right=hole_right)
+
+    index, flux = local_max(spectre, par_vicinity)
+    wave: NDArray[np.float64] = grid[index]
     if flux[0] < spectre[0]:
         wave = np.insert(wave, 0, grid[0])
         flux = np.insert(flux, 0, spectre[0])
@@ -461,54 +411,43 @@ def cli():
         index = np.hstack([index, len(spectre) - 1])
 
     # supression of cosmic peak
-    median = np.ravel(pd.DataFrame(flux).rolling(10, center=True).quantile(0.50))
-    IQ = np.ravel(pd.DataFrame(flux).rolling(10, center=True).quantile(0.75)) - median
-    # plt.plot(wave,np.ravel(pd.DataFrame(flux).rolling(10,center=True).quantile(0.50))+10*IQ,color='k')
-    # plt.scatter(wave,flux)
+    median: NDArray[np.float64] = np.ravel(
+        pd.DataFrame(flux).rolling(10, center=True).quantile(0.50)
+    )
+    IQ: NDArray[np.float64] = (
+        np.ravel(pd.DataFrame(flux).rolling(10, center=True).quantile(0.75)) - median
+    )
     IQ[np.isnan(IQ)] = spectre.max()
     median[np.isnan(median)] = spectre.max()
     mask = flux > median + 20 * IQ
-    # plt.show()
     logging.info(f" Number of cosmic peaks removed : {np.sum(mask):.0f}")
     wave = wave[~mask]
     flux = flux[~mask]
     index = index[~mask]
 
-    # print(' Rough estimation of the typical width of the lines : median=%.3f mean=%.3f'%(np.median(np.diff(wave))/conversion_fwhm_sig,np.mean(np.diff(wave))/conversion_fwhm_sig))
-
-    computed_parameters = (
-        0.390 / 51.3 * np.median(abs(np.diff(flux))) / np.median(np.diff(wave))
-    )  # old calibration
-
     calib_low = np.polyval([-0.08769286, 5.90699857], par_fwhm / conversion_fwhm_sig)
     calib_high = np.polyval([-0.38532535, 20.17699949], par_fwhm / conversion_fwhm_sig)
 
     logging.info(
-        f" Suggestion of a streching parameter to try : {calib_low + (calib_high - calib_low) * 0.5:.0f} +/- {(calib_high - calib_low) * 0.25:.0f}"
+        f"Suggestion of a streching parameter to try : {calib_low + (calib_high - calib_low) * 0.5:.0f} +/- {(calib_high - calib_low) * 0.25:.0f}"
     )
 
     out_of_calibration = False
     if par_fwhm / conversion_fwhm_sig > 30:
         out_of_calibration = True
-        print(" [WARNING] Star out of the FWHM calibration range")
+        logging.warning("Star out of the FWHM calibration range")
 
     if isinstance(par_stretching, Auto):
         if not out_of_calibration:
             par_stretching = float(calib_low + (calib_high - calib_low) * par_stretching.ratio)
-            # TODO: what about this
-            # par_stretching = 20*computed_parameters #old calibration
-            logging.info(f" [AUTO] par_stretching fixed : {par_stretching:.2f}")
+            logging.info(f"[AUTO] par_stretching fixed : {par_stretching:.2f}")
         else:
-            print(" [AUTO] par_stretching out of the calibration range, value fixed at 7")
+            logging.info("[AUTO] par_stretching out of the calibration range, value fixed at 7")
             par_stretching = 7.0
 
     spectre = spectre / par_stretching
     flux = flux / par_stretching
     normalisation = normalisation * par_stretching
-
-    locmaxx = wave.copy()
-    locmaxy = flux.copy()
-    locmaxz = index.copy()
 
     logging.info(" Computation of the local maxima : DONE")
 
@@ -532,11 +471,6 @@ def cli():
     # (no need to modify the values except if you are visually unsatisfied of the penality plot)
     # iteration increase the upper zone of the penality top
 
-    np.random.seed(random_number + 1)
-    subset = np.sort(
-        np.random.choice(np.arange(len(spectre)), size=int(len(spectre) / speedup), replace=False)
-    )  # take randomly 1 point over 10 to speed process
-
     windows = 10.0  # 10 typical line width scale (small window for the first continuum)
     big_windows = 100.0  # 100 typical line width scale (large window for the second continuum)
     iteration = 5
@@ -547,68 +481,63 @@ def cli():
     if par_R == "auto":
         par_R = np.round(10 * par_fwhm, 1)
         logging.info(f"[AUTO] R fixed : {par_R:.1f}")
-        if par_R > 5:
+        if par_R > 5.0:
             logging.warning("R larger than 5, R fixed at 5")
-            par_R = 5
+            par_R = 5.0
 
     if out_of_calibration:
         windows = 2.0  # 2 typical line width scale (small window for the first continuum)
         big_windows = 20.0  # 20typical line width scale (large window for the second continuum)
 
-    law_chromatic = wave / minx
+    law_chromatic = wave / wave_min
 
     radius = par_R * np.ones(len(wave)) * law_chromatic
     if (par_Rmax != par_R) | (par_Rmax == "auto"):
         Penalty = True
         dx = par_fwhm / np.median(np.diff(grid))
-
         continuum_small_win = np.ravel(
-            pd.DataFrame(spectre[subset])
-            .rolling(int(windows * dx / speedup), center=True)
-            .quantile(1)
+            pd.DataFrame(spectre).rolling(int(windows * dx / speedup), center=True).quantile(1)
         )  # rolling maximum with small windows
         continuum_right = np.ravel(
-            pd.DataFrame(spectre[subset]).rolling(int(big_windows * dx / speedup)).quantile(1)
+            pd.DataFrame(spectre).rolling(int(big_windows * dx / speedup)).quantile(1)
         )
         continuum_left = np.ravel(
-            pd.DataFrame(spectre[subset][::-1])
-            .rolling(int(big_windows * dx / speedup))
-            .quantile(1)
+            pd.DataFrame(spectre[::-1]).rolling(int(big_windows * dx / speedup)).quantile(1)
         )[::-1]
         continuum_right[np.isnan(continuum_right)] = continuum_right[~np.isnan(continuum_right)][0]
         continuum_left[np.isnan(continuum_left)] = continuum_left[~np.isnan(continuum_left)][-1]
         both = np.array([continuum_right, continuum_left])
         continuum_small_win[
-            np.isnan(continuum_small_win) & (2 * grid[subset] < (maxx + minx))
+            np.isnan(continuum_small_win) & (2 * grid < (wave_max + wave_min))
         ] = continuum_small_win[~np.isnan(continuum_small_win)][0]
         continuum_small_win[
-            np.isnan(continuum_small_win) & (2 * grid[subset] > (maxx + minx))
+            np.isnan(continuum_small_win) & (2 * grid > (wave_max + wave_min))
         ] = continuum_small_win[~np.isnan(continuum_small_win)][-1]
         continuum_large_win = np.min(
             both, axis=0
         )  # when taking a large window, the rolling maximum depends on the direction make both direction and take the minimum
 
-        median_large = np.ravel(
+        median_large: NDArray[np.float64] = np.ravel(
             pd.DataFrame(continuum_large_win)
             .rolling(int(10 * big_windows * dx), min_periods=1, center=True)
             .quantile(0.5)
         )
-        Q3_large = np.ravel(
+        Q3_large: NDArray[np.float64] = np.ravel(
             pd.DataFrame(continuum_large_win)
             .rolling(int(10 * big_windows * dx), min_periods=1, center=True)
             .quantile(0.75)
         )
-        q3_large = np.ravel(
+        q3_large: NDArray[np.float64] = np.ravel(
             pd.DataFrame(continuum_large_win)
             .rolling(int(big_windows * dx), min_periods=1, center=True)
             .quantile(0.75)
         )
-        Q1_large = np.ravel(
+        Q1_large: NDArray[np.float64] = np.ravel(
             pd.DataFrame(continuum_large_win)
             .rolling(int(10 * big_windows * dx), min_periods=1, center=True)
             .quantile(0.25)
         )
-        q1_large = np.ravel(
+        q1_large: NDArray[np.float64] = np.ravel(
             pd.DataFrame(continuum_large_win)
             .rolling(int(big_windows * dx), min_periods=1, center=True)
             .quantile(0.25)
@@ -617,79 +546,59 @@ def cli():
         IQ2_large = q3_large - q1_large
         sup_large = np.min([Q3_large + 1.5 * IQ1_large, q3_large + 1.5 * IQ2_large], axis=0)
 
-        if speedup > 1:
-            sup_large = interp1d(subset, sup_large, bounds_error=False, fill_value="extrapolate")(
-                np.arange(len(spectre))
-            )
-            continuum_large_win = interp1d(
-                subset, continuum_large_win, bounds_error=False, fill_value="extrapolate"
-            )(np.arange(len(spectre)))
-            median_large = interp1d(
-                subset, median_large, bounds_error=False, fill_value="extrapolate"
-            )(np.arange(len(spectre)))
-
         mask = continuum_large_win > sup_large
         continuum_large_win[mask] = median_large[mask]
 
-        median_small = np.ravel(
+        median_small: NDArray[np.float64] = np.ravel(
             pd.DataFrame(continuum_small_win)
-            .rolling(int(10 * big_windows * dx / speedup), min_periods=1, center=True)
+            .rolling(int(10 * big_windows * dx), min_periods=1, center=True)
             .quantile(0.5)
         )
-        Q3_small = np.ravel(
+        Q3_small: NDArray[np.float64] = np.ravel(
             pd.DataFrame(continuum_small_win)
-            .rolling(int(10 * big_windows * dx / speedup), min_periods=1, center=True)
+            .rolling(int(10 * big_windows * dx), min_periods=1, center=True)
             .quantile(0.75)
         )
-        q3_small = np.ravel(
+        q3_small: NDArray[np.float64] = np.ravel(
             pd.DataFrame(continuum_small_win)
-            .rolling(int(big_windows * dx / speedup), min_periods=1, center=True)
+            .rolling(int(big_windows * dx), min_periods=1, center=True)
             .quantile(0.75)
         )
-        Q1_small = np.ravel(
+        Q1_small: NDArray[np.float64] = np.ravel(
             pd.DataFrame(continuum_small_win)
-            .rolling(int(10 * big_windows * dx / speedup), min_periods=1, center=True)
+            .rolling(int(10 * big_windows * dx), min_periods=1, center=True)
             .quantile(0.25)
         )
-        q1_small = np.ravel(
+        q1_small: NDArray[np.float64] = np.ravel(
             pd.DataFrame(continuum_small_win)
-            .rolling(int(big_windows * dx / speedup), min_periods=1, center=True)
+            .rolling(int(big_windows * dx), min_periods=1, center=True)
             .quantile(0.25)
         )
         IQ1_small = Q3_small - Q1_small
         IQ2_small = q3_small - q1_small
         sup_small = np.min([Q3_small + 1.5 * IQ1_small, q3_small + 1.5 * IQ2_small], axis=0)
 
-        if speedup > 1:
-            sup_small = interp1d(subset, sup_small, bounds_error=False, fill_value="extrapolate")(
-                np.arange(len(spectre))
-            )
-            continuum_small_win = interp1d(
-                subset, continuum_small_win, bounds_error=False, fill_value="extrapolate"
-            )(np.arange(len(spectre)))
-            median_small = interp1d(
-                subset, median_small, bounds_error=False, fill_value="extrapolate"
-            )(np.arange(len(spectre)))
-
         mask = continuum_small_win > sup_small
         continuum_small_win[mask] = median_small[mask]
 
-        loc_out = ras.local_max(continuum_large_win, 2)[0]
+        loc_out = local_max(continuum_large_win, 2)[0]
         for k in loc_out.astype("int"):
             continuum_large_win[k] = np.min(
                 [continuum_large_win[k - 1], continuum_large_win[k + 1]]
             )
 
-        loc_out = ras.local_max(continuum_small_win, 2)[0]
+        loc_out = local_max(continuum_small_win, 2)[0]
         for k in loc_out.astype("int"):
             continuum_small_win[k] = np.min(
                 [continuum_small_win[k - 1], continuum_small_win[k + 1]]
             )
 
-        continuum_large_win = np.where(
+        continuum_large_win: NDArray[np.float64] = np.where(
             continuum_large_win == 0, 1.0, continuum_large_win
         )  # replace null values
-        penalite0 = (continuum_large_win - continuum_small_win) / continuum_large_win
+        penalite0: NDArray[np.float64] = (
+            continuum_large_win - continuum_small_win  # type: ignore
+        ) / continuum_large_win
         penalite0[penalite0 < 0] = 0
         penalite = penalite0.copy()
 
@@ -726,9 +635,10 @@ def cli():
         loop = True
         if par_Rmax == "auto":
             cluster_length = np.zeros(())  # TODO: added
+            largest_cluster = -1
             while (loop) & (threshold > 0.2):
                 difference = (continuum_large_win < continuum_small_win).astype("int")
-                cluster_broad_line = ras.grouping(difference, 0.5, 0)[-1]
+                cluster_broad_line = grouping(difference, 0.5, 0)[-1]
                 if cluster_broad_line[0][0] == 0:  # rm border left
                     cluster_broad_line = cluster_broad_line[1:]
                 if cluster_broad_line[-1][1] == len(grid) - 2:  # rm border right
@@ -774,7 +684,7 @@ def cli():
 
                 par_Rmax = 2 * np.round(
                     largest_radius
-                    * minx
+                    * wave_min
                     / cluster_length[largest_cluster, 5]
                     / cluster_length[largest_cluster, 3],
                     0,
@@ -786,10 +696,10 @@ def cli():
                     par_Rmax = par_R
             # TOCHECK: removed the if threshold < 0.2 logic
             logging.info(
-                f" [AUTO] Rmax found around {cluster_length[largest_cluster, 5]:.0f} AA and fixed : {par_Rmax:.0f}"
+                f"[AUTO] Rmax found around {cluster_length[largest_cluster, 5]:.0f} AA and fixed : {par_Rmax:.0f}"
             )
             if par_Rmax > 150:
-                logging.warning(" [WARNING] Rmax larger than 150, Rmax fixed at 150")
+                logging.warning("Rmax larger than 150, Rmax fixed at 150")
                 par_Rmax = 150
 
         par_R = np.round(par_R, 1)
@@ -824,55 +734,42 @@ def cli():
 
     mask = (distance > 0) & (distance < 2.0 * par_R)
 
-    loop = "y"
     count_iter = 0
-    k_factor = []
+    # DONE: I removed the loop here
+    mask = np.zeros(1)
+    radius[0] = radius[0] / 1.5
+    keep = [0]
+    j = 0
+    R_old = par_R
 
-    while loop == "y":
-        mask = np.zeros(1)
-        radius[0] = radius[0] / 1.5
-        keep = [0]
-        j = 0
-        R_old = par_R
+    while len(wave) - j > 3:
+        par_R = float(radius[j])  # take the radius from the penality law
+        # recompute the points closer than the diameter if Radius changed with the penality
+        mask = (distance[j, :] > 0) & (distance[j, :] < 2.0 * par_R)
+        while np.sum(mask) == 0:
+            par_R *= 1.5
+            # recompute the points closer than the diameter if Radius changed with the penality
+            mask = (distance[j, :] > 0) & (distance[j, :] < 2.0 * par_R)
+        # vector of all the local maxima
+        p1 = cast(NDArray[np.float64], np.array([wave[j], flux[j]]).T)
+        # vector of all the maxima in the diameter zone
+        p2 = cast(NDArray[np.float64], np.array([wave[mask], flux[mask]]).T)
+        delta: NDArray[np.float64] = p2 - p1  # delta x delta y
+        c = np.sqrt(delta[:, 0] ** 2 + delta[:, 1] ** 2)  # euclidian distance
+        h = np.sqrt(par_R**2 - 0.25 * c**2)
+        cx = p1[0] + 0.5 * delta[:, 0] - h / c * delta[:, 1]  # x coordinate of the circles center
+        cy = p1[1] + 0.5 * delta[:, 1] + h / c * delta[:, 0]  # y coordinates of the circles center
 
-        while len(wave) - j > 3:
-            par_R = float(radius[j])  # take the radius from the penality law
-            mask = (distance[j, :] > 0) & (
-                distance[j, :] < 2.0 * par_R
-            )  # recompute the points closer than the diameter if Radius changed with the penality
-            while np.sum(mask) == 0:
-                par_R *= 1.5
-                mask = (distance[j, :] > 0) & (
-                    distance[j, :] < 2.0 * par_R
-                )  # recompute the points closer than the diameter if Radius changed with the penality
-            p1 = np.array([wave[j], flux[j]]).T  # vector of all the local maxima
-            p2 = np.array(
-                [wave[mask], flux[mask]]
-            ).T  # vector of all the maxima in the diameter zone
-            delta = p2 - p1  # delta x delta y
-            c = np.sqrt(delta[:, 0] ** 2 + delta[:, 1] ** 2)  # euclidian distance
-            h = np.sqrt(par_R**2 - 0.25 * c**2)
-            cx = (
-                p1[0] + 0.5 * delta[:, 0] - h / c * delta[:, 1]
-            )  # x coordinate of the circles center
-            cy = (
-                p1[1] + 0.5 * delta[:, 1] + h / c * delta[:, 0]
-            )  # y coordinates of the circles center
-
-            cond1 = (cy - p1[1]) >= 0
-            thetas = cond1 * (-1 * np.arccos((cx - p1[0]) / par_R) + np.pi) + (1 - 1 * cond1) * (
-                -1 * np.arcsin((cy - p1[1]) / par_R) + np.pi
-            )
-            j2 = thetas.argmin()
-            j = numero[mask][
-                j2
-            ]  # take the numero of the local maxima falling in the diameter zone
-            keep.append(j)
-        flux = flux[keep]  # we only keep the local maxima with the rolling pin condition
-        wave = wave[keep]
-        index = index[keep]
-        if True:
-            loop = "n"
+        cond1 = (cy - p1[1]) >= 0
+        thetas = cond1 * (-1 * np.arccos((cx - p1[0]) / par_R) + np.pi) + (1 - 1 * cond1) * (
+            -1 * np.arcsin((cy - p1[1]) / par_R) + np.pi
+        )
+        j2 = thetas.argmin()
+        j = numero[mask][j2]  # take the numero of the local maxima falling in the diameter zone
+        keep.append(j)
+    flux = flux[keep]  # we only keep the local maxima with the rolling pin condition
+    wave = wave[keep]
+    index = index[keep]
 
     logging.info(" Rolling pin is rolling : DONE")
 
@@ -956,11 +853,11 @@ def cli():
         diff_x = np.hstack([0, diff_x, 0])
         diff_diff_x = np.hstack([0, diff_diff_x, 0])
         if criterion == 1:
-            parameter = diff_x - diff_diff_x
+            parameter = diff_x - diff_diff_x  # type: ignore
         elif criterion == 2:
             parameter = diff_x
-        IQ = 2 * (np.nanpercentile(parameter, 50) - np.nanpercentile(parameter, 25))
-        mask_out = parameter < (np.nanpercentile(parameter, 50) - 1.5 * IQ)
+        IQ_grid = 2 * (np.nanpercentile(parameter, 50) - np.nanpercentile(parameter, 25))
+        mask_out = parameter < (np.nanpercentile(parameter, 50) - 1.5 * IQ_grid)
         if not sum(mask_out):
             criterion += 1
             if criterion == 2:
@@ -969,8 +866,8 @@ def cli():
                 break
         mask_out_idx = np.arange(len(parameter))[mask_out]
         if len(mask_out_idx) > 1:
-            cluster_idx = ras.clustering(mask_out_idx, 3, 1)
-            unique = np.setdiff1d(mask_out_idx, np.hstack(cluster_idx))
+            cluster_idx = clustering(mask_out_idx, 3, 1)
+            unique = np.setdiff1d(mask_out_idx, np.hstack(cluster_idx))  # type: ignore
             cluster_idx = list(cluster_idx)
             for j in unique:
                 cluster_idx += [np.array([j])]
@@ -996,33 +893,9 @@ def cli():
         flux = flux[mask_final]
         index = index[mask_final]
 
-    if len(wave) != len(wave_backup):
-        #        plt.plot(grid, spectre, zorder=0)
-        #        for j in np.setdiff1d(wave_backup,wave):
-        #            plt.axvline(x=j,color='k',ls='-')
-        #        Interpol = interp1d(wave, flux, kind = interpol, bounds_error = False, fill_value = 'extrapolate')
-        #        continuum = Interpol(grid)
-        #        continuum = truncated(continuum)
-        #        plt.plot(grid,continuum,ls=':',label='new continuum')
-        #        Interpol = interp1d(wave_backup, flux_backup, kind = interpol, bounds_error = False, fill_value = 'extrapolate')
-        #        continuum = Interpol(grid)
-        #        continuum = truncated(continuum)
-        #        plt.plot(grid,continuum,label = 'old continuum')
-        #        plt.legend()
-        #        plt.show()
-        #        answer = sphinx('Do you accept the following grid rearangement ? (y/n)',rep=['y','n'])
-        answer = "y"
-        if answer == "n":
-            wave = wave_backup.copy()
-            flux = flux_backup.copy()
-
     logging.info(
         f"Number of points removed to build a more equidistant grid : {(len(wave_backup) - len(wave))}"
     )
-
-    # =============================================================================
-    # MANUAL ADDING/SUPRESSING
-    # =============================================================================
 
     # =============================================================================
     # PHYSICAL MODEL FITTING (to develop)
@@ -1047,13 +920,13 @@ def cli():
     end = time.time()
 
     logging.info(
-        f"[END] RASSINE has finished to compute your continuum in {end - begin:.2f} seconds \n"
+        f"[END] RASSINE has finished to compute your continuum in {end - begin:.2f} seconds"
     )
 
     jump_point = 1  # make lighter figure for article
 
     if interpol == "cubic":
-        continuum1, continuum3, continuum1_denoised, continuum3_denoised = ras.make_continuum(
+        continuum1, continuum3, continuum1_denoised, continuum3_denoised = make_continuum(
             wave,
             flux,
             flux_denoised,
@@ -1063,7 +936,7 @@ def cli():
         )
         conti = continuum3
     elif interpol == "linear":
-        continuum1, continuum3, continuum1_denoised, continuum3_denoised = ras.make_continuum(
+        continuum1, continuum3, continuum1_denoised, continuum3_denoised = make_continuum(
             wave,
             flux,
             flux_denoised,
@@ -1075,7 +948,7 @@ def cli():
     else:
         raise NotImplementedError  # TODO: handle
 
-    continuum1, continuum3, continuum1_denoised, continuum3_denoised = ras.make_continuum(
+    continuum1, continuum3, continuum1_denoised, continuum3_denoised = make_continuum(
         wave,
         flux,
         flux_denoised,
@@ -1085,74 +958,77 @@ def cli():
     )
 
     if (plot_end) | (save_last_plot):
-        fig = plt.figure(figsize=(16, 6))
-        plt.subplot(2, 1, 1)
-        plt.plot(
-            grid[::jump_point],
-            spectrei[::jump_point],
-            label=f"spectrum (SNR={int(SNR_0):.0f})",
-            color="g",
-        )
-        plt.plot(
-            grid[::jump_point],
-            spectre[::jump_point] * normalisation,
-            label="spectrum reduced",
-            color="b",
-            alpha=0.3,
-        )
-        plt.scatter(wave, flux, color="k", label=f"anchor points ({int(len(wave))})", zorder=100)
 
-    if (plot_end) | (save_last_plot):
-        plt.plot(grid[::jump_point], conti[::jump_point], label="continuum", zorder=101, color="r")
-        plt.xlabel("Wavelength", fontsize=14)
-        plt.ylabel("Flux", fontsize=14)
-        plt.legend(loc=4)
-        plt.title("Final products of RASSINE", fontsize=14)
-        ax = plt.gca()
-        ax.xaxis.set_minor_locator(MultipleLocator(50))
-        plt.tick_params(direction="in", top=True, which="both")
-        plt.subplot(2, 1, 2, sharex=ax)
-        plt.plot(grid[::jump_point], spectrei[::jump_point] / conti[::jump_point], color="k")
-        plt.axhline(y=1, color="r", zorder=102)
-        plt.xlabel(r"Wavelength [$\AA$]", fontsize=14)
-        plt.ylabel("Flux normalised", fontsize=14)
-        ax = plt.gca()
-        ax.xaxis.set_minor_locator(MultipleLocator(50))
-        plt.tick_params(direction="in", top=True, which="both")
-        plt.subplots_adjust(left=0.07, right=0.96, hspace=0, top=0.95)
-        if save_last_plot:
-            plt.savefig(output_dir / f"{new_file}_output.png")
-        # TODO: remove this
-        plt.close()
+        def perform_plot():
+            fig = plt.figure(figsize=(16, 6))
+            plt.subplot(2, 1, 1)
+            plt.plot(
+                grid[::jump_point],
+                spectrei[::jump_point],
+                label=f"spectrum (SNR={int(SNR_0):.0f})",
+                color="g",
+            )
+            plt.plot(
+                grid[::jump_point],
+                spectre[::jump_point] * normalisation,
+                label="spectrum reduced",
+                color="b",
+                alpha=0.3,
+            )
+            plt.scatter(
+                wave, flux, color="k", label=f"anchor points ({int(len(wave))})", zorder=100
+            )
+            plt.plot(
+                grid[::jump_point], conti[::jump_point], label="continuum", zorder=101, color="r"
+            )
+            plt.xlabel("Wavelength", fontsize=14)
+            plt.ylabel("Flux", fontsize=14)
+            plt.legend(loc=4)
+            plt.title("Final products of RASSINE", fontsize=14)
+            ax = plt.gca()
+            ax.xaxis.set_minor_locator(MultipleLocator(50))
+            plt.tick_params(direction="in", top=True, which="both")
+            plt.subplot(2, 1, 2, sharex=ax)
+            plt.plot(grid[::jump_point], spectrei[::jump_point] / conti[::jump_point], color="k")
+            plt.axhline(y=1, color="r", zorder=102)
+            plt.xlabel(r"Wavelength [$\AA$]", fontsize=14)
+            plt.ylabel("Flux normalised", fontsize=14)
+            ax = plt.gca()
+            ax.xaxis.set_minor_locator(MultipleLocator(50))
+            plt.tick_params(direction="in", top=True, which="both")
+            plt.subplots_adjust(left=0.07, right=0.96, hspace=0, top=0.95)
+            if save_last_plot:
+                plt.savefig(output_dir / f"{spectrum_name.stem}_output.png")
+            # TODO: remove this
+            plt.close()
+
+        perform_plot()
 
     # =============================================================================
     # SAVE OF THE PARAMETERS
     # =============================================================================
 
     if (hole_left is not None) & (hole_left != -99.9):
-        hole_left = ras.find_nearest1(grid, ras.doppler_r(hole_left, -30)[0])[1]
+        hole_left = find_nearest1(grid, doppler_r(hole_left, -30)[0])[1]  # type: ignore
     if (hole_right is not None) & (hole_right != -99.9):
-        hole_right = ras.find_nearest1(grid, ras.doppler_r(hole_right, 30)[0])[1]
-
-    def print_parameters_according_to_paper():
-        # TODO: move the name_parameters stuff inside here
-        pass
-
-    parameters = {
+        hole_right = find_nearest1(grid, doppler_r(hole_right, 30)[0])[1]  # type: ignore
+    output_filename = f"RASSINE_{spectrum_name.stem}.p"
+    parameters: RassineParameters = {
+        "filename": output_filename,
         "number_iteration": count_iter,
-        "K_factors": k_factor,
+        "K_factors": [],
         "axes_stretching": np.round(par_stretching, 1),
         "vicinity_local_max": par_vicinity,
-        "smoothing_box": smoothing_length,
-        "smoothing_kernel": smoothing_shape,
+        "smoothing_box": par_smoothing_box,
+        "smoothing_kernel": par_smoothing_kernel,
         "fwhm_ccf": np.round(par_fwhm / conversion_fwhm_sig, 2),
         "CCF_mask": CCF_mask,
-        "RV_sys": RV_sys,
+        "RV_sys": float(RV_sys),
         "min_radius": np.round(R_old, 1),
         "max_radius": np.round(par_Rmax, 1),
-        "model_penality_radius": par_model,
+        "model_penality_radius": reg.string,
         "denoising_dist": denoising_dist,
-        "number of cut": count_cut,
+        "number_of_cut": count_cut,
         "windows_penality": windows,
         "large_window_penality": big_windows,
         "number_points": len(grid),
@@ -1160,8 +1036,8 @@ def cli():
         "SNR_5500": int(SNR_0),
         "mjd": mjd,
         "jdb": jdb,
-        "wave_min": minx,
-        "wave_max": maxx,
+        "wave_min": wave_min,
+        "wave_max": wave_max,
         "dwave": dgrid,
         "hole_left": hole_left,
         "hole_right": hole_right,
@@ -1177,160 +1053,39 @@ def cli():
         "arcfiles": arcfiles,
     }
 
-    name_parameters = [
-        "number_iteration",
-        "K_factors",
-        "par_stretching",
-        "par_vicinity",
-        "par_smoothing_box",
-        "par_smoothing_kernel",
-        "par_fwhm",
-        "CCF_mask",
-        "RV_sys",
-        "par_R",
-        "par_Rmax",
-        "par_reg_nu",
-        "denoising_dist",
-        "count_cut_lim",
-        "windows_penality",
-        "large_window_penality",
-        "number of points",
-        "number of anchors",
-        "SNR_5500",
-        "mjd",
-        "jdb",
-        "wave_min",
-        "wave_max",
-        "dwave",
-        "hole_left",
-        "hole_right",
-        "RV_shift",
-        "berv",
-        "lamp_offset",
-        "acc_sec",
-        "light_file",
-        "speedup",
-        "continuum_interpolated_saved",
-        "continuum_denoised_saved",
-        "nb_spectra_stacked",
-        "arcfiles",
-    ]
-
     if logging.getLogger().level <= 20:  # logging INFO
-        print("\n------TABLE------- \n")
-        for i, j in zip(name_parameters, parameters.keys()):
-            print(i + " : " + str(parameters[j]))
-        print("\n----------------- \n")
-
-    if not Penalty:
-        penalite_step = None
-        penalite0 = None
+        print_parameters_according_to_paper(parameters)
 
     # conversion in fmt format
 
     flux_used = spectre * normalisation
-    index = index.astype("int")
 
     # =============================================================================
     # SAVE THE OUTPUT
     # =============================================================================
-
-    # TODO: mode "basic" with the stuff that used later in the pipeline
-    #       mode "full" with everything
-
-    # linear / undenoised
-    # to discuss further
-
-    if (outputs_interpolation_saved == "linear") & (outputs_denoising_saved == "undenoised"):
-        basic = {
-            "continuum_linear": continuum1,
-            "anchor_wave": wave,
-            "anchor_flux": flux,
-            "anchor_index": index,
-        }
-    elif (outputs_interpolation_saved == "cubic") & (outputs_denoising_saved == "undenoised"):
-        basic = {
-            "continuum_cubic": continuum3,
-            "anchor_wave": wave,
-            "anchor_flux": flux,
-            "anchor_index": index,
-        }
-    elif (outputs_interpolation_saved == "linear") & (outputs_denoising_saved == "denoised"):
-        basic = {
-            "continuum_linear": continuum1_denoised,
-            "anchor_wave": wave,
-            "anchor_flux": flux_denoised,
-            "anchor_index": index,
-        }
-    elif (outputs_interpolation_saved == "cubic") & (outputs_denoising_saved == "denoised"):
-        basic = {
-            "continuum_cubic": continuum3_denoised,
-            "anchor_wave": wave,
-            "anchor_flux": flux_denoised,
-            "anchor_index": index,
-        }
-    elif (outputs_interpolation_saved == "all") & (outputs_denoising_saved == "denoised"):
-        basic = {
-            "continuum_cubic": continuum3_denoised,
-            "continuum_linear": continuum1_denoised,
-            "anchor_wave": wave,
-            "anchor_flux": flux_denoised,
-            "anchor_index": index,
-        }
-    elif (outputs_interpolation_saved == "all") & (outputs_denoising_saved == "undenoised"):
-        basic = {
-            "continuum_cubic": continuum3,
-            "continuum_linear": continuum1,
-            "anchor_wave": wave,
-            "anchor_flux": flux,
-            "anchor_index": index,
-        }
-    elif (outputs_interpolation_saved == "linear") & (outputs_denoising_saved == "all"):
-        basic = {
-            "continuum_linear": continuum1,
-            "continuum_linear_denoised": continuum1_denoised,
-            "anchor_wave": wave,
-            "anchor_flux": flux,
-            "anchor_flux_denoised": flux_denoised,
-            "anchor_index": index,
-        }
-    elif (outputs_interpolation_saved == "cubic") & (outputs_denoising_saved == "all"):
-        basic = {
-            "continuum_cubic": continuum3,
-            "continuum_cubic_denoised": continuum3_denoised,
-            "anchor_wave": wave,
-            "anchor_flux": flux,
-            "anchor_flux_denoised": flux_denoised,
-            "anchor_index": index,
-        }
-    else:
-        basic = {
-            "continuum_cubic": continuum3,
-            "continuum_linear": continuum1,
-            "continuum_cubic_denoised": continuum3_denoised,
-            "continuum_linear_denoised": continuum1_denoised,
-            "anchor_wave": wave,
-            "anchor_flux": flux,
-            "anchor_flux_denoised": flux_denoised,
-            "anchor_index": index,
-        }
+    # reveal_type(wave)
+    # reveal_type(flux)
+    # reveal_type(index)
+    # reveal_type(continuum1)
+    basic: BasicOutput = {
+        "continuum_linear": continuum1,
+        "anchor_wave": wave,
+        "anchor_flux": flux,
+        "anchor_index": index,
+    }
 
     # we assume light_version=True here
-    output = {
+    output: RassinePickle = {
         "wave": grid,
         "flux": spectrei,
+        "flux_err": spectrei_err,
         "flux_used": flux_used,
         "output": basic,
         "parameters": parameters,
     }
 
-    if spectrei_err is not None:
-        output["flux_err"] = spectrei_err
-
-    output["parameters"]["filename"] = "RASSINE_" + new_file + ".p"
-
-    output_file = output_dir / f"RASSINE_{new_file}.p"
-    ras.save_pickle(output_file, output)
+    output_file = output_dir / output_filename
+    save_pickle(output_file, output)
     print(
         f"Output file saved under : {output_file} (SNR at 5500 : {output['parameters']['SNR_5500']:.0f})"
     )

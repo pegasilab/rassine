@@ -100,46 +100,9 @@ def check_none_negative_values(array: NDArray[np.float64]) -> NDArray[np.float64
     return array
 
 
-def empty_ccd_gap(
-    wave: NDArray[np.float64],
-    flux: NDArray[np.float64],
-    left: Optional[Float] = None,
-    right: Optional[Float] = None,
-    extended: float = 30.0,
-) -> NDArray[np.float64]:
-    """
-    Ensure a 0 value in the gap between the ccd of HARPS s1d with extended=30 kms extension
-
-    Args:
-        wave: Wavelength vector.
-        flux: Flux vector.
-        left: Wavelength of the left CCF gap.
-        right: Wavelength of the right CCF gap.
-        extended: Extension of the gap in kms.
-
-    Returns:
-        Flux values with null values inside the specified gap
-    """
-
-    dgrid = np.diff(wave)[0]
-
-    if left is not None:
-        left_ = np.array(left).astype("float64")
-        left = doppler_r(left_, -extended)[0]  # 30 km/s supression
-    else:
-        left = wave.max()
-
-    if right is not None:
-        right_ = np.array(right).astype("float64")
-        right = doppler_r(right_, extended)[0]  # 30 km/s supression
-    else:
-        right = wave.min()
-
-    flux[(wave >= left - dgrid / 2) & (wave <= right + dgrid / 2)] = 0
-    return flux
-
-
-def local_max(spectre: NDArray[np.float64], vicinity: int) -> NDArray[np.float64]:
+def local_max(
+    spectre: NDArray[np.float64], vicinity: int
+) -> Tuple[NDArray[np.int64], NDArray[np.float64]]:
     """
     Perform a local maxima algorithm of a vector.
 
@@ -148,7 +111,7 @@ def local_max(spectre: NDArray[np.float64], vicinity: int) -> NDArray[np.float64
         vicinity: The half window in which a local maxima is searched.
 
     Returns:
-        A matrix containing the index and vector values of the detected local maxima.
+        A tuple containing the index and vector values of the detected local maxima.
     """
 
     vec_base = spectre[vicinity:-vicinity]
@@ -163,7 +126,7 @@ def local_max(spectre: NDArray[np.float64], vicinity: int) -> NDArray[np.float64
 
     index = np.where(maxima == 1)[0] + vicinity
     flux = spectre[index]
-    return np.array([index, flux])
+    return (index, flux)
 
 
 def import_files_mcpu_wrapper(args):

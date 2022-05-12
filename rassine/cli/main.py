@@ -215,20 +215,6 @@ def cli():
     # TODO: what is that random thing?
     random_number = np.sum([ord(a) for a in filename.split("RASSINE_")[-1]])
 
-    # to ignite the variable present after preprocessing
-
-    mjd: Optional[np.float64] = None
-    jdb: Optional[np.float64] = None
-    hole_left: Optional[np.float64] = None
-    hole_right: Optional[np.float64] = None
-    RV_shift: Optional[np.float64] = None
-    acc_sec: Optional[np.float64] = None
-    berv: Optional[np.float64] = None
-    lamp_offset: Optional[np.float64] = None
-    nb_spectra_stacked: Optional[int] = None
-
-    # list of files part of the current stack
-    arcfiles: Optional[Sequence[str]] = None
 
     assert anchor_file is None or os.path.exists(
         anchor_file
@@ -272,14 +258,16 @@ def cli():
     RV_sys = data["RV_sys"]
 
     RV_shift = data["RV_shift"]
-    mjd = data["mjd"]
-    jdb = data["jdb"]
-    hole_left = data["hole_left"]
-    hole_right = data["hole_right"]
-    berv = data["berv"]
-    lamp_offset = data["lamp_offset"]
-    acc_sec = data["acc_sec"]
+    mjd : np.float64= data["mjd"]
+    jdb: np.float64 = data["jdb"]
+    hole_left :np.float64= data["hole_left"]
+    hole_right :np.float64= data["hole_right"]
+    berv :np.float64= data["berv"]
+    lamp_offset :np.float64= data["lamp_offset"]
+    acc_sec:np.float64 = data["acc_sec"]
+    # TODO: the type of this
     nb_spectra_stacked = ras.try_field(data, "nb_spectra_stacked")
+    # TODO: the type of this
     arcfiles = ras.try_field(data, "arcfiles")
 
     if output_dir != "":
@@ -293,13 +281,13 @@ def cli():
 
     if not isinstance(par_stretching, str):
         if par_stretching < 0:
-            print("[WARNING] par_stretching is smaller than 0, please enter a higher value")
-            print("[WARNING] par_stretching value fixed at 3")
+            logging.warning("par_stretching is smaller than 0, please enter a higher value")
+            logging.warning("par_stretching value fixed at 3")
             par_stretching = 3.0
     else:
         if (float(par_stretching.split("_")[1]) > 1) | (float(par_stretching.split("_")[1]) < 0):
-            print("[WARNING] par_stretching automatic value should be between 0 and 1")
-            print("[WARNING] par_stretching value fixed at 0.5")
+            logging.warning("par_stretching automatic value should be between 0 and 1")
+            logging.warning("par_stretching value fixed at 0.5")
             par_stretching = "auto_0.5"
 
     # =============================================================================

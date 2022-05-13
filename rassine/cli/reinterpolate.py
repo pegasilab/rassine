@@ -168,10 +168,11 @@ class Task(cp.Config):
     #
     # Task specific information
     #
-
+    
     prog_ = Path(__file__).stem
 
     ini_strict_sections_ = [Path(__file__).stem.split("_")[0]]
+
 
     #: Input spectrum table
     input_table: Annotated[Path, cp.Param.store(cp.parsers.path_parser, short_flag_name="-I")]
@@ -179,7 +180,7 @@ class Task(cp.Config):
     #: Output spectrum table
     output_table: Annotated[Path, cp.Param.store(cp.parsers.path_parser, short_flag_name="-O")]
 
-    #: Relative path to the folder containing the raw spectra
+    #: Relative path to the folder containing the spectra
     input_folder: Annotated[Path, cp.Param.store(cp.parsers.path_parser, short_flag_name="-i")]
 
     #: Name of the output directory. If None, the output directory is created at the same location than the spectra.

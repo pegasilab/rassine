@@ -101,13 +101,51 @@
             "program": ".venv/bin/rassine",
             "console": "integratedTerminal",
             "justMyCode": true,
+            "env": {
+                "RASSINE_CONFIG": "harps03.ini",
+                "RASSINE_ROOT": "${workspaceFolder}/spectra_library/HD23249/data/s1d/HARPS03"
+            },
             "args": [
-                "-s",
-                "/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/MASTER/Master_spectrum_2022-05-12T09:42:17.p",
-                "-S",
-                "True",
-                "-e",
-                "1",
+                "--logging-level",
+                "INFO",
+                "--input-spectrum",
+                "Master_spectrum_2022-05-12T09:42:17.p",
+                "--input-folder",
+                "MASTER",
+                "--output-folder",
+                "MASTER",
+                "--output-plot-folder",
+                "MASTER",
+                "--output-anchor-ini",
+                "anchor_file.ini"
+            ]
+        },
+        {
+            "name": "rassine_apply",
+            "type": "python",
+            "request": "launch",
+            "program": ".venv/bin/rassine",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "RASSINE_CONFIG": "harps03.ini",
+                "RASSINE_ROOT": "${workspaceFolder}/spectra_library/HD23249/data/s1d/HARPS03"
+            },
+            "args": [
+                "--logging-level",
+                "INFO",
+                "--input-table",
+                "stacked_basic.csv",
+                "--input-folder",
+                "STACKED",
+                "--output-folder",
+                "STACKED",
+                "--config",
+                "/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/anchor_Master_spectrum_2022-05-13T14:33:07.ini",
+                "--output-folder",
+                "STACKED",
+                "40",
+                "41"
             ]
         }
     ]

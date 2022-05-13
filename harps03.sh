@@ -7,7 +7,7 @@ export RASSINE_ROOT=$script_folder/spectra_library/HD23249/data/s1d/HARPS03
 export RASSINE_CONFIG=$script_folder/harps03.ini
 export RASSINE_LOGGING_LEVEL=INFO
 nthreads=4 # number of concurrent jobs
-nchunks=40 # number of spectra per Python script invocation
+nchunks=10 # number of items per Python script invocation
 
 PARALLEL_OPTIONS="--will-cite --verbose -N$nchunks --jobs $nthreads --keep-order"
 
@@ -49,7 +49,8 @@ enumerate_table_column_unique_values -c group individual_group.csv | parallel $P
 #mkdir -p /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/MASTER
 #python rassine_stacking.py --input_directory /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/PREPROCESSED
 
-master_table="Master_spectrum_$(date +%Y-%m-%dT%H:%M:%S).p"
+tag=$(date +%Y-%m-%dT%H:%M:%S)
+master_table="Master_spectrum_$tag.p"
 stacking_master_spectrum -I stacked_basic.csv -O master_spectrum.csv -i STACKED -o MASTER/$master_table
 
 
@@ -65,19 +66,14 @@ stacking_master_spectrum -I stacked_basic.csv -O master_spectrum.csv -i STACKED 
 ##
 
 not_full_auto=1 # we get different results by using the GUI and just pressing ENTER vs. full auto mode, is that bad?
-master=$(ls -t /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/MASTER/Master*.p | head -n 1)
-python rassine_main.py -s $master -a $not_full_auto -S True -e $not_full_auto
+rassine --input-spectrum $master_table --input-folder MASTER --output-folder MASTER --output-plot-folder MASTER --output-anchor-ini anchor_Master_spectrum_$tag.ini
 # RASSINE_Master has additional stuff
-rassine_master=$(ls -t /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/MASTER/RASSINE_Master_spectrum*.p | head -n 1)
-nthreads_rassine=4
-
 ##
 ## 
 ##
 # Step 4B Normalisation frame, done in parallel
-output_dir=/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED
-ls /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED/Stacked*.p | parallel --will-cite --jobs $nthreads_rassine --keep-order python rassine_main.py -o $output_dir -a False -P True -e False -l $rassine_master -s
-
+enumerate_table_rows stacked_basic.csv | parallel $PARALLEL_OPTIONS \
+  rassine --logging-level WARNING --input-table stacked_basic.csv --input-folder STACKED --output-folder STACKED --config $RASSINE_ROOT/anchor_Master_spectrum_$tag.ini --output-folder STACKED --output-plot-folder STACKED
 
 ## Intersect continuum
 # This was python Rassine_multiprocessed.py -v INTERSECT -s /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED/RASSINE -n $nthreads_intersect
@@ -87,6 +83,7 @@ ls /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED/Stack
 nthreads_intersect1=4
 python rassine_anchor_scan.py --input-directory /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED --feedback $not_full_auto --no-master-spectrum --copies-master 0 --kind anchor_index --nthreads $nthreads_intersect1 --fraction 0.2 --threshold 0.66 --tolerance 0.5 --add-new True
 
+exit
 # Step 5B: application in parallel
 # Done in place
 nthreads_intersect2=4

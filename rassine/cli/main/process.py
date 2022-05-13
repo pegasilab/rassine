@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import time
-from typing import Literal, Sequence, Tuple, Union, cast
+from typing import Literal, Optional, Sequence, Tuple, Union, cast
 
 import matplotlib.pylab as plt
 import numpy as np
@@ -19,9 +19,9 @@ from ...math import c_lum, create_grid, doppler_r, gaussian
 from ...util import assert_never
 from ..stacking_master_spectrum import MasterPickle
 from ..stacking_stack import StackedPickle
-from .config import Auto, Reg, RegPoly, RegSigmoid, Stretching
 from .formats import ExtraPlotData, RassineBasicOutput, RassineParameters, RassinePickle
 from .functions import empty_ccd_gap
+from .types import Auto, Reg, RegPoly, RegSigmoid, Stretching
 
 
 def rassine_process(
@@ -70,8 +70,6 @@ def rassine_process(
         The processed result
     """
 
-    # DONE: revamped output_dir support, it always mkdirs stuff
-
     # =============================================================================
     # TAKE THE DATA
     # =============================================================================
@@ -96,15 +94,12 @@ def rassine_process(
     berv: np.float64 = data["berv"]
     lamp_offset: np.float64 = data["lamp_offset"]
     acc_sec: np.float64 = data["acc_sec"]
-    # TODO: the type of this
     nb_spectra_stacked: int = data["nb_spectra_stacked"]
-    # TODO: the type of this
     arcfiles: Sequence[str] = data["arcfiles"]
 
     # Preprocess spectrum
     assert np.all(np.isfinite(grid)), "Grid points must be finite"
     assert np.all(np.isfinite(spectrei)), "Flux values must be finite"
-    assert np.all(spectrei >= 0.0), "Flux values must be non-negative"
 
     # clamp value to non-negative
     spectrei[spectrei < 0] = 0

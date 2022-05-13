@@ -21,6 +21,7 @@ from .util import log_task_name_and_time
 
 @dataclass(frozen=True)
 class MasterRow:
+    name: str
     SNR_5500: np.float64
     acc_sec: np.float64
     berv: np.float64
@@ -215,6 +216,7 @@ def run(t: Task) -> None:
     }
     save_pickle(t.root / t.output_file, out)
     out_row = MasterRow(
+        name=t.output_file.stem,
         SNR_5500=SNR,
         acc_sec=first.acc_sec,
         berv=BERV,

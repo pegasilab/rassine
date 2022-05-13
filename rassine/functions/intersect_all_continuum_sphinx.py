@@ -11,10 +11,27 @@ import numpy as np
 from colorama import Fore
 from matplotlib.widgets import Button, Slider
 
-from rassine.functions.misc import make_sound, sphinx
-
 from ..analysis import grouping
 from ..io import open_pickle, save_pickle
+
+
+def my_input(text):
+    return input(text)
+
+
+def sphinx(sentence, rep=None, s2=""):
+    answer = "-99.9"
+    print(
+        " ______________ \n\n --- SPHINX --- \n\n TTTTTTTTTTTTTT \n\n Question : "
+        + sentence
+        + "\n\n [Deafening silence ...] \n\n ______________ \n\n --- OEDIPE --- \n\n XXXXXXXXXXXXXX \n "
+    )
+    if rep != None:
+        while answer not in rep:
+            answer = my_input("Answer : " + s2)
+    else:
+        answer = my_input("Answer : " + s2)
+    return answer
 
 
 def import_files_mcpu_wrapper(args):
@@ -354,12 +371,10 @@ def intersect_all_continuum_sphinx(
     plt.show(block=False)
 
     if feedback:
-        make_sound("The sphinx is waiting on you...")
         sphinx("Press ENTER to save the clusters locations (black curve)")
 
     while type(callback.nb_clust) == str:
         print("[WARNING] You have to move the sliders at least once before validating clusters")
-        make_sound("Warning")
         sphinx("Press ENTER to save the clusters locations (black curve)")
 
     time.sleep(0.5)

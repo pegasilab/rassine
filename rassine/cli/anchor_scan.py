@@ -1,10 +1,7 @@
 import argparse
-import glob
-import os
-import textwrap
 from pathlib import Path
 
-from rassine.functions.intersect_all_continuum_sphinx import intersect_all_continuum_sphinx
+from ..functions.intersect_all_continuum_sphinx import intersect_all_continuum_sphinx
 
 
 def get_parser():
@@ -76,7 +73,7 @@ def get_parser():
     return parser
 
 
-if __name__ == "__main__":
+def cli():
     p = get_parser()
     args = p.parse_args()
     # preprocess_stack wants strings

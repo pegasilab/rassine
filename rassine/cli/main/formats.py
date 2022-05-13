@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Literal, Mapping, Optional, Sequence, TypedDict, Union
 
 import numpy as np
@@ -70,46 +71,8 @@ class RassinePickle(TypedDict):
     parameters: RassineParameters
 
 
-def print_parameters_according_to_paper(parameters: RassineParameters):
-    translation: Mapping[str, str] = {
-        "number_iteration": "number_iteration",
-        "K_factors": "K_factors",
-        "axes_stretching": "par_stretching",
-        "vicinity_local_max": "par_vicinity",
-        "smoothing_box": "par_smoothing_box",
-        "smoothing_kernel": "par_smoothing_kernel",
-        "fwhm_ccf": "par_fwhm",
-        "CCF_mask": "CCF_mask",
-        "RV_sys": "RV_sys",
-        "min_radius": "par_R",
-        "max_radius": "par_Rmax",
-        "model_penality_radius": "par_reg_nu",
-        "denoising_dist": "denoising_dist",
-        "number_of_cut": "count_cut_lim",
-        "windows_penality": "windows_penality",
-        "large_window_penality": "large_window_penality",
-        "number_points": "number of points",
-        "number_anchors": "number of anchors",
-        "SNR_5500": "SNR_5500",
-        "mjd": "mjd",
-        "jdb": "jdb",
-        "wave_min": "wave_min",
-        "wave_max": "wave_max",
-        "dwave": "dwave",
-        "hole_left": "hole_left",
-        "hole_right": "hole_right",
-        "RV_shift": "RV_shift",
-        "berv": "berv",
-        "lamp_offset": "lamp_offset",
-        "acc_sec": "acc_sec",
-        "light_file": "light_file",
-        "speedup": "speedup",
-        "continuum_interpolated_saved": "continuum_interpolated_saved",
-        "continuum_denoised_saved": "continuum_denoised_saved",
-        "nb_spectra_stacked": "nb_spectra_stacked",
-        "arcfiles": "arcfiles",
-    }
-    print("\n------TABLE------- \n")
-    for key, display in translation.items():
-        print(f"{display} : {parameters[key]}")
-    print("\n----------------- \n")
+@dataclass(frozen=True)
+class ExtraPlotData:
+    normalisation: float
+    spectre: NDArray[np.float64]
+    conti: NDArray[np.float64]

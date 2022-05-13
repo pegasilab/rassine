@@ -2,14 +2,11 @@ from __future__ import annotations
 
 import logging
 import time
-from pathlib import Path
-from typing import Any, Literal, Mapping, Optional, Sequence, Tuple, TypedDict, Union, cast
+from typing import Literal, Sequence, Tuple, Union, cast
 
-import matplotlib
 import matplotlib.pylab as plt
 import numpy as np
 import pandas as pd
-from matplotlib.ticker import MultipleLocator
 from numpy.typing import ArrayLike, NDArray
 from scipy.interpolate import interp1d
 from scipy.optimize import curve_fit
@@ -18,24 +15,18 @@ from scipy.special import erf
 from ...analysis import clustering, find_nearest1
 from ...functions.misc import ccf as ccf_fun
 from ...functions.misc import grouping, local_max, make_continuum, produce_line, smooth
-from ...io import open_pickle, save_pickle
 from ...math import c_lum, create_grid, doppler_r, gaussian
 from ...util import assert_never
 from ..stacking_master_spectrum import MasterPickle
 from ..stacking_stack import StackedPickle
-from .config import Auto, Config, Reg, RegPoly, RegSigmoid, Stretching, update_using_anchor_file
-from .formats import (
-    RassineBasicOutput,
-    RassineParameters,
-    RassinePickle,
-    print_parameters_according_to_paper,
-)
+from .config import Auto, Reg, RegPoly, RegSigmoid, Stretching
+from .formats import ExtraPlotData, RassineBasicOutput, RassineParameters, RassinePickle
 from .functions import empty_ccd_gap
 
 
 def rassine_process(
-    spectrum_name: Path,
-    output_dir: Path,
+    output_filename: str,
+    data: Union[MasterPickle, StackedPickle],
     synthetic_spectrum: bool,
     random_seed: int,
     par_stretching: Stretching,
@@ -45,17 +36,39 @@ def rassine_process(
     par_fwhm_: Union[Literal["auto"], float],
     CCF_mask: str,
     mask_telluric: Sequence[Tuple[float, float]],
-    par_R: Union[Literal["auto"], float],
-    par_Rmax: Union[Literal["auto"], float],
+    par_R_: Union[Literal["auto"], float],
+    par_Rmax_: Union[Literal["auto"], float],
     par_reg_nu: Reg,
     denoising_dist: int,
     count_cut_lim: int,
     count_out_lim: int,
     interpol: Literal["cubic", "linear"],
-    plot_end: bool,
-    save_last_plot: bool,
-):
-    matplotlib.use("Qt5Agg", force=True)
+) -> Tuple[RassinePickle, ExtraPlotData]:
+    """Runs the RASSINE processing
+
+    Args:
+        output_filename: Output filename, used only to populate the returned dict
+        data: Input spectrum
+        synthetic_spectrum: See config
+        random_seed: Random seed used for synthetic spectrum
+        par_stretching: See config
+        par_vicinity: See config
+        par_smoothing_box: See config
+        par_smoothing_kernel: See config
+        par_fwhm_: See config
+        CCF_mask: See config
+        mask_telluric: See config
+        par_R_: See config
+        par_Rmax_: See config
+        par_reg_nu: See config
+        denoising_dist: See config
+        count_cut_lim: v
+        count_out_lim: See config
+        interpol: See config
+
+    Returns:
+        The processed result
+    """
 
     # DONE: revamped output_dir support, it always mkdirs stuff
 
@@ -63,20 +76,13 @@ def rassine_process(
     # TAKE THE DATA
     # =============================================================================
 
-    plt.close("all")
-
-    # CHECKME: later
-    data: Union[MasterPickle, StackedPickle] = open_pickle(
-        spectrum_name
-    )  # load the pickle dictionary
-
     spectrei = data["flux"]  # the flux of your spectrum
-    spectrei_err = data.get("flux_err", None)  # the error flux of your spectrum
+    # the error flux of your spectrum
+    spectrei_err: Optional[NDArray[np.float64]] = data.get("flux_err", None)
 
     def get_grid_and_dgrid_from_pickle(
         d: Union[MasterPickle, StackedPickle]
     ) -> Tuple[NDArray[np.float64], np.float64]:
-        # TODO: uniform this
         return create_grid(d["wave_min"], d["dwave"], len(d["flux"])), d["dwave"]
 
     grid, dgrid = get_grid_and_dgrid_from_pickle(data)
@@ -263,6 +269,8 @@ def rassine_process(
         par_fwhm = compute_fwhm()
     else:
         par_fwhm = par_fwhm_
+
+    del par_fwhm_
 
     if par_smoothing_box == "auto":
 
@@ -453,13 +461,15 @@ def rassine_process(
     par_model = reg.name
     Penalty = False
 
-    if par_R == "auto":
-        par_R = np.round(10 * par_fwhm, 1)
+    if par_R_ == "auto":
+        par_R: float = float(np.round(10 * par_fwhm, 1))
         logging.info(f"[AUTO] R fixed : {par_R:.1f}")
         if par_R > 5.0:
             logging.warning("R larger than 5, R fixed at 5")
             par_R = 5.0
-
+    else:
+        par_R = par_R_
+    del par_R_
     if out_of_calibration:
         windows = 2.0  # 2 typical line width scale (small window for the first continuum)
         big_windows = 20.0  # 20typical line width scale (large window for the second continuum)
@@ -467,7 +477,7 @@ def rassine_process(
     law_chromatic = wave / wave_min
 
     radius = par_R * np.ones(len(wave)) * law_chromatic
-    if (par_Rmax != par_R) | (par_Rmax == "auto"):
+    if (par_Rmax_ != par_R) | (par_Rmax_ == "auto"):
         Penalty = True
         dx = par_fwhm / np.median(np.diff(grid))
         continuum_small_win = np.ravel(
@@ -608,7 +618,7 @@ def rassine_process(
 
         threshold = 0.75
         loop = True
-        if par_Rmax == "auto":
+        if par_Rmax_ == "auto":
             cluster_length = np.zeros(())  # TODO: added
             largest_cluster = -1
             while (loop) & (threshold > 0.2):
@@ -657,7 +667,7 @@ def rassine_process(
                     cluster_length[largest_cluster, 2] * dgrid
                 )  # largest radius in vrad unit
 
-                par_Rmax = 2 * np.round(
+                par_Rmax_ = 2 * np.round(
                     largest_radius
                     * wave_min
                     / cluster_length[largest_cluster, 5]
@@ -666,35 +676,38 @@ def rassine_process(
                 )
             else:
                 if out_of_calibration:
-                    par_Rmax = 5 * par_R
+                    par_Rmax_ = 5 * par_R
                 else:
-                    par_Rmax = par_R
+                    par_Rmax_ = par_R
             # TOCHECK: removed the if threshold < 0.2 logic
             logging.info(
-                f"[AUTO] Rmax found around {cluster_length[largest_cluster, 5]:.0f} AA and fixed : {par_Rmax:.0f}"
+                f"[AUTO] Rmax found around {cluster_length[largest_cluster, 5]:.0f} AA and fixed : {par_Rmax_:.0f}"
             )
-            if par_Rmax > 150:
+            if par_Rmax_ > 150:  # type: ignore
                 logging.warning("Rmax larger than 150, Rmax fixed at 150")
-                par_Rmax = 150
+                par_Rmax_ = 150
 
         par_R = np.round(par_R, 1)
-        par_Rmax = np.round(par_Rmax, 1)
+        par_Rmax_ = np.round(par_Rmax_, 1)
         # TODO: par_model role
         par_model = reg
         if isinstance(reg, RegPoly):
             radius = law_chromatic * (
-                par_R + (par_Rmax - par_R) * penalite_graph ** float(reg.expo)
+                par_R + (float(par_Rmax_) - par_R) * penalite_graph ** float(reg.expo)
             )
         elif isinstance(reg, RegSigmoid):
             radius = law_chromatic * (
                 par_R
-                + (par_Rmax - par_R)
+                + (float(par_Rmax_) - par_R)
                 * (1 + np.exp(-reg.steepness * (penalite_graph - reg.center))) ** -1
             )
             par_model = reg
         else:
             assert_never(reg)
 
+    assert par_Rmax_ != "auto"
+    par_Rmax = float(par_Rmax_)
+    del par_Rmax_
     logging.info("Computation of the penality map : DONE")
 
     loc_penality_time = time.time()
@@ -898,8 +911,6 @@ def rassine_process(
         f"[END] RASSINE has finished to compute your continuum in {end - begin:.2f} seconds"
     )
 
-    jump_point = 1  # make lighter figure for article
-
     if interpol == "cubic":
         continuum1, continuum3, continuum1_denoised, continuum3_denoised = make_continuum(
             wave,
@@ -934,53 +945,6 @@ def rassine_process(
         continuum_to_produce=(outputs_interpolation_saved, outputs_denoising_saved),
     )
 
-    if (plot_end) | (save_last_plot):
-
-        def perform_plot():
-            fig = plt.figure(figsize=(16, 6))
-            plt.subplot(2, 1, 1)
-            plt.plot(
-                grid[::jump_point],
-                spectrei[::jump_point],
-                label=f"spectrum (SNR={int(SNR_0):.0f})",
-                color="g",
-            )
-            plt.plot(
-                grid[::jump_point],
-                spectre[::jump_point] * normalisation,
-                label="spectrum reduced",
-                color="b",
-                alpha=0.3,
-            )
-            plt.scatter(
-                wave, flux, color="k", label=f"anchor points ({int(len(wave))})", zorder=100
-            )
-            plt.plot(
-                grid[::jump_point], conti[::jump_point], label="continuum", zorder=101, color="r"
-            )
-            plt.xlabel("Wavelength", fontsize=14)
-            plt.ylabel("Flux", fontsize=14)
-            plt.legend(loc=4)
-            plt.title("Final products of RASSINE", fontsize=14)
-            ax = plt.gca()
-            ax.xaxis.set_minor_locator(MultipleLocator(50))
-            plt.tick_params(direction="in", top=True, which="both")
-            plt.subplot(2, 1, 2, sharex=ax)
-            plt.plot(grid[::jump_point], spectrei[::jump_point] / conti[::jump_point], color="k")
-            plt.axhline(y=1, color="r", zorder=102)
-            plt.xlabel(r"Wavelength [$\AA$]", fontsize=14)
-            plt.ylabel("Flux normalised", fontsize=14)
-            ax = plt.gca()
-            ax.xaxis.set_minor_locator(MultipleLocator(50))
-            plt.tick_params(direction="in", top=True, which="both")
-            plt.subplots_adjust(left=0.07, right=0.96, hspace=0, top=0.95)
-            if save_last_plot:
-                plt.savefig(output_dir / f"{spectrum_name.stem}_output.png")
-            # TODO: remove this
-            plt.close()
-
-        perform_plot()
-
     # =============================================================================
     # SAVE OF THE PARAMETERS
     # =============================================================================
@@ -989,7 +953,6 @@ def rassine_process(
         hole_left = find_nearest1(grid, doppler_r(hole_left, -30)[0])[1]  # type: ignore
     if (hole_right is not None) & (hole_right != -99.9):
         hole_right = find_nearest1(grid, doppler_r(hole_right, 30)[0])[1]  # type: ignore
-    output_filename = f"RASSINE_{spectrum_name.stem}.p"
     parameters: RassineParameters = {
         "filename": output_filename,
         "number_iteration": count_iter,
@@ -1030,9 +993,6 @@ def rassine_process(
         "arcfiles": arcfiles,
     }
 
-    if logging.getLogger().level <= 20:  # logging INFO
-        print_parameters_according_to_paper(parameters)
-
     # conversion in fmt format
 
     flux_used = spectre * normalisation
@@ -1040,10 +1000,6 @@ def rassine_process(
     # =============================================================================
     # SAVE THE OUTPUT
     # =============================================================================
-    # reveal_type(wave)
-    # reveal_type(flux)
-    # reveal_type(index)
-    # reveal_type(continuum1)
     basic: RassineBasicOutput = {
         "continuum_linear": continuum1,
         "anchor_wave": wave,
@@ -1061,8 +1017,4 @@ def rassine_process(
         "parameters": parameters,
     }
 
-    output_file = output_dir / output_filename
-    save_pickle(output_file, output)
-    print(
-        f"Output file saved under : {output_file} (SNR at 5500 : {output['parameters']['SNR_5500']:.0f})"
-    )
+    return output, ExtraPlotData(normalisation=normalisation, spectre=spectre, conti=conti)

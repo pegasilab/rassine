@@ -31,14 +31,14 @@ def empty_ccd_gap(
     dgrid = np.diff(wave)[0]
 
     if left is not None:
-        left_ = np.array(left).astype("float64")
-        left = doppler_r(left_, -extended)[0]  # 30 km/s supression
+        left_ = np.array([left]).astype("float64")
+        left = doppler_r(left_, -extended)[0][0]  # 30 km/s supression
     else:
         left = wave.max()
 
     if right is not None:
-        right_ = np.array(right).astype("float64")
-        right = doppler_r(right_, extended)[0]  # 30 km/s supression
+        right_ = np.array([right]).astype("float64")
+        right = doppler_r(right_, extended)[0][0]  # 30 km/s supression
     else:
         right = wave.min()
 

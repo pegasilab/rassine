@@ -294,16 +294,6 @@ def smooth(
     return y_smooth
 
 
-def sphinx(sentence: str, rep=None, s2=""):
-    answer = "-99.9"
-    if rep != None:
-        while answer not in rep:
-            answer = my_input("Answer : " + s2)
-    else:
-        answer = my_input("Answer : " + s2)
-    return answer
-
-
 def rm_outliers(
     array: ArrayLike,
     m: float = 1.5,

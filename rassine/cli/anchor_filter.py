@@ -1,13 +1,15 @@
+import argparse
 import glob as glob
 import os
 import typing
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
 from ..analysis import match_nearest
 from ..io import open_pickle, save_pickle
-from .misc import local_max, make_continuum
+from ..misc import local_max, make_continuum
 
 
 def intersect_all_continuum(names_: typing.Sequence[str], add_new: bool = True):
@@ -82,8 +84,8 @@ def intersect_all_continuum(names_: typing.Sequence[str], add_new: bool = True):
             test = mask * curve
 
             mask_idx = test[save].astype("bool")
-            mask_idx[0 : file["parameters"]["number of cut"]] = True
-            mask_idx[-file["parameters"]["number of cut"] :] = True
+            mask_idx[0 : file["parameters"]["number_of_cut"]] = True
+            mask_idx[-file["parameters"]["number_of_cut"] :] = True
 
             try:
                 flux_denoised = file[sub_dico]["anchor_flux_denoised"]
@@ -186,15 +188,6 @@ def intersect_all_continuum(names_: typing.Sequence[str], add_new: bool = True):
                 ],
             )
 
-            float_precision = file["parameters"]["float_precision"]
-            if float_precision != "float64":
-                flux = flux.astype(float_precision)
-                wave = wave.astype(float_precision)
-                continuum3 = continuum3.astype(float_precision)
-                continuum1 = continuum1.astype(float_precision)
-                continuum3_denoised = continuum3_denoised.astype(float_precision)
-                continuum1_denoised = continuum1_denoised.astype(float_precision)
-                flux_denoised = flux_denoised.astype(float_precision)
             index = index.astype("int")
 
             outputs_interpolation_saved = file["parameters"]["continuum_interpolated_saved"]
@@ -295,3 +288,28 @@ def intersect_all_continuum(names_: typing.Sequence[str], add_new: bool = True):
                 "fraction": fraction,
             }
             save_pickle(names[i], file)
+
+
+def get_parser():
+    """
+    Returns the argument parser used in this script
+    """
+    res = argparse.ArgumentParser(
+        description="""\
+    Intersection tool, 2nd step
+                                        
+    Perform the intersection of the RASSINE files by using the anchor location saved in the master RASSINE spectrum. 
+    """
+    )
+
+    res.add_argument("names", type=Path, nargs="+", help="List of RASSINE files. ")
+    res.add_argument(
+        "--add_new", type=bool, default=True, help="Add anchor points that were not detected."
+    )
+    return res
+
+
+def cli():
+    parser = get_parser()
+    args = parser.parse_args()
+    intersect_all_continuum(list(map(str, args.names)), add_new=args.add_new)

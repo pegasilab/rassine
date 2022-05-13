@@ -10,12 +10,11 @@ from scipy.interpolate import interp1d
 from scipy.signal import savgol_filter
 from scipy.stats import norm
 
-from ..analysis import grouping
-from ..io import open_pickle
-from ..math import doppler_r
-from ..types import Float
-from ..util import assert_never
-from . import c_lum
+from .analysis import grouping
+from .io import open_pickle
+from .math import c_lum, doppler_r
+from .types import Float
+from .util import assert_never
 
 
 def ccf(

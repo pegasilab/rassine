@@ -1,4 +1,6 @@
+import argparse
 import time
+from pathlib import Path
 from typing import Sequence
 
 import matplotlib.pylab as plt
@@ -7,7 +9,26 @@ from matplotlib.widgets import Button, Slider
 
 from ..analysis import rolling_iq
 from ..io import open_pickle, save_pickle
-from .misc import make_sound, smooth, sphinx
+from ..misc import smooth
+
+
+def my_input(text):
+    return input(text)
+
+
+def sphinx(sentence, rep=None, s2=""):
+    answer = "-99.9"
+    print(
+        " ______________ \n\n --- SPHINX --- \n\n TTTTTTTTTTTTTT \n\n Question : "
+        + sentence
+        + "\n\n [Deafening silence ...] \n\n ______________ \n\n --- OEDIPE --- \n\n XXXXXXXXXXXXXX \n "
+    )
+    if rep != None:
+        while answer not in rep:
+            answer = my_input("Answer : " + s2)
+    else:
+        answer = my_input("Answer : " + s2)
+    return answer
 
 
 def matching_diff_continuum_sphinx(
@@ -114,10 +135,67 @@ def matching_diff_continuum_sphinx(
     button.on_clicked(reset)
 
     plt.show(block=False)
-    make_sound("The sphinx is waiting on you...")
     sphinx("Press ENTER to save the kernel length for the smoothing")
     savgol_window = ssmoothing.val
     plt.close()
     time.sleep(1)
 
     return master, savgol_window
+
+
+def get_parser():
+    res = argparse.ArgumentParser(
+        description="""\
+    Continuum matching tool
+    
+    Matches the continuum of individual spectra to a reference spectrum with a savgol filtering on the spectra difference. 
+    The savogol window parameter can be selected by the GUI interface. 
+    
+    The input files are the ones matching the RASSINE*.p pattern in the given directory.
+    """
+    )
+
+    res.add_argument(
+        "--input_directory", type=Path, help="Path to the directory containing the input files"
+    )
+    res.add_argument(
+        "--output-file",
+        type=Path,
+        required=True,
+        help="Path to the output text file where the savgol_window value will be written",
+    )
+    res.add_argument(
+        "--master", type=str, default=None, help="Name of the RASSINE master spectrum file"
+    )
+    res.add_argument("--no-master", dest="master", action="store_const", const=None)
+    res.add_argument(
+        "--sub_dico",
+        type=str,
+        choices=["output", "matching_anchors"],
+        default="matching_anchors",
+        help="Name of the continuum to use. Either 'output' (RASSINE individual) or 'matching_anchors' (RASSINE time-series)",
+    )
+    res.add_argument(
+        "--savgol_window",
+        type=int,
+        default=200,
+        help="Length of the window for the savgol filtering",
+    )
+    res.add_argument("--zero_point", type=bool, default=False, help="No more used ?")
+    return res
+
+
+def cli():
+    parser = get_parser()
+    args = parser.parse_args()
+    # preprocess_stack wants strings
+    files = [str(path) for path in args.input_directory.glob("RASSINE*.p")]
+    master, savgol_window = matching_diff_continuum_sphinx(
+        files,
+        sub_dico=args.sub_dico,
+        master=args.master,
+        savgol_window=args.savgol_window,
+        zero_point=args.zero_point,
+    )
+    with open(args.output_file, "w") as f:
+        f.write(str(savgol_window))

@@ -1,11 +1,12 @@
+import argparse
 import typing
+from pathlib import Path
 
 import numpy as np
 
-from rassine.functions.misc import smooth
-
 from ..analysis import rolling_iq
 from ..io import open_pickle, save_pickle
+from ..misc import smooth
 
 
 def matching_diff_continuum(
@@ -100,3 +101,32 @@ def matching_diff_continuum(
                 file["matching_diff"][label] = cont_corr
 
             save_pickle(j, file)
+
+
+def get_parser():
+    """
+    Returns the argument parser used in this script
+    """
+    res = argparse.ArgumentParser(
+        description="""\
+    SAVGOL step
+    """
+    )
+    res.add_argument("inputfiles", type=Path, nargs="+", help="Input files to process")
+    res.add_argument("--anchor-file", type=Path, required=True, help="Anchor file")
+    res.add_argument(
+        "--savgol-window", type=int, default=200, help="Length of the window for SAVGOL filtering"
+    )
+    return res
+
+
+def cli():
+    parser = get_parser()
+    args = parser.parse_args()
+    matching_diff_continuum(
+        list(map(str, args.inputfiles)),
+        sub_dico="matching_anchors",
+        master_=str(args.anchor_file),
+        savgol_window=args.savgol_window,
+        zero_point=False,
+    )

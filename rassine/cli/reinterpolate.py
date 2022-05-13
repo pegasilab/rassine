@@ -14,12 +14,11 @@ from numpy.typing import NDArray
 from scipy.interpolate import interp1d
 from typing_extensions import Annotated
 
-from rassine.cli.preprocess_import import IndividualImportedRow
-from rassine.io import open_pickle, save_pickle
-from rassine.math import create_grid, doppler_r
-
 from ..analysis import find_nearest1
+from ..cli.preprocess_import import IndividualImportedRow
 from ..data import absurd_minus_99_9
+from ..io import open_pickle, save_pickle
+from ..math import create_grid, doppler_r
 from .data import LoggingLevel, PickleProtocol
 from .preprocess_import import IndividualImportedRow, PickledIndividualSpectrum
 from .util import log_task_name_and_time
@@ -168,11 +167,10 @@ class Task(cp.Config):
     #
     # Task specific information
     #
-    
+
     prog_ = Path(__file__).stem
 
     ini_strict_sections_ = [Path(__file__).stem.split("_")[0]]
-
 
     #: Input spectrum table
     input_table: Annotated[Path, cp.Param.store(cp.parsers.path_parser, short_flag_name="-I")]

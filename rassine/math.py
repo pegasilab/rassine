@@ -7,6 +7,8 @@ from numpy.typing import NDArray
 from .types import Float
 
 c_lum = 299.792e6
+h_planck = 6.626e-34
+k_boltz = 1.3806e-23
 
 
 def create_grid(wave_min: Float, dwave: Float, nb_bins: int) -> NDArray[np.float64]:

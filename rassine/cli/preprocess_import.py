@@ -15,10 +15,9 @@ from filelock import FileLock
 from numpy.typing import NDArray
 from typing_extensions import Annotated
 
-from rassine.io import save_pickle
-
 from ..analysis import grouping
 from ..data import absurd_minus_99_9
+from ..io import save_pickle
 from .data import LoggingLevel, PickleProtocol
 from .preprocess_table import IndividualBasicRow
 from .util import log_task_name_and_time

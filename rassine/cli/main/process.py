@@ -12,10 +12,10 @@ from scipy.interpolate import interp1d
 from scipy.optimize import curve_fit
 from scipy.special import erf
 
-from ...analysis import clustering, find_nearest1
-from ...functions.misc import ccf as ccf_fun
-from ...functions.misc import grouping, local_max, make_continuum, produce_line, smooth
+from ...analysis import clustering, find_nearest1, grouping
 from ...math import c_lum, create_grid, doppler_r, gaussian
+from ...misc import ccf as ccf_fun
+from ...misc import local_max, make_continuum, produce_line, smooth
 from ...util import assert_never
 from ..stacking_master_spectrum import MasterPickle
 from ..stacking_stack import StackedPickle

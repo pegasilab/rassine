@@ -1,32 +1,14 @@
 from __future__ import annotations
 
-import logging
-import time
-from typing import Any, Literal, Mapping, Optional, Sequence, Tuple, TypedDict, Union, cast
+from typing import Literal, Mapping, Optional, Sequence, TypedDict, Union
 
 import numpy as np
-import pandas as pd
-from numpy.typing import ArrayLike, NDArray
+from numpy.typing import NDArray
 
 from ...types import Float
 
 
-class RassinePickle(TypedDict):
-    #: Wavelength
-    wave: NDArray[np.float64]
-    #: Initial flux
-    flux: NDArray[np.float64]
-    #: Initial flux error, passed through by RASSINE
-    flux_err: Optional[NDArray[np.float64]]
-    #: Smoothed flux
-    flux_used: NDArray[np.float64]
-    #: Rassine output continuum
-    output: BasicOutput
-    #: Rassine derived parameters
-    parameters: RassineParameters
-
-
-class BasicOutput(TypedDict):
+class RassineBasicOutput(TypedDict):
     continuum_linear: NDArray[np.float64]
     anchor_wave: NDArray[np.float64]
     anchor_flux: NDArray[np.float64]
@@ -67,10 +49,25 @@ class RassineParameters(TypedDict):
     acc_sec: Float
     light_file: Literal[True]
     speedup: Literal[1]
-    continuum_interpolated_saved: str
-    continuum_denoised_saved: str
+    continuum_interpolated_saved: Literal["linear"]
+    continuum_denoised_saved: Literal["undenoised"]
     nb_spectra_stacked: int
     arcfiles: Sequence[str]
+
+
+class RassinePickle(TypedDict):
+    #: Wavelength
+    wave: NDArray[np.float64]
+    #: Initial flux
+    flux: NDArray[np.float64]
+    #: Initial flux error, passed through by RASSINE
+    flux_err: Optional[NDArray[np.float64]]
+    #: Smoothed flux
+    flux_used: NDArray[np.float64]
+    #: Rassine output continuum
+    output: RassineBasicOutput
+    #: Rassine derived parameters
+    parameters: RassineParameters
 
 
 def print_parameters_according_to_paper(parameters: RassineParameters):

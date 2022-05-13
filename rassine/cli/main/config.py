@@ -137,9 +137,9 @@ class Config(cp.Config):
     =====================================================================================  
          ^                  .-=-.          .-==-.
         {}      __        .' O o '.       /   ^  )
-       { }    .' O'.     / o .-. O \     /  .--`\
-       { }   / .-. o\   /O  /   \  o\   /O /    ^  (RASSSSSSINE)
-        \ `-` /   \ O`-'o  /     \  O`-`o /
+       { }    .' O'.     / o .-. O \\     /  .--`\\
+       { }   / .-. o\\   /O  /   \\  o\\   /O /    ^  (RASSSSSSINE)
+        \\ `-` /   \\ O`-'o  /     \\  O`-`o /
     jgs  `-.-`     '.____.'       `.____.'
 
     Authors: Michael Cretignier, Jeremie Francfort and Denis Rosset
@@ -159,12 +159,20 @@ class Config(cp.Config):
     ]
 
     #: Put a RASSINE output file that will fix the value of the 7 parameters to the same value than in the anchor file
-    anchor_file: Annotated[
+    input_anchor_pickle: Annotated[
         Optional[Path],
         cp.Param.store(
             cp.parsers.path_parser.empty_means_none(), short_flag_name="-l", default_value=""
         ),
     ]
+
+    # #: Optional INI output anchor file that can be used as an input configuration file
+    # output_anchor_config: Annotated[
+    #     Optional[Path],
+    #     cp.Param.store(
+    #         cp.parsers.path_parser.empty_means_none(), short_flag_name="-l", default_value=""
+    #     ),
+    # ]
 
     #: True if working with a noisy-free synthetic spectra
     synthetic_spectrum: Annotated[
@@ -260,20 +268,6 @@ class Config(cp.Config):
         Sequence[Tuple[float, float]],
         cp.Param.store(
             mask_telluric_parser, default_value="[[6275,6330],[6470,6577],[6866,8000]]"
-        ),
-    ]
-
-    #: To only save a specific continuum (output files are lighter), either 'linear','cubic' or 'all'
-    outputs_interpolation_saved: Annotated[
-        Literal["linear", "cubic", "all"],
-        cp.Param.store(cp.Parser.from_choices(["linear", "cubic", "all"]), default_value="all"),
-    ]
-
-    #: To only save a specific continuum (output files are lighter), either 'denoised','undenoised' or 'all'
-    outputs_denoising_saved: Annotated[
-        Literal["denoised", "undenoised", "all"],
-        cp.Param.store(
-            cp.Parser.from_choices(["denoised", "undenoised", "all"]), default_value="denoised"
         ),
     ]
 

@@ -69,7 +69,7 @@ def ccf(
 
 def check_none_negative_values(array: NDArray[np.float64]) -> NDArray[np.float64]:
     """
-    Remove negative numbers an a 1-D vector by the local closest non-zero value.
+    Replace negative numbers an a 1-D vector by the local closest non-zero value.
 
     Args:
         array: The wavelength vector of the spectrum.
@@ -386,14 +386,6 @@ def rolling_stat(array, window=1, min_periods=1):
     return roll_median, roll_Q1, roll_Q3, roll_IQ
 
 
-def try_field(dico, field):
-    try:
-        a = dico[field]
-        return a
-    except:
-        return None
-
-
 def truncated(array, spectre, treshold=5):
     maxi = np.percentile(spectre, 99.9)
     mini = np.percentile(spectre, 0.1)
@@ -403,7 +395,16 @@ def truncated(array, spectre, treshold=5):
     return array
 
 
-def make_continuum(wave, flux, flux_denoised, grid, spectrei, continuum_to_produce=["all", "all"]):
+def make_continuum(
+    wave,
+    flux,
+    flux_denoised,
+    grid,
+    spectrei,
+    continuum_to_produce: Tuple[
+        Literal["all", "linear", "cubic"], Literal["all", "denoised", "undenoised"]
+    ] = ("all", "all"),
+):
     """
     Perform the classical sanity check sequence of continuum.
 
@@ -474,12 +475,3 @@ def make_continuum(wave, flux, flux_denoised, grid, spectrei, continuum_to_produ
             continuum3 = check_none_negative_values(continuum3)
 
     return continuum1, continuum3, continuum1_denoised, continuum3_denoised
-
-
-def make_sound(sentence):
-    # TODO: remove
-    pass
-
-
-def my_input(text):
-    return input(text)

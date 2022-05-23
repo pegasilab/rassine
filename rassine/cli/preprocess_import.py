@@ -8,7 +8,6 @@ from typing import List, Optional, Sequence, Tuple, TypedDict
 
 import configpile as cp
 import numpy as np
-import numpy.typing as npt
 import tybles as tb
 from astropy.io import fits
 from filelock import FileLock
@@ -29,13 +28,13 @@ class PickledIndividualSpectrum(TypedDict):
     """
 
     #: Wavelength in Angstroms
-    wave: npt.NDArray[np.float64]
+    wave: NDArray[np.float64]
 
     #: Flux in photon count units, must not have NaNs
-    flux: npt.NDArray[np.float64]
+    flux: NDArray[np.float64]
 
     #: Error on flux, must not have NaNs
-    flux_err: npt.NDArray[np.float64]
+    flux_err: NDArray[np.float64]
 
     #: Instrument name
     instrument: str

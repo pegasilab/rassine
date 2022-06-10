@@ -24,10 +24,12 @@
                 "RASSINE_ROOT": "${workspaceFolder}/spectra_library/HD110315/data/s1d/HARPN",
             },
             "args": [
+                "--drs-style",
+                "new",
                 "-i",
                 "RAW",
                 "-o",
-                "PREPROCESSED",
+                "PREPROCESSED/{name}.p",
                 "-I",
                 "individual_basic.csv",
                 "-O",

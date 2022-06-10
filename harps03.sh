@@ -28,15 +28,15 @@ then
 ##
 # We read the FITS files in the format of a particular instrument and output files in the format
 # expected by RASSINE. The data is reformatted, and a few parameters are extracted
+mkdir -p $RASSINE_ROOT/PREPROCESSED
 
-
-preprocess_table -I DACE_TABLE/Dace_extracted_table.csv -i raw -O individual_basic.csv
+preprocess_table -I DACE_TABLE/Dace_extracted_table.csv -i RAW -O individual_basic.csv
 
 # delete the produced table if it exists already
 individual_imported=$RASSINE_ROOT/individual_imported.csv
 [ -f $individual_imported ] && rm $individual_imported 
 enumerate_table_rows individual_basic.csv | parallel $PARALLEL_OPTIONS \
-  preprocess_import -i raw -o PREPROCESSED -I individual_basic.csv -O individual_imported.csv
+  preprocess_import --drs-style old -i RAW -o PREPROCESSED/{name}.p -I individual_basic.csv -O individual_imported.csv
 reorder_csv --column name --reference individual_basic.csv individual_imported.csv 
 fi
 

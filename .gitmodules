@@ -1,3 +1,6 @@
 [submodule "spectra_library/HD23249"]
 	path = spectra_library/HD23249
 	url = git@github.com:denisrosset/HD23249.git
+[submodule "spectra_library/HD110315"]
+	path = spectra_library/HD110315
+	url = git@gitlab.com:denis.rosset/hd110315_raw.git

@@ -44,7 +44,7 @@ def open_pickle(filename: Path, expected_type: Any = NoCheck.TOKEN) -> Any:
     Returns:
         Information read
     """
-    logging.debug(f"Reading pickle {filename}")
+    logging.debug("Reading pickle %s", filename)
     res = pd.read_pickle(filename)
     if not isinstance(expected_type, NoCheck):
         check_type("pickle", res, expected_type)
@@ -60,6 +60,6 @@ def save_pickle(filename: Path, output: Any, protocol: int = default_pickle_prot
         output: Data to save
         protocol:
     """
-    logging.debug(f"Writing pickle {filename}")
+    logging.debug("Writing pickle %s", filename)
     with open(filename, "wb") as f:
         pickle.dump(output, f, protocol=protocol)

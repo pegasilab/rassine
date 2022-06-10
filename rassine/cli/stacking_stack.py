@@ -31,6 +31,8 @@ class StackedBasicRow:
 
     #: Stacked spectrum name without path and extension
     name: str
+    #: Group index
+    group: int
     #: Instrument name
     instrument: str
     #: mjd weighted average
@@ -193,8 +195,12 @@ class Task(cp.Config):
     ]
 
 
-def stack(
-    t: Task, rows: Sequence[IndividualReinterpolatedRow], bin_length: int, dbin: np.float64
+def perform_stacking(
+    t: Task,
+    rows: Sequence[IndividualReinterpolatedRow],
+    group: int,
+    bin_length: int,
+    dbin: np.float64,
 ) -> StackedBasicRow:
 
     nb_spectra_stacked = len(rows)
@@ -275,6 +281,7 @@ def stack(
 
     return StackedBasicRow(
         name=name,
+        group=group,
         instrument=instrument,
         rv_mean=RV_sys,
         rv_shift=rv_shift_w,
@@ -304,13 +311,13 @@ def run(t: Task) -> None:
     (t.root / t.output_folder).mkdir(parents=True, exist_ok=True)
     (t.root / t.output_table).parent.mkdir(parents=True, exist_ok=True)
 
-    logging.debug(f"Reading {t.root/t.input_table}")
+    logging.debug("Reading %s", t.root / t.input_table)
     input_tyble = IndividualReinterpolatedRow.schema().read_csv(
         t.root / t.input_table, return_type="Tyble"
     )
     input_df = input_tyble.data_frame
 
-    logging.debug(f"Reading {t.root/t.group_table}")
+    logging.debug("Reading %s", t.root / t.group_table)
     group_tyble = IndividualGroupRow.schema().read_csv(t.root / t.group_table, return_type="Tyble")
     group_df = group_tyble.data_frame
 
@@ -333,12 +340,12 @@ def run(t: Task) -> None:
     for group in groups:
         rows = [input_tyble[i] for i in group_df.index[group_df["group"] == group]]
         assert rows, "A group must have at least one spectrum in it"
-        stacked_rows.append(stack(t, rows, bin_length, dbin))
+        stacked_rows.append(perform_stacking(t, rows, group, bin_length, dbin))
 
     output_table = t.root / t.output_table
     output_table_lockfile = output_table.with_suffix(output_table.suffix + ".lock")
 
-    logging.debug(f"Appending to output table {output_table}")
+    logging.debug("Appending to output table %s", output_table)
     with FileLock(output_table_lockfile):
         df = StackedBasicRow.schema().from_rows(stacked_rows, return_type="DataFrame")
         df.to_csv(output_table, header=not output_table.exists(), mode="a", index=False)

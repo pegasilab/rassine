@@ -257,6 +257,7 @@ def preprocess_fits_harps_coraline_harpn(
     spectre = spectre[begin : end + 1]
     wave_min = np.min(wave)
     wave_max = np.max(wave)
+    mjd: np.float64 = row.mjd
 
     kw = "ESO"
     if instrument == "HARPN":
@@ -285,8 +286,6 @@ def preprocess_fits_harps_coraline_harpn(
             spectre *= 400780143771.18976  # calibrated with HD8651 2016-12-16 AND 2013-10-24
 
         spectre /= 1.4e10 / 125**2  # calibrated to match with HARPS SNR
-
-    mjd: np.float64 = row.mjd
 
     jdb = np.float64(mjd + 0.5)
 

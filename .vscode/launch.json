@@ -13,140 +13,27 @@
             "justMyCode": true
         },
         {
-            "name": "RASSINE preprocess",
+            "name": "HD110315:preprocess",
             "type": "python",
             "request": "launch",
-            "program": ".venv/bin/rassine_preprocess",
+            "program": ".venv/bin/preprocess_import",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
-                "RASSINE_CONFIG": "harps03.ini",
-                "RASSINE_ROOT": "${workspaceFolder}/spectra_library/HD23249/data/s1d/HARPS03"
-            },
-            "args": [
-                "HARPS.2005-11-16T07:05:03.095_s1d_A.fits",
-            ]
-        },
-        {
-            "name": "reorder_individual1",
-            "type": "python",
-            "request": "launch",
-            "program": ".venv/bin/reorder_csv",
-            "console": "integratedTerminal",
-            "justMyCode": true,
-            "env": {
-                "RASSINE_CONFIG": "harps03.ini",
-                "RASSINE_ROOT": "${workspaceFolder}/spectra_library/HD23249/data/s1d/HARPS03"
-            },
-            "args": [
-                "-c",
-                "name",
-                "-r",
-                "individual_table.csv",
-                "individual1_table.csv"
-            ]
-        },
-        {
-            "name": "reinterpolate",
-            "type": "python",
-            "request": "launch",
-            "program": ".venv/bin/reinterpolate",
-            "console": "integratedTerminal",
-            "justMyCode": true,
-            "env": {
-                "RASSINE_CONFIG": "harps03.ini",
-                "RASSINE_ROOT": "${workspaceFolder}/spectra_library/HD23249/data/s1d/HARPS03"
+                "RASSINE_CONFIG": "harpn.ini",
+                "RASSINE_ROOT": "${workspaceFolder}/spectra_library/HD110315/data/s1d/HARPN",
             },
             "args": [
                 "-i",
-                "PREPROCESSED",
+                "RAW",
                 "-o",
                 "PREPROCESSED",
                 "-I",
-                "individual1_table.csv",
+                "individual_basic.csv",
                 "-O",
-                "individual2_table.csv",
-                "320"
+                "individual_imported.csv",
+                "0",
             ]
         },
-        {
-            "name": "stacking",
-            "type": "python",
-            "request": "launch",
-            "program": ".venv/bin/stacking_stack",
-            "console": "integratedTerminal",
-            "justMyCode": true,
-            "env": {
-                "RASSINE_CONFIG": "harps03.ini",
-                "RASSINE_ROOT": "${workspaceFolder}/spectra_library/HD23249/data/s1d/HARPS03"
-            },
-            "args": [
-                "-i",
-                "PREPROCESSED",
-                "-o",
-                "STACKED",
-                "-I",
-                "individual_reinterpolated.csv",
-                "-G",
-                "individual_group.csv",
-                "-O",
-                "stacked_basic.csv",
-                "53690"
-            ]
-        },
-        {
-            "name": "rassine_master",
-            "type": "python",
-            "request": "launch",
-            "program": ".venv/bin/rassine",
-            "console": "integratedTerminal",
-            "justMyCode": true,
-            "env": {
-                "RASSINE_CONFIG": "harps03.ini",
-                "RASSINE_ROOT": "${workspaceFolder}/spectra_library/HD23249/data/s1d/HARPS03"
-            },
-            "args": [
-                "--logging-level",
-                "INFO",
-                "--input-spectrum",
-                "Master_spectrum_2022-05-12T09:42:17.p",
-                "--input-folder",
-                "MASTER",
-                "--output-folder",
-                "MASTER",
-                "--output-plot-folder",
-                "MASTER",
-                "--output-anchor-ini",
-                "anchor_file.ini"
-            ]
-        },
-        {
-            "name": "rassine_apply",
-            "type": "python",
-            "request": "launch",
-            "program": ".venv/bin/rassine",
-            "console": "integratedTerminal",
-            "justMyCode": false,
-            "env": {
-                "RASSINE_CONFIG": "harps03.ini",
-                "RASSINE_ROOT": "${workspaceFolder}/spectra_library/HD23249/data/s1d/HARPS03"
-            },
-            "args": [
-                "--logging-level",
-                "INFO",
-                "--input-table",
-                "stacked_basic.csv",
-                "--input-folder",
-                "STACKED",
-                "--output-folder",
-                "STACKED",
-                "--config",
-                "/home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/anchor_Master_spectrum_2022-05-13T14:33:07.ini",
-                "--output-folder",
-                "STACKED",
-                "40",
-                "41"
-            ]
-        }
     ]
 }

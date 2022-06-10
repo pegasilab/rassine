@@ -13,7 +13,7 @@ class RassineBasicOutput(TypedDict):
     continuum_linear: NDArray[np.float64]
     anchor_wave: NDArray[np.float64]
     anchor_flux: NDArray[np.float64]
-    anchor_index: NDArray[np.intp]
+    anchor_index: NDArray[np.int64]
 
 
 class RassineParameters(TypedDict):

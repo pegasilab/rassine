@@ -9,7 +9,7 @@
         "reportUnboundVariable": "error",
         "reportGeneralTypeIssues": "error",
     },
-    "python.analysis.diagnosticMode": "openFilesOnly",
+    "python.analysis.diagnosticMode": "workspace",
     "python.analysis.useLibraryCodeForTypes": false,
     "editor.formatOnSave": true,
     "autoDocstring.guessTypes": false,

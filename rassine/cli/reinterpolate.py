@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, List, Optional, Sequence, Tuple, TypedDict, cast
+from typing import List, Optional, Sequence, TypedDict
 
 import configpile as cp
 import numpy as np
@@ -262,8 +262,8 @@ class ReinterpolationSettings:
         return ReinterpolationSettings.make(
             wave_min_k=wave_min_k,
             wave_max_k=wave_max_k,
-            hole_left_k=hole_left_k,
-            hole_right_k=hole_right_k,
+            hole_left_k=np.float64(hole_left_k),
+            hole_right_k=np.float64(hole_right_k),
             dlambda=dlambda,
             nb_bins=nb_bins,
         )

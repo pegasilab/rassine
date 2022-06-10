@@ -4,7 +4,7 @@ import logging
 import pickle
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional, Sequence, Tuple, TypedDict
+from typing import List, Sequence, Tuple, TypedDict
 
 import configpile as cp
 import numpy as np
@@ -266,11 +266,11 @@ def preprocess_fits_harps_coraline_harpn(
     berv = header["HIERARCH " + kw + " DRS BERV"]
     lamp = header["HIERARCH " + kw + " DRS CAL TH LAMP OFFSET"]
     try:
-        pma = header["HIERARCH " + kw + " TEL TARG PMA"] * 1000
-        pmd = header["HIERARCH " + kw + " TEL TARG PMD"] * 1000
+        pma = float(header["HIERARCH " + kw + " TEL TARG PMA"] * 1000.0)
+        pmd = float(header["HIERARCH " + kw + " TEL TARG PMD"] * 1000.0)
     except:
-        pma = 0
-        pmd = 0
+        pma = 0.0
+        pmd = 0.0
 
     if plx_mas:
         distance_m = 1000.0 / plx_mas * 3.08567758e16
@@ -279,7 +279,7 @@ def preprocess_fits_harps_coraline_harpn(
         )
         acc_sec = distance_m * 86400.0 * mu_radps**2  # rv secular drift in m/s per days
     else:
-        acc_sec = 0
+        acc_sec = 0.0
 
     if instrument == "CORALIE":
         if np.mean(spectre) < 100000:
@@ -303,7 +303,7 @@ def preprocess_fits_harps_coraline_harpn(
         "berv": berv,
         "lamp_offset": lamp,
         "plx_mas": np.float64(plx_mas),
-        "acc_sec": acc_sec,
+        "acc_sec": np.float64(acc_sec),
         "wave_min": wave_min,
         "wave_max": wave_max,
         "dwave": spectre_step,
@@ -324,7 +324,7 @@ def preprocess_fits_harps_coraline_harpn(
         berv=berv,
         lamp_offset=lamp,
         plx_mas=np.float64(plx_mas),
-        acc_sec=acc_sec,
+        acc_sec=np.float64(acc_sec),
         wave_min=wave_min,
         wave_max=wave_max,
         dwave=spectre_step,
@@ -394,7 +394,7 @@ def preprocess_fits_espresso_express(t: Task, row: IndividualBasicRow) -> Indivi
         "berv": np.float64(berv),
         "lamp_offset": np.float64(lamp),
         "plx_mas": np.float64(plx_mas),
-        "acc_sec": acc_sec,
+        "acc_sec": np.float64(acc_sec),
         "wave_min": wave_min,
         "wave_max": wave_max,
         "dwave": spectre_step,
@@ -412,7 +412,7 @@ def preprocess_fits_espresso_express(t: Task, row: IndividualBasicRow) -> Indivi
         berv=berv,
         lamp_offset=lamp,
         plx_mas=np.float64(plx_mas),
-        acc_sec=acc_sec,
+        acc_sec=np.float64(acc_sec),
         wave_min=wave_min,
         wave_max=wave_max,
         dwave=spectre_step,

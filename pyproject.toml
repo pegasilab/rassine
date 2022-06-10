@@ -126,7 +126,7 @@ addopts = [
 ]
 
 [tool.pylint.MAIN]
-disable = ["C0103"]
+disable = ["C0103", "W1203"]
 load-plugins = [
   "pylint.extensions.docparams",
   "pylint.extensions.typing",

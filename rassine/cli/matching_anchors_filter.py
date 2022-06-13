@@ -1,6 +1,11 @@
+"""
+Implementation of the matching_anchors_filter script
+"""
 from __future__ import annotations
 
+import argparse
 import logging
+import typing
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, List, Optional, Sequence, TypedDict, Union, cast
@@ -14,9 +19,8 @@ from typing_extensions import Annotated
 
 from rassine.cli.main.rassine import NameRow
 
-from ..analysis import match_nearest
 from ..io import open_pickle, save_pickle
-from ..misc import local_max, make_continuum
+from ..math import local_max, make_continuum
 from .data import LoggingLevel, PathPattern, PickleProtocol
 from .main.formats import RassineBasicOutput, RassineParameters, RassinePickle
 from .matching_anchors_scan import MasterToolPickle
@@ -85,6 +89,53 @@ class AnchorPickle(TypedDict):
 def cast_as_anchor_pickle(arg: Any) -> AnchorPickle:
     # to make pylance happy
     return cast(AnchorPickle, arg)
+
+
+def match_nearest(array1, array2):
+    """
+    Match the closest elements of two arrays vectors and return the matching matrix.
+
+    Parameters
+    ----------
+    array1 : array_like
+        First vector.
+    array2 : array_like
+        Second vector.
+
+    Returns
+    -------
+
+    matching_matrix : array_like
+        Matrix where each column contain :
+        1) the indices in the first vector
+        2) the indices in the second vector
+        3) the values in the first vector
+        4) the values in the second vector
+        5) the distance between the closest elements
+
+    """
+
+    dmin = np.diff(np.sort(array1)).min()
+    dmin2 = np.diff(np.sort(array2)).min()
+    array1_r = array1 + 0.001 * dmin * np.random.randn(len(array1))
+    array2_r = array2 + 0.001 * dmin2 * np.random.randn(len(array2))
+    m = abs(array2_r - array1_r[:, np.newaxis])
+    arg1 = np.argmin(m, axis=0)
+    arg2 = np.argmin(m, axis=1)
+    mask = np.arange(len(arg1)) == arg2[arg1]
+    liste_idx1 = arg1[mask]
+    liste_idx2 = arg2[arg1[mask]]
+    array1_k = array1[liste_idx1]
+    array2_k = array2[liste_idx2]
+    return np.hstack(
+        [
+            liste_idx1[:, np.newaxis],
+            liste_idx2[:, np.newaxis],
+            array1_k[:, np.newaxis],
+            array2_k[:, np.newaxis],
+            (array1_k - array2_k)[:, np.newaxis],
+        ]
+    )
 
 
 def intersect_all_continuum_single(
@@ -395,6 +446,11 @@ class Task(cp.Config):
             cp.parsers.path_parser.empty_means_none(), short_flag_name="-O", default_value=""
         ),
     ]
+
+
+def get_parser() -> argparse.ArgumentParser:
+    """Returns the argument parser for Sphinx doc purposes"""
+    return Task.get_argument_parser_()
 
 
 @log_task_name_and_time(name=Path(__file__).stem)

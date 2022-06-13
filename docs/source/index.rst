@@ -2,7 +2,7 @@ RASSINE
 =======
 
 RASSINE is a free access `<https://github.com/MichaelCretignier/Rassine_public>`_ Python3 code,
-:strike:`compatible with Python2,` which is a simple tool to normalise spectra with the less "fine-tuning buttons" possible.
+ which is a simple tool to normalise spectra with the less "fine-tuning buttons" possible.
 
 Please cite :footcite:`Cretignier2020` (see the paper in the directory for a better understanding of the code).
 
@@ -18,7 +18,7 @@ TODO
 Changelog
 ~~~~~~~~~
 
-.. include:: ../HISTORY.rst
+.. include:: ../../HISTORY.rst
 
 .. toctree::
    :hidden:
@@ -26,6 +26,7 @@ Changelog
 
    important
    tutorial
-   tools
+   cli/index
+   graph
    api
    bibliography

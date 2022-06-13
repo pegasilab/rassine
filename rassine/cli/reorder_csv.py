@@ -1,3 +1,5 @@
+import argparse
+import typing
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Sequence
@@ -62,6 +64,11 @@ class Task(cp.Config):
             positional=cp.Positional.ONCE,
         ),
     ]
+
+
+def get_parser() -> argparse.ArgumentParser:
+    """Returns the argument parser for Sphinx doc purposes"""
+    return Task.get_argument_parser_()
 
 
 @log_task_name_and_time(name=Path(__file__).stem)

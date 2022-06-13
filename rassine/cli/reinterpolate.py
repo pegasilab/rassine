@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import argparse
 import logging
+import typing
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional, Sequence, TypedDict
@@ -16,9 +18,8 @@ from typing_extensions import Annotated
 
 from ..analysis import find_nearest1
 from ..cli.preprocess_import import IndividualImportedRow
-from ..data import absurd_minus_99_9
 from ..io import open_pickle, save_pickle
-from ..math import create_grid, doppler_r
+from ..math import absurd_minus_99_9, create_grid, doppler_r
 from .data import LoggingLevel, PickleProtocol
 from .preprocess_import import IndividualImportedRow, PickledIndividualSpectrum
 from .util import log_task_name_and_time
@@ -80,6 +81,15 @@ class IndividualReinterpolatedRow:
 
     # same for all spectra, len(pickled_spectrum.flux)
     nb_bins: np.int64
+
+    #: Radial velocity
+    vrad: np.float64
+
+    #: Radial velocity uncertainty
+    svrad: np.float64
+
+    #: Instrumental drift
+    drift: np.float64
 
     @staticmethod
     def schema() -> tb.Schema[IndividualReinterpolatedRow]:
@@ -346,7 +356,15 @@ def reinterpolate(
         nb_bins=np.int64(s.nb_bins),
         hole_left=s.hole_left_k,
         hole_right=s.hole_right_k,
+        vrad=row.vrad,
+        svrad=row.svrad,
+        drift=row.drift,
     )
+
+
+def get_parser() -> argparse.ArgumentParser:
+    """Returns the argument parser for Sphinx doc purposes"""
+    return Task.get_argument_parser_()
 
 
 @log_task_name_and_time(name=Path(__file__).stem)

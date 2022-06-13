@@ -1,5 +1,7 @@
 """Implements the matching_diff script"""
+import argparse
 import logging
+import typing
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional, Sequence, TypedDict
@@ -11,7 +13,7 @@ from typing_extensions import Annotated
 
 from ..analysis import rolling_iq
 from ..io import open_pickle, save_pickle
-from ..misc import smooth
+from ..math import smooth
 from .data import LoggingLevel, PathPattern, PickleProtocol
 from .main.formats import RassineBasicOutput, RassineParameters
 from .main.rassine import NameRow
@@ -188,6 +190,11 @@ class Task(cp.Config):
 
     #: TODO: document
     zero_point: Annotated[bool, cp.Param.store(cp.parsers.bool_parser, default_value="false")]
+
+
+def get_parser() -> argparse.ArgumentParser:
+    """Returns the argument parser for Sphinx doc purposes"""
+    return Task.get_argument_parser_()
 
 
 @log_task_name_and_time(name=Path(__file__).stem)

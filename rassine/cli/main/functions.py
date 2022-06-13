@@ -1,10 +1,9 @@
-from typing import Literal, Optional, Tuple, cast
+from typing import Optional
 
 import numpy as np
-from numpy.typing import ArrayLike, NDArray
+from numpy.typing import NDArray
 
-from ...math import doppler_r
-from ...types import Float
+from ...math import Float, doppler_r
 
 
 def empty_ccd_gap(

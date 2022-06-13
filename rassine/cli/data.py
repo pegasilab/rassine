@@ -1,3 +1,6 @@
+"""
+Various dataclasses for standard RASSINE configuration parameters
+"""
 from __future__ import annotations
 
 import logging
@@ -6,7 +9,6 @@ from pathlib import Path
 from typing import Optional
 
 import configpile as cp
-import configpile.parsers
 
 from .. import io
 
@@ -62,7 +64,7 @@ class LoggingLevel:
         """Sets the logging level in the provided logger
 
         Args:
-            logger: Logger to update, or root logger (if :py:`None`)
+            logger: Logger to update, or root logger (if :data:`None`)
         """
         if logger is None:
             logger = logging.getLogger()

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import argparse
 import logging
+import typing  # pylint: disable=W0611
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Sequence, TypedDict
@@ -21,6 +23,117 @@ from .data import LoggingLevel, PickleProtocol
 from .reinterpolate import IndividualReinterpolatedRow, ReinterpolatedSpectrumPickle
 from .stacking_create_groups import IndividualGroupRow
 from .util import log_task_name_and_time
+
+# def import_dace_table_rv(self: spec_time_series, path=None, bin_length=1, dbin=0):
+#     """
+#     Produce a summary table based on the DACE table by restacking spectra
+
+#     Parameters
+#     ----------
+#     path : path of the dace extracted table
+#     bin_length : length of the binning
+#     dbin : shift of the binning
+
+
+#     Returns
+#     -------
+#     """
+
+#     directory = self.directory
+
+#     files = np.sort(glob.glob(directory + "/RASS*.p"))
+#     jdb_table = []
+#     for file in files:
+#         file = pd.read_pickle(file)
+#         jdb_table.append(file["parameters"]["jdb"])
+#     jdb_table = np.array(jdb_table)
+
+#     if path is None:
+#         dace_file = (
+#             "/".join(self.directory.split("/")[0:-2])
+#             + "/DACE_TABLE/Dace_extracted_table.csv"
+#         )
+#     else:
+#         dace_file = path + "Dace_extracted_table.csv"
+#     dace = pd.read_csv(dace_file, index_col=0)
+#     self.dace = dace
+#     jdb = np.array(dace["rjd"])
+#     vrad = np.array(dace["vrad"])
+#     svrad = np.array(dace["svrad"])
+#     model = np.array(dace["model"]) * 1000
+#     drift = np.array(dace["drift_used"])
+#     vrad -= model
+#     vrad += drift
+#     weights = 1 / svrad**2
+
+#     if bin_length == 0:
+#         group = np.arange(len(jdb))
+#         groups = np.arange(len(jdb))
+#     else:
+#         groups = (jdb // bin_length).astype("int")
+#         groups -= groups[0]
+#         group = np.unique(groups)
+
+#     mean_jdb = []
+#     mean_vrad = []
+#     mean_svrad = []
+
+#     for j in group:
+#         g = np.where(groups == j)[0]
+#         mean_jdb.append(np.mean(jdb[g]))
+#         mean_svrad.append(1 / np.sqrt(np.sum(weights[g])))
+#         mean_vrad.append(np.sum(vrad[g] * weights[g]) / np.sum(weights[g]))
+
+#     mean_jdb = np.array(mean_jdb)
+#     mean_vrad = np.array(mean_vrad)
+#     mean_svrad = np.array(mean_svrad)
+
+#     mean_vrad -= np.nanmedian(mean_vrad)
+
+#     # plt.scatter(np.arange(len(jdb_table)),jdb_table)
+#     # plt.scatter(np.arange(len(mean_jdb)),mean_jdb)
+
+#     match = myf.match_nearest(jdb_table, mean_jdb)
+
+#     self.debug = (jdb_table, mean_jdb, mean_vrad, match)
+
+#     if len(match) != len(jdb_table):
+
+#         print("Matching of DACE and YARARA table failed.")
+
+#         if len(mean_jdb) == len(jdb_table):
+#             print("But same length for both table, so 1 per 1 index assumed")
+#             vrad_kept = mean_vrad
+#             svrad_kept = mean_svrad
+#             dace = myc.tableXY(mean_jdb, vrad_kept, svrad_kept)
+#             plt.figure()
+#             dace.plot()
+#             for k, file in enumerate(files):
+#                 f = pd.read_pickle(file)
+#                 f["parameters"]["rv_dace"] = vrad_kept[k]
+#                 f["parameters"]["rv_dace_std"] = svrad_kept[k]
+#                 ras.save_pickle(file, f)
+
+#             self.yarara_analyse_summary()
+#             self.import_table()
+
+#     else:
+#         vrad_kept = mean_vrad[match[:, 1].astype("int")]
+#         svrad_kept = mean_svrad[match[:, 1].astype("int")]
+
+#         dace = myc.tableXY(
+#             mean_jdb[match[:, 1].astype("int")], vrad_kept, svrad_kept
+#         )
+#         plt.figure()
+#         dace.plot()
+#         for k, file in enumerate(files):
+#             f = pd.read_pickle(file)
+#             f["parameters"]["rv_dace"] = vrad_kept[k]
+#             f["parameters"]["rv_dace_std"] = svrad_kept[k]
+#             ras.save_pickle(file, f)
+
+#         self.yarara_analyse_summary()
+#         self.import_table()
 
 
 @dataclass(frozen=True)
@@ -66,11 +179,22 @@ class StackedBasicRow:
     #: delta between two bins, synonym dlambda
     dwave: np.float64
     #: Number of days using for the stacking
-    stacking_length: np.int64
+    stacking_length: np.float64
     #: Number of individual spectra using for this individual spectrum
     nb_spectra_stacked: np.int64
     # same for all spectra, len(flux)
     nb_bins: np.int64
+
+    #: Time weighted by the radial velocity uncertainty (info for YARARA)
+    mean_jdb: np.float64
+
+    #: Radial velocity weighted by the radial velocity uncertainty (info for YARARA)
+    #:
+    #: Median recentered over all averages
+    mean_vrad: np.float64
+
+    #: Propagated harmonic mean of the radial velocity uncertainties (info for YARARA)
+    mean_svrad: np.float64
 
     @staticmethod
     def schema() -> tb.Schema[StackedBasicRow]:
@@ -120,7 +244,7 @@ class StackedPickle(TypedDict):
     #: delta between two bins, synonym dlambda
     dwave: np.float64
     #: Number of days using for the stacking
-    stacking_length: int
+    stacking_length: np.float64
     #: Number of individual spectra using for this individual spectrum
     nb_spectra_stacked: int
     #: Paths of files used in this stacked spectrum
@@ -195,11 +319,16 @@ class Task(cp.Config):
     ]
 
 
+def get_parser() -> argparse.ArgumentParser:
+    """Returns the argument parser for Sphinx doc purposes"""
+    return Task.get_argument_parser_()
+
+
 def perform_stacking(
     t: Task,
     rows: Sequence[IndividualReinterpolatedRow],
     group: int,
-    bin_length: int,
+    bin_length: np.float64,
     dbin: np.float64,
 ) -> StackedBasicRow:
 
@@ -241,20 +370,41 @@ def perform_stacking(
 
     bolo = np.array(bolo_)
 
-    def weighted_average(values: ArrayLike) -> np.float64:
+    def bolometric_weighted_average(values: ArrayLike) -> np.float64:
         """Computes the bolometric average of a value"""
         return np.sum(np.asarray(values) * bolo) / np.sum(bolo)
 
-    jdb_w = weighted_average([r.jdb for r in rows])
+    jdb_w = bolometric_weighted_average([r.jdb for r in rows])
     date_name = Time(jdb_w - 0.5, format="mjd").isot
     berv = [r.berv for r in rows]
-    berv_w = weighted_average(berv)
-    lamp_w = weighted_average([r.lamp_offset for r in rows])
-    rv_shift_w = weighted_average([r.rv_shift for r in rows])
+    berv_w = bolometric_weighted_average(berv)
+    lamp_w = bolometric_weighted_average([r.lamp_offset for r in rows])
+    rv_shift_w = bolometric_weighted_average([r.rv_shift for r in rows])
     wave_ref = int(find_nearest1(grid, 5500)[0])
     continuum_5500 = np.nanpercentile(stack[wave_ref - 50 : wave_ref + 50], 95)
     SNR = np.sqrt(continuum_5500)
     mjd_w = jdb_w - 0.5
+
+    jdb_array = np.array([r.jdb for r in rows], dtype=np.float64)
+    vrad_array = np.array([r.vrad for r in rows], dtype=np.float64)
+    svrad_array = np.array([r.svrad for r in rows], dtype=np.float64)
+    model_array = np.array([r.model for r in rows], dtype=np.float64)
+    drift_array = np.array([r.model for r in rows], dtype=np.float64)
+
+    vrad_array += drift_array - model_array * 1000.0
+    weights_array = 1.0 / svrad_array**2
+
+    def uncertainty_weighted_average(values: NDArray[np.float64]) -> np.float64:
+        """Computes the weighted average according to the radial vel. uncertainties"""
+        return np.sum(values * weights_array) / np.sum(weights_array)
+
+    mean_jdb = uncertainty_weighted_average(jdb_array)
+    mean_vrad = uncertainty_weighted_average(vrad_array)
+    mean_svrad = 1 / np.sqrt(np.sum(weights_array))
+    mean_vrad -= np.nanmedian(mean_vrad)
+
+    # Computations taken from YARARA
+
     out: StackedPickle = {
         "flux": stack,
         "flux_err": np.sqrt(np.abs(stack_err2)),
@@ -271,11 +421,11 @@ def perform_stacking(
         "wave_min": wave_min,
         "wave_max": wave_max,
         "dwave": dwave,
-        "stacking_length": int(bin_length),
+        "stacking_length": bin_length,
         "nb_spectra_stacked": int(nb_spectra_stacked),
         "arcfiles": name_root_files,
     }
-    name = f"Stacked_spectrum_bin_{bin_length}.{date_name}"
+    name = f"Stacked_spectrum_B{bin_length:.2f}_D{date_name}.p"
     output_file = t.root / t.output_folder / f"{name}.p"
     save_pickle(output_file, out)
 
@@ -298,9 +448,12 @@ def perform_stacking(
         wave_min=wave_min,
         wave_max=wave_max,
         dwave=dwave,
-        stacking_length=np.int64(bin_length),
+        stacking_length=bin_length,
         nb_spectra_stacked=np.int64(nb_spectra_stacked),
         nb_bins=nb_bins,
+        mean_jdb=mean_jdb,
+        mean_vrad=mean_vrad,
+        mean_svrad=mean_svrad,
     )
 
 

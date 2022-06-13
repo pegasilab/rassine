@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+import argparse
 import logging
-import pickle
+import typing
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Literal, Sequence, Tuple, TypedDict
@@ -15,8 +16,8 @@ from numpy.typing import NDArray
 from typing_extensions import Annotated
 
 from ..analysis import grouping
-from ..data import absurd_minus_99_9
 from ..io import save_pickle
+from ..math import absurd_minus_99_9
 from .data import LoggingLevel, PathPattern, PickleProtocol
 from .preprocess_table import IndividualBasicRow
 from .util import log_task_name_and_time
@@ -115,6 +116,15 @@ class IndividualImportedRow:
     hole_left: np.float64
 
     hole_right: np.float64
+
+    #: Radial velocity
+    vrad: np.float64
+
+    #: Radial velocity uncertainty
+    svrad: np.float64
+
+    #: Instrumental drift
+    drift: np.float64
 
     @staticmethod
     def schema() -> tb.Schema[IndividualImportedRow]:
@@ -362,8 +372,16 @@ def preprocess_import(
         dwave=spectre_step,
         hole_left=np.float64(hole_left),
         hole_right=np.float64(hole_right),
+        vrad=row.vrad,
+        svrad=row.svrad,
+        drift=row.drift,
     )
     return output_pickle, output_row
+
+
+def get_parser() -> argparse.ArgumentParser:
+    """Returns the argument parser for Sphinx doc purposes"""
+    return Task.get_argument_parser_()
 
 
 @log_task_name_and_time(name="preprocess_import")

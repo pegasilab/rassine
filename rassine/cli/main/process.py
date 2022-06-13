@@ -1,27 +1,186 @@
+"""Processing code for RASSINE, takes a long time to analyze in Pylance"""
 from __future__ import annotations
 
 import logging
 import time
-from typing import Literal, Optional, Sequence, Tuple, Union, cast
+from typing import Any, List, Literal, Optional, Sequence, Tuple, Union, cast
 
 import matplotlib.pylab as plt
 import numpy as np
 import pandas as pd
-from numpy.typing import ArrayLike, NDArray
+from numpy.typing import NDArray
 from scipy.interpolate import interp1d
 from scipy.optimize import curve_fit
 from scipy.special import erf
+from typing_extensions import assert_never
 
-from ...analysis import clustering, find_nearest1, grouping
-from ...math import c_lum, create_grid, doppler_r, gaussian
-from ...misc import ccf as ccf_fun
-from ...misc import local_max, make_continuum, produce_line, smooth
-from ...util import assert_never
+from ...analysis import find_nearest1, grouping
+from ...math import c_lum, create_grid, doppler_r, gaussian, local_max, make_continuum, smooth
 from ..stacking_master_spectrum import MasterPickle
 from ..stacking_stack import StackedPickle
 from .formats import ExtraPlotData, RassineBasicOutput, RassineParameters, RassinePickle
 from .functions import empty_ccd_gap
 from .types import Auto, Reg, RegPoly, RegSigmoid, Stretching
+
+
+def clustering(
+    array: NDArray[np.float64], threshold: float, num: int
+) -> Union[List[np.ndarray], np.ndarray]:
+    """
+    Detect and form 1D-cluster on an array. A new cluster is formed once the next vector value is farther than a threshold value.
+
+    Args:
+        array: The vector used to create the clustering (1D)
+        threshold: Threshold value distance used to define a new cluster.
+        num: The minimum number of elements to consider a cluster
+
+    Returns:
+        The matrix containing the left index, right index and the length of the 1D cluster
+    """
+    difference = np.diff(array)
+    cluster = difference < threshold
+    indice = np.arange(len(cluster))[cluster]
+    if sum(cluster):
+        j = 0
+        border_left = [indice[0]]
+        border_right = []
+        while j < len(indice) - 1:
+            if indice[j] == indice[j + 1] - 1:
+                j += 1
+            else:
+                border_right.append(indice[j])
+                border_left.append(indice[j + 1])
+                j += 1
+        border_right.append(indice[-1])
+        border = np.array([border_left, border_right]).T
+        border = np.hstack([border, (1 + border[:, 1] - border[:, 0])[:, np.newaxis]])
+
+        kept: List[Any] = []
+        for j in range(len(border)):
+            if border[j, -1] >= num:
+                kept.append(array[border[j, 0] : border[j, 1] + 2])
+        return np.array(kept, dtype="object")
+    else:
+        return [np.array([j]) for j in array]
+
+
+def ccf_fun(
+    wave: NDArray[np.float64],
+    spec1: NDArray[np.float64],
+    spec2: NDArray[np.float64],
+    extended: int = 1500,
+) -> Tuple[NDArray[np.float64], NDArray[np.float64]]:
+    """
+    Compute the Cross Correlation Function for an equidistant grid in log wavelength.
+
+    Args:
+        wave: The wavelength vector of the spectrum.
+        spec1: The flux vector of the spectrum.
+        spec2: The binary mask used to cross-correlate.
+        extended: The length of the extension of the vectors.
+
+    Returns
+    -------
+    vrad_grid : array_like
+        The velocity values of the CCF elements.
+    ccf : array_like
+        The values of the CCF.
+
+    """
+
+    dwave = wave[1] - wave[0]
+    spec1 = np.hstack([np.ones(extended), spec1, np.ones(extended)])
+    spec2 = np.hstack([np.zeros(extended), spec2, np.zeros(extended)])
+    wave = np.hstack(
+        [
+            np.arange(-extended * dwave + wave.min(), wave.min(), dwave),
+            wave,
+            np.arange(wave.max() + dwave, (extended + 1) * dwave + wave.max(), dwave),
+        ]
+    )  # type: ignore
+    shift = np.linspace(0, dwave, 10)[:-1]
+    shift_save = []
+    sum_spec = np.sum(spec2)
+    convolution = []
+    for j in shift:
+        new_spec = interp1d(
+            wave + j, spec2, kind="cubic", bounds_error=False, fill_value="extrapolate"
+        )(wave)
+        for k in np.arange(-60, 61, 1):
+            new_spec2 = np.hstack([new_spec[-k:], new_spec[:-k]])
+            convolution.append(np.sum(new_spec2 * spec1) / sum_spec)
+            shift_save.append(j + k * dwave)
+    return (c_lum * 10 ** np.array(shift_save)) - c_lum, np.array(convolution)
+
+
+def produce_line(
+    grid: NDArray[np.float64],
+    spectre: NDArray[np.float64],
+    box: int = 5,
+    shape: Literal["rectangular", "gaussian", "savgol"] = "savgol",
+    vic=7,
+):
+    index, line_flux = local_max(-smooth(spectre, box, shape=shape), vic)
+    line_flux = -line_flux
+    line_index = index.astype("int")
+    line_wave = grid[line_index]
+
+    index2, line_flux2 = local_max(smooth(spectre, box, shape=shape), vic)
+    line_index2 = index2.astype("int")
+    line_wave2 = grid[line_index2]
+
+    if line_wave[0] < line_wave2[0]:
+        line_wave2 = np.insert(line_wave2, 0, grid[0])
+        line_flux2 = np.insert(line_flux2, 0, spectre[0])
+        line_index2 = np.insert(line_index2, 0, 0)
+
+    if line_wave[-1] > line_wave2[-1]:
+        line_wave2 = np.insert(line_wave2, -1, grid[-1])
+        line_flux2 = np.insert(line_flux2, -1, spectre[-1])
+        line_index2 = np.insert(line_index2, -1, len(grid) - 1)
+
+    memory = np.hstack([-1 * np.ones(len(line_wave)), np.ones(len(line_wave2))])
+    stack_wave = np.hstack([line_wave, line_wave2])
+    stack_flux = np.hstack([line_flux, line_flux2])
+    stack_index = np.hstack([line_index, line_index2])
+
+    memory = memory[stack_wave.argsort()]
+    stack_flux = stack_flux[stack_wave.argsort()]
+    stack_wave = stack_wave[stack_wave.argsort()]
+    stack_index = stack_index[stack_index.argsort()]
+
+    trash, matrix = grouping(memory, 0.01, 0)
+
+    delete_liste = []
+    for j in range(len(matrix)):
+        number = np.arange(matrix[j, 0], matrix[j, 1] + 2)
+        fluxes = stack_flux[number].argsort()
+        if trash[j][0] == 1:
+            delete_liste.append(number[fluxes[0:-1]])
+        else:
+            delete_liste.append(number[fluxes[1:]])
+    delete_liste = np.hstack(delete_liste)
+
+    memory = np.delete(memory, delete_liste)
+    stack_flux = np.delete(stack_flux, delete_liste)
+    stack_wave = np.delete(stack_wave, delete_liste)
+    stack_index = np.delete(stack_index, delete_liste)
+
+    minima = np.where(memory == -1)[0]
+    maxima = np.where(memory == 1)[0]
+
+    index = stack_index[minima]
+    index2 = stack_index[maxima]
+    flux = stack_flux[minima]
+    flux2 = stack_flux[maxima]
+    wave = stack_wave[minima]
+    wave2 = stack_wave[maxima]
+
+    index = np.hstack([index[:, np.newaxis], index2[0:-1, np.newaxis], index2[1:, np.newaxis]])
+    flux = np.hstack([flux[:, np.newaxis], flux2[0:-1, np.newaxis], flux2[1:, np.newaxis]])
+    wave = np.hstack([wave[:, np.newaxis], wave2[0:-1, np.newaxis], flux2[1:, np.newaxis]])
+
+    return index, wave, flux
 
 
 def rassine_process(

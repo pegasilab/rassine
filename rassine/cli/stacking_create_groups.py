@@ -1,16 +1,18 @@
 from __future__ import annotations
 
+import argparse
 import logging
+import typing
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Sequence, Set
+from typing import Sequence
 
 import configpile as cp
 import numpy as np
 import tybles as tb
 from typing_extensions import Annotated
 
-from ..types import Float
+from ..math import Float
 from .data import LoggingLevel, PickleProtocol
 from .reinterpolate import IndividualReinterpolatedRow
 from .util import log_task_name_and_time
@@ -27,7 +29,7 @@ class IndividualGroupRow:
     group: int
 
     #: Number of days used for stacking
-    stacking_length: int
+    stacking_length: np.float64
 
     #: dbin to shift the binning (0.5 for solar data)
     dbin: np.float64
@@ -89,13 +91,20 @@ class Task(cp.Config):
     #: Output grouping table
     output_table: Annotated[Path, cp.Param.store(cp.parsers.path_parser, short_flag_name="-O")]
 
-    #: Length of the binning for the stacking in days (integer)
+    #: Length of the binning for the stacking in days
+    #:
+    #: Can be a floating point value indicating fractions of a day
     #:
     #: The value 0 means that each spectrum is in its individual group
-    bin_length: Annotated[int, cp.Param.store(cp.parsers.int_parser, default_value="1")]
+    bin_length: Annotated[float, cp.Param.store(cp.parsers.float_parser, default_value="1.0")]
 
     #: dbin to shift the binning (0.5 for solar data)
     dbin: Annotated[float, cp.Param.store(cp.parsers.float_parser, default_value="0.0")]
+
+
+def get_parser() -> argparse.ArgumentParser:
+    """Returns the argument parser for Sphinx doc purposes"""
+    return Task.get_argument_parser_()
 
 
 @log_task_name_and_time(name=Path(__file__).stem)
@@ -106,12 +115,12 @@ def run(t: Task) -> None:
 
     input_table_path = t.root / t.input_table
 
-    logging.info(f"Reaading table {input_table_path}")
+    logging.info(f"Reading table {input_table_path}")
     rows = IndividualReinterpolatedRow.schema().read_csv(input_table_path, return_type="Tyble")
 
     if t.bin_length == 0:
         group_info = [
-            IndividualGroupRow(r.name, i, t.bin_length, np.float64(t.dbin))
+            IndividualGroupRow(r.name, i, np.float64(t.bin_length), np.float64(t.dbin))
             for i, r in enumerate(rows)
         ]
     else:
@@ -120,7 +129,9 @@ def run(t: Task) -> None:
             return int((jdb + t.dbin) // t.bin_length)
 
         group_info = [
-            IndividualGroupRow(r.name, compute_group(r.jdb), t.bin_length, np.float64(t.dbin))
+            IndividualGroupRow(
+                r.name, compute_group(r.jdb), np.float64(t.bin_length), np.float64(t.dbin)
+            )
             for r in rows
         ]
 

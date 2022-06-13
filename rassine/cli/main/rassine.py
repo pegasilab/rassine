@@ -1,7 +1,13 @@
+"""
+Main file for the RASSINE script
+"""
+
 from __future__ import annotations
 
+import argparse
 import logging
 import textwrap
+import typing
 from dataclasses import dataclass, replace
 from datetime import datetime
 from pathlib import Path
@@ -21,7 +27,7 @@ from rassine.cli.data import LoggingLevel, PickleProtocol
 
 from ...io import open_pickle, save_pickle
 from ..stacking_master_spectrum import MasterPickle
-from ..stacking_stack import StackedBasicRow, StackedPickle
+from ..stacking_stack import StackedPickle
 from .formats import ExtraPlotData, RassineParameters, RassinePickle
 from .process import rassine_process
 from .types import (
@@ -39,15 +45,16 @@ from .types import (
 @dataclass(frozen=True)
 class Task(cp.Config):
     """
-    =====================================================================================
     Rolling Alpha Shape for a Spectral Improved Normalisation Estimator (RASSINE)
-    =====================================================================================  
-         ^                  .-=-.          .-==-.
-        {}      __        .' O o '.       /   ^  )
-       { }    .' O'.     / o .-. O \\     /  .--`\\
-       { }   / .-. o\\   /O  /   \\  o\\   /O /    ^  (RASSSSSSINE)
-        \\ `-` /   \\ O`-'o  /     \\  O`-`o /
-    jgs  `-.-`     '.____.'       `.____.'
+
+    ..
+    
+             ^                  .-=-.          .-==-.
+            {}      __        .' O o '.       /   ^  )
+           { }    .' O'.     / o .-. O \\     /  .--`\\
+           { }   / .-. o\\   /O  /   \\  o\\   /O /    ^  (RASSSSSSINE)
+            \\ `-` /   \\ O`-'o  /     \\  O`-`o /
+        jgs  `-.-`     '.____.'       `.____.'
 
     Authors: Michael Cretignier, Jeremie Francfort and Denis Rosset
     """
@@ -346,6 +353,11 @@ class Task(cp.Config):
     random_seed: Annotated[
         Optional[int], cp.Param.store(cp.parsers.int_parser.empty_means_none(), default_value="")
     ]
+
+
+def get_parser() -> argparse.ArgumentParser:
+    """Returns the argument parser for Sphinx doc purposes"""
+    return Task.get_argument_parser_()
 
 
 def print_parameters_according_to_paper(parameters: RassineParameters):

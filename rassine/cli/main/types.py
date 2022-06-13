@@ -1,14 +1,11 @@
+"""Parsed types used in RASSINE configuration"""
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
-from pathlib import Path
-from typing import Literal, Optional, Sequence, Tuple, Union
+from dataclasses import dataclass
+from typing import Literal, Sequence, Tuple, Union
 
 import configpile as cp
-from typing_extensions import Annotated, TypeAlias
-
-from ...io import open_pickle
-from ...util import assert_never
+from typing_extensions import TypeAlias
 
 
 @dataclass(frozen=True)

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import argparse
 import logging
 import sys
+import typing
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Sequence, Set
@@ -28,12 +30,21 @@ class DACE:
     #: Observation date/time in MJD
     mjd: np.float64
 
-    #: Optional RV shift correction
+    #: Optional RV shift correction km/s
     model: np.float64
 
     @staticmethod
     def schema() -> tb.Schema[DACE]:
         return tb.schema(DACE, order_columns=True, missing_columns="error", extra_columns="drop")
+
+    #: Radial velocity
+    vrad: np.float64
+
+    #: Radial velocity uncertainty
+    svrad: np.float64
+
+    #: Instrumental drift
+    drift_used: np.float64
 
 
 @dataclass(frozen=True)
@@ -57,6 +68,15 @@ class IndividualBasicRow:
 
     #: Difference model - rv_mean in km/s
     rv_shift: np.float64
+
+    #: Radial velocity
+    vrad: np.float64
+
+    #: Radial velocity uncertainty
+    svrad: np.float64
+
+    #: Instrumental drift
+    drift: np.float64
 
     @staticmethod
     def schema() -> tb.Schema[IndividualBasicRow]:
@@ -136,6 +156,11 @@ class Task(cp.Config):
     strict: Annotated[bool, cp.Param.store(cp.parsers.bool_parser, default_value="true")]
 
 
+def get_parser() -> argparse.ArgumentParser:
+    """Returns the argument parser for Sphinx doc purposes"""
+    return Task.get_argument_parser_()
+
+
 @log_task_name_and_time(name=Path(__file__).stem)
 def run(t: Task) -> None:
     t.logging_level.set()
@@ -144,7 +169,7 @@ def run(t: Task) -> None:
 
     dace_path = t.root / t.dace_table
 
-    logging.info(f"Reaading DACE table {dace_path}")
+    logging.info(f"Reading DACE table {dace_path}")
     dace = DACE.schema().read_csv(dace_path)
     if t.verify_sorted:
         filenames: List[str] = dace["fileroot"].to_list()
@@ -175,6 +200,9 @@ def run(t: Task) -> None:
             model=r.model,
             rv_mean=rv_mean,
             rv_shift=r.model - rv_mean,
+            vrad=r.vrad,
+            svrad=r.svrad,
+            drift=r.drift_used,
         )
         for r in rows
     ]

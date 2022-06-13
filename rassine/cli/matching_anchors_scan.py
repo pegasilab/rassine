@@ -1,4 +1,6 @@
+import argparse
 import logging
+import typing
 from dataclasses import dataclass
 from pathlib import Path
 from typing import ClassVar, List, Optional, Sequence, TypedDict
@@ -8,13 +10,12 @@ import numpy as np
 from numpy.typing import NDArray
 from typing_extensions import Annotated
 
-from rassine.cli.data import LoggingLevel, PathPattern, PickleProtocol
-from rassine.cli.stacking_stack import StackedBasicRow
-from rassine.cli.util import log_task_name_and_time
-
 from ..analysis import grouping
 from ..io import open_pickle, save_pickle
+from .data import LoggingLevel, PathPattern, PickleProtocol
 from .main.formats import RassinePickle
+from .stacking_stack import StackedBasicRow
+from .util import log_task_name_and_time
 
 
 class MasterToolPickle(TypedDict):
@@ -321,6 +322,11 @@ class Task(cp.Config):
 
     #: Parameter of the model between 0 and 1
     tolerance: Annotated[float, cp.Param.store(cp.parsers.float_parser, default_value="0.5")]
+
+
+def get_parser() -> argparse.ArgumentParser:
+    """Returns the argument parser for Sphinx doc purposes"""
+    return Task.get_argument_parser_()
 
 
 @log_task_name_and_time(name=Path(__file__).stem)

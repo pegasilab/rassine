@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Literal, Mapping, Optional, Sequence, TypedDict, Union
+from typing import Literal, Optional, Sequence, TypedDict, Union
 
 import numpy as np
 from numpy.typing import NDArray
 
-from ...types import Float
+from ...math import Float
 
 
 class RassineBasicOutput(TypedDict):

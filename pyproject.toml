@@ -25,14 +25,16 @@ repository = "https://github.com/denisrosset/rassine.git"
 version = "0.1.0"
 
 [tool.poetry.scripts]
+preprocess_import = "rassine.cli.preprocess_import:cli"
+preprocess_table = "rassine.cli.preprocess_table:cli"
+
 enumerate_table_column_unique_values = "rassine.cli.enumerate_table_column_unique_values:cli"
 enumerate_table_rows = "rassine.cli.enumerate_table_rows:cli"
+
 matching_anchors_filter = "rassine.cli.matching_anchors_filter:cli"
 matching_anchors_scan = "rassine.cli.matching_anchors_scan:cli"
 matching_diff = "rassine.cli.matching_diff:cli"
 pickle_compare = "rassine.cli.pickle_compare:cli"
-preprocess_import = "rassine.cli.preprocess_import:cli"
-preprocess_table = "rassine.cli.preprocess_table:cli"
 rassine = "rassine.cli.main.rassine:cli"
 reinterpolate = "rassine.cli.reinterpolate:cli"
 reorder_csv = "rassine.cli.reorder_csv:cli"
@@ -48,7 +50,7 @@ PyQt5 = "^5.15.6"
 PyQt5-Qt = "^5.15.2"
 PyQt5-sip = "^12.9.1"
 astropy = "^4.2.1"
-configpile = {version = "^10.0.2", extras = ["parsy", "rich"]}
+configpile = {version = "^10.0.3", extras = ["parsy", "rich"]}
 deepdish = "^0.3.7"
 filelock = "^3.6.0"
 h5py = "^2.10.0"
@@ -65,13 +67,13 @@ tybles = "^0.3.2"
 typeguard = "^2.13.3"
 typing-extensions = "^4.1.1"
 
-myst-nb = {version = "^0.13.2", optional = true}
-sphinx = {version = "4.3.2", optional = true}
+ipywidgets = {version = "^7.7.0", optional = true}
+myst-nb = {version = "^0.15.0", optional = true}
+sphinx = {version = "4.5.0", optional = true}
 sphinx-argparse = {version = "^0.3.1", optional = true}
-sphinx-autodoc-typehints = {version = "^1.17.0", optional = true}
-sphinx-book-theme = {version = "^0.2.0", optional = true}
-sphinxcontrib-bibtex = {version = "^2.4.1", optional = true}
-sphinxnotes-strike = {version = "^1.0", optional = true}
+sphinx-autodoc-typehints = {version = "^1.18.3", optional = true}
+sphinx-book-theme = {version = "^0.3.2", optional = true}
+sphinxcontrib-bibtex = {version = "^2.4.2", optional = true}
 
 [tool.poetry.extras]
 docs = [
@@ -80,45 +82,19 @@ docs = [
   "sphinx-argparse",
   "sphinx-autodoc-typehints",
   "sphinx-book-theme",
-  "sphinx-pydantic",
   "sphinxcontrib-bibtex",
-  "sphinxnotes-strike",
+  "ipywidgets",
 ]
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
 commitizen = "^2.21.2"
 doc8 = "^0.10.1"
-esbonio = "^0.10.2"
+esbonio = "^0.13.0"
 isort = "^5.10.1"
-mypy = "^0.941"
 pandas-stubs = "^1.2.0.43"
 pytest = "^7.0.1"
 rstcheck = "^3.3.1"
-
-[mypy]
-plugins = ["numpy.typing.mypy_plugin"]
-python_version = "3.8"
-
-warn_return_any = true
-warn_unused_configs = true
-
-# super strict
-check_untyped_defs = true
-disallow_any_generics = true
-disallow_incomplete_defs = true
-disallow_subclassing_any = true
-disallow_untyped_calls = true
-disallow_untyped_decorators = true
-disallow_untyped_defs = true
-no_implicit_optional = true
-show_column_numbers = true
-show_error_codes = true
-show_error_context = true
-show_none_errors = true
-strict_equality = true
-strict_optional = true
-warn_redundant_casts = true
 
 [tool.pytest.ini_options]
 addopts = [

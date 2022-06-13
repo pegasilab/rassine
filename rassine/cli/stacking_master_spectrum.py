@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import argparse
 import logging
+import typing
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal, Sequence, TypedDict
@@ -157,6 +159,11 @@ class Task(cp.Config):
             short_flag_name=None,
         ),
     ]
+
+
+def get_parser() -> argparse.ArgumentParser:
+    """Returns the argument parser for Sphinx doc purposes"""
+    return Task.get_argument_parser_()
 
 
 @log_task_name_and_time(name=Path(__file__).stem)

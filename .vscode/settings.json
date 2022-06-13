@@ -141,6 +141,12 @@
             "gutterIcon": true
         },
     },
-    "esbonio.server.enabled": false,
-    "esbonio.sphinx.confDir": "",
+    "esbonio.server.enabled": true,
+    "esbonio.sphinx.buildDir": "${workspaceFolder}/docs/build/html",
+    "esbonio.sphinx.confDir": "${workspaceFolder}/docs/source",
+    "esbonio.sphinx.srcDir": "${workspaceFolder}/docs/source",
+    "restructuredtext.linter.doc8.extraArgs": [
+        "--config",
+        "${workspaceFolder}/doc8.ini"
+    ]
 }

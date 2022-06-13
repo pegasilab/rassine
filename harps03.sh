@@ -9,7 +9,7 @@ export RASSINE_LOGGING_LEVEL=INFO
 
 nthreads=4 # number of concurrent jobs
 nchunks=10 # number of items per Python script invocation
-PARALLEL_OPTIONS="--will-cite --verbose -N$nchunks --jobs $nthreads --keep-order"
+PARALLEL_OPTIONS="--nice 18 --will-cite --verbose -N$nchunks --jobs $nthreads --keep-order"
 
 if [ ! -f $RASSINE_ROOT/tag ]
 then
@@ -35,7 +35,7 @@ preprocess_table -I DACE_TABLE/Dace_extracted_table.csv -i RAW -O individual_bas
 # delete the produced table if it exists already
 individual_imported=$RASSINE_ROOT/individual_imported.csv
 [ -f $individual_imported ] && rm $individual_imported 
-enumerate_table_rows individual_basic.csv | parallel $PARALLEL_OPTIONS \
+enumerate_table_rows individual_basic.csv | ./parallel $PARALLEL_OPTIONS \
   preprocess_import --drs-style old -i RAW -o PREPROCESSED/{name}.p -I individual_basic.csv -O individual_imported.csv
 reorder_csv --column name --reference individual_basic.csv individual_imported.csv 
 fi
@@ -46,7 +46,7 @@ then
 # if the summary table exists, remove it
 individual_reinterpolated=$RASSINE_ROOT/individual_reinterpolated.csv
 [ -f $individual_reinterpolated ] && rm $individual_reinterpolated 
-enumerate_table_rows individual_imported.csv | parallel $PARALLEL_OPTIONS \
+enumerate_table_rows individual_imported.csv | ./parallel $PARALLEL_OPTIONS \
   reinterpolate -i PREPROCESSED -o PREPROCESSED -I individual_imported.csv -O individual_reinterpolated.csv
 reorder_csv --column name --reference individual_imported.csv individual_reinterpolated.csv 
 fi
@@ -65,7 +65,7 @@ stacking_create_groups -I individual_reinterpolated.csv -O individual_group.csv
 stacked_basic=$RASSINE_ROOT/stacked_basic.csv
 [ -f $stacked_basic ] && rm $stacked_basic 
 
-enumerate_table_column_unique_values -c group individual_group.csv | parallel $PARALLEL_OPTIONS \
+enumerate_table_column_unique_values -c group individual_group.csv | ./parallel $PARALLEL_OPTIONS \
   stacking_stack -I individual_reinterpolated.csv -G individual_group.csv -O stacked_basic.csv -i PREPROCESSED -o STACKED
 
 sort_csv --column group stacked_basic.csv
@@ -96,7 +96,7 @@ rassine --input-spectrum $master_table --input-folder MASTER --output-folder MAS
 ## 
 ##
 # Step 4B Normalisation frame, done in parallel
-enumerate_table_rows stacked_basic.csv | parallel $PARALLEL_OPTIONS \
+enumerate_table_rows stacked_basic.csv | ./parallel $PARALLEL_OPTIONS \
   rassine --input-table stacked_basic.csv --input-folder STACKED --output-folder STACKED --config $RASSINE_ROOT/anchor_Master_spectrum_$tag.ini --output-folder STACKED --output-plot-folder STACKED
 
 fi
@@ -119,7 +119,7 @@ matching_anchors_scan --input-table stacked_basic.csv --input-pattern STACKED/RA
 anchors_table=$RASSINE_ROOT/matching_anchors.csv
 [ -f $anchors_table ] && rm $anchors_table 
 
-enumerate_table_rows stacked_basic.csv | parallel $PARALLEL_OPTIONS \
+enumerate_table_rows stacked_basic.csv | ./parallel $PARALLEL_OPTIONS \
   matching_anchors_filter --master-tool MASTER/Master_tool_$tag.p --process-table stacked_basic.csv --process-pattern STACKED/RASSINE_{name}.p --output-table matching_anchors.csv 
 reorder_csv --column name --reference stacked_basic.csv matching_anchors.csv 
 
@@ -134,17 +134,10 @@ then
 
 # Step 6B done in parallel
 # "matching_diff"
-enumerate_table_rows stacked_basic.csv | parallel $PARALLEL_OPTIONS \
+enumerate_table_rows stacked_basic.csv | ./parallel $PARALLEL_OPTIONS \
   matching_diff --anchor-file MASTER/RASSINE_$master_table --savgol-window 200 --process-table stacked_basic.csv --process-pattern STACKED/RASSINE_{name}.p
 touch /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/rassine_finished.txt
 
 fi
 
 rm $RASSINE_ROOT/*.lock
-
-# TODO:
-# 1) Split the instrument preprocessing in different scripts
-# 2) Make all paths visible in the options
-# 3) Introduce a configuration file format
-# 7) See if rassine_intersect1.py would be faster using HDF5 vs pickle
-# 8) Time all the steps

@@ -17,7 +17,7 @@ from typing_extensions import assert_never
 from ...analysis import find_nearest1, grouping
 from ...math import c_lum, create_grid, doppler_r, gaussian, local_max, make_continuum, smooth
 from ..stacking_master_spectrum import MasterPickle
-from ..stacking_stack import StackedPickle
+from ..stacking_stack import StackedBasicRow, StackedPickle
 from .formats import ExtraPlotData, RassineBasicOutput, RassineParameters, RassinePickle
 from .functions import empty_ccd_gap
 from .types import Auto, Reg, RegPoly, RegSigmoid, Stretching
@@ -185,6 +185,7 @@ def produce_line(
 
 def rassine_process(
     output_filename: str,
+    row: Optional[StackedBasicRow],
     data: Union[MasterPickle, StackedPickle],
     synthetic_spectrum: bool,
     random_seed: int,
@@ -1145,6 +1146,9 @@ def rassine_process(
         "continuum_denoised_saved": outputs_denoising_saved,
         "nb_spectra_stacked": nb_spectra_stacked,
         "arcfiles": arcfiles,
+        "rv_mean_jdb": None if row is None else row.mean_jdb,
+        "rv_dace": None if row is None else row.mean_vrad,
+        "rv_dace_std": None if row is None else row.mean_svrad,
     }
 
     # conversion in fmt format

@@ -27,7 +27,7 @@ from rassine.cli.data import LoggingLevel, PickleProtocol
 
 from ...io import open_pickle, save_pickle
 from ..stacking_master_spectrum import MasterPickle
-from ..stacking_stack import StackedPickle
+from ..stacking_stack import StackedBasicRow, StackedPickle
 from .formats import ExtraPlotData, RassineParameters, RassinePickle
 from .process import rassine_process
 from .types import (
@@ -500,25 +500,6 @@ def make_ini_contents_from_parameters(
     ).strip()
 
 
-@dataclass(frozen=True)
-class NameRow:
-    """
-    Describes a table with a name column
-    """
-
-    #: Stacked spectrum name without path and extension
-    name: str
-
-    @staticmethod
-    def schema() -> tb.Schema[NameRow]:
-        return tb.schema(
-            NameRow,
-            order_columns=True,
-            missing_columns="error",
-            extra_columns="drop",
-        )
-
-
 def run(t: Task):
     t.pickle_protocol.set()
     t.logging_level.set()
@@ -539,6 +520,7 @@ def run(t: Task):
     @dataclass(frozen=True)
     class Step:
         stem: str
+        row: Optional[StackedBasicRow]
         input_file: Path
         output_file: Path
         output_plot_file: Optional[Path]
@@ -554,17 +536,21 @@ def run(t: Task):
         assert t.input_table is not None
         assert t.input_folder is not None
         logging.debug(f"Reading {t.root/t.input_table}")
-        tyble = NameRow.schema().read_csv(t.root / t.input_table, return_type="Tyble")
+        tyble = StackedBasicRow.schema().read_csv(t.root / t.input_table, return_type="Tyble")
         stems = [tyble[i].name for i in t.input_indices]
-        steps = [
-            Step(
-                stem,
-                t.root / t.input_folder / (stem + ".p"),
-                t.root / t.output_folder / (t.output_pattern.replace("{}", stem)),
-                output_plot_file_for_stem(stem),
+        steps: List[Step] = []
+        for i in t.input_indices:
+            row = tyble[i]
+            stem = row.name
+            steps.append(
+                Step(
+                    stem=stem,
+                    row=tyble[i],
+                    input_file=t.root / t.input_folder / (stem + ".p"),
+                    output_file=t.root / t.output_folder / (t.output_pattern.replace("{}", stem)),
+                    output_plot_file=output_plot_file_for_stem(stem),
+                )
             )
-            for stem in stems
-        ]
     else:
         if t.input_folder is None:
             abs_input_folder = t.root
@@ -575,6 +561,7 @@ def run(t: Task):
         steps = [
             Step(
                 stem,
+                None,
                 abs_input_folder / t.input_spectrum,
                 t.root / t.output_folder / (t.output_pattern.replace("{}", stem)),
                 output_plot_file_for_stem(stem),
@@ -612,6 +599,7 @@ def run(t: Task):
 
         output, extra_plot_data = rassine_process(
             output_filename=step.output_file.name,
+            row=step.row,
             data=data,
             synthetic_spectrum=t.synthetic_spectrum,
             random_seed=random_seed,

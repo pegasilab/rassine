@@ -190,7 +190,7 @@ class StackedBasicRow:
 
     #: Radial velocity weighted by the radial velocity uncertainty (info for YARARA)
     #:
-    #: Median recentered over all averages
+    #: Median *not* recentered over all averages, YARAR takes care of that
     mean_vrad: np.float64
 
     #: Propagated harmonic mean of the radial velocity uncertainties (info for YARARA)
@@ -389,7 +389,7 @@ def perform_stacking(
     vrad_array = np.array([r.vrad for r in rows], dtype=np.float64)
     svrad_array = np.array([r.svrad for r in rows], dtype=np.float64)
     model_array = np.array([r.model for r in rows], dtype=np.float64)
-    drift_array = np.array([r.model for r in rows], dtype=np.float64)
+    drift_array = np.array([r.drift for r in rows], dtype=np.float64)
 
     vrad_array += drift_array - model_array * 1000.0
     weights_array = 1.0 / svrad_array**2
@@ -401,7 +401,6 @@ def perform_stacking(
     mean_jdb = uncertainty_weighted_average(jdb_array)
     mean_vrad = uncertainty_weighted_average(vrad_array)
     mean_svrad = 1 / np.sqrt(np.sum(weights_array))
-    mean_vrad -= np.nanmedian(mean_vrad)
 
     # Computations taken from YARARA
 

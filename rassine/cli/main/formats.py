@@ -55,6 +55,25 @@ class RassineParameters(TypedDict):
     nb_spectra_stacked: int
     arcfiles: Sequence[str]
 
+    #: Time weighted by the radial velocity uncertainty (info for YARARA)
+    #:
+    #: Not present in the master spectrum
+    rv_mean_jdb: Optional[np.float64]
+
+    #: Std deviation weighted radial velocity average (info for YARARA)
+    #:
+    #: Comes from the stacking_basic table mean_vrad column (info for YARARA)
+    #:
+    #: Not present in the master spectrum
+    rv_dace: Optional[np.float64]
+
+    #: Radial velocity standard deviation
+    #:
+    #: Comes from the stacking_basic table mean_svrad column
+    #:
+    #: Not present in the master spectrum
+    rv_dace_std: Optional[np.float64]
+
 
 class RassinePickle(TypedDict):
     #: Wavelength

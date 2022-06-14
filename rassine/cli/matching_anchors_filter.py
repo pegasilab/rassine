@@ -17,11 +17,9 @@ from filelock import FileLock
 from numpy.typing import NDArray
 from typing_extensions import Annotated
 
-from rassine.cli.main.rassine import NameRow
-
 from ..io import open_pickle, save_pickle
 from ..math import local_max, make_continuum
-from .data import LoggingLevel, PathPattern, PickleProtocol
+from .data import LoggingLevel, NameRow, PathPattern, PickleProtocol
 from .main.formats import RassineBasicOutput, RassineParameters, RassinePickle
 from .matching_anchors_scan import MasterToolPickle
 from .util import log_task_name_and_time

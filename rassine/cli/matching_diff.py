@@ -14,9 +14,8 @@ from typing_extensions import Annotated
 from ..analysis import rolling_iq
 from ..io import open_pickle, save_pickle
 from ..math import smooth
-from .data import LoggingLevel, PathPattern, PickleProtocol
+from .data import LoggingLevel, NameRow, PathPattern, PickleProtocol
 from .main.formats import RassineBasicOutput, RassineParameters
-from .main.rassine import NameRow
 from .matching_anchors_filter import AnchorOutput, AnchorPickle
 from .util import log_task_name_and_time
 

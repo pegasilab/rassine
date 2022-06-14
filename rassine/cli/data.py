@@ -9,8 +9,28 @@ from pathlib import Path
 from typing import Optional
 
 import configpile as cp
+import tybles as tb
 
 from .. import io
+
+
+@dataclass(frozen=True)
+class NameRow:
+    """
+    Describes a table with a name column
+    """
+
+    #: Stacked spectrum name without path and extension
+    name: str
+
+    @staticmethod
+    def schema() -> tb.Schema[NameRow]:
+        return tb.schema(
+            NameRow,
+            order_columns=True,
+            missing_columns="error",
+            extra_columns="drop",
+        )
 
 
 @dataclass(frozen=True)

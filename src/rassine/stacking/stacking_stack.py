@@ -198,7 +198,7 @@ def perform_stacking(
         "nb_spectra_stacked": int(nb_spectra_stacked),
         "arcfiles": name_root_files,
     }
-    name = f"Stacked_spectrum_B{bin_length:.2f}_D{date_name}.p"
+    name = f"Stacked_spectrum_B{bin_length:.2f}_D{date_name}"
     output_file = t.root / t.output_folder / f"{name}.p"
     save_pickle(output_file, out)
 

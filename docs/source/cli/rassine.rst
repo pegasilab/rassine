@@ -2,6 +2,6 @@ rassine
 =======
 
 .. argparse::
-   :module: rassine.cli.main.rassine
+   :module: rassine.rassine.rassine
    :func: get_parser
    :prog: rassine

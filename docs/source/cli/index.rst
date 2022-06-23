@@ -1,7 +1,7 @@
 Command-line tools
 ==================
 
-.. toctree:: 
+.. toctree::
 
     preprocess_import
     preprocess_table

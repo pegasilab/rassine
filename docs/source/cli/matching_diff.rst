@@ -2,6 +2,6 @@ matching_diff
 =============
 
 .. argparse::
-   :module: rassine.cli.matching_diff
+   :module: rassine.matching.matching_diff
    :func: get_parser
    :prog: matching_diff

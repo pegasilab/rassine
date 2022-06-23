@@ -2,6 +2,6 @@ reinterpolate
 =============
 
 .. argparse::
-   :module: rassine.cli.reinterpolate
+   :module: rassine.imports.reinterpolate
    :func: get_parser
    :prog: reinterpolate

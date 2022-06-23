@@ -6,4 +6,9 @@ Public API
    :toctree: _autosummary
    :recursive:
 
-   rassine
+   rassine.imports
+   rassine.stacking
+   rassine.rassine
+   rassine.matching
+   rassine.tools
+   rassine.lib

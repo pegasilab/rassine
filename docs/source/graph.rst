@@ -6,10 +6,10 @@ File processing
     digraph process {
         newrank=false
         subgraph cluster_input_data {
-        label="input data"
+        label=<<i>input data</i>>
         peripheries=0
         "RAW/{name}.fits" [shape=none]
-        "DACE_TABLE/Dace_extracted_table.csv" [shape=none]
+        "DACE_TABLE/Dace_extracted_table.csv" [shape=none, label=<DACE_TABLE/Dace_extracted_table.csv<br/><font color="#444444">rassine.imports.types.DACE</font>>, href="../_autosummary/rassine.imports.types.DACE.html#rassine.imports.types.DACE", target="_top"]
         }
 
         subgraph cluster_data0 {
@@ -31,12 +31,12 @@ File processing
         }
 
         subgraph cluster_output_data {
-        label="output data"
+        label=<<i>output data</i>>
         peripheries=0
         "STACKED/RASSINE_{name}.p (ter)" [shape=none,label="STACKED/RASSINE_{name}.p"]
         }
         subgraph cluster_import {
-            label="import"
+            label=<<i>import</i>>
             "preprocess_table" [shape=box, href="../cli/preprocess_table.html", target="_top"]
                 "RAW/{name}.fits" -> "preprocess_table" [style="dashed"]
                 "DACE_TABLE/Dace_extracted_table.csv" -> "preprocess_table"
@@ -46,7 +46,7 @@ File processing
             "individual_basic.csv" -> "preprocess_import"
             "RAW/{name}.fits" -> "preprocess_import"
 
-            "individual_basic.csv" [shape=none]
+            "individual_basic.csv" [shape=none, label=<individual_basic.csv<br/><font color="#444444">rassine.imports.types.IndividualBasicRow</font>>, href="../_autosummary/rassine.imports.types.IndividualBasicRow.html", target="_top"]
 
             "preprocess_import" -> "PREPROCESSED/{name}.p"
             "preprocess_import" -> "individual_imported.csv"
@@ -64,7 +64,7 @@ File processing
 
         }
         subgraph cluster_stacking1 {
-            label="stacking"
+            label=<<i>stacking</i>>
             "stacking_create_groups" [shape="box", href="../cli/stacking_create_groups.html", target="_top"]
             "individual_reinterpolated.csv" -> "stacking_create_groups"
             "stacking_create_groups" -> "individual_group.csv"
@@ -83,14 +83,14 @@ File processing
 
         }
         subgraph cluster_stacking2 {
-            label="stacking"
+            label=<<i>stacking</i>>
             "stacking_master_spectrum" [shape="box", href="../cli/stacking_master_spectrum.html", target="_top"]
             "STACKED/{name}.p" -> "stacking_master_spectrum"
             "stacked_basic.csv" -> "stacking_master_spectrum"
             "stacking_master_spectrum" -> "MASTER/Master_spectrum_{tag}.p"
         }
         subgraph cluster_rassine {
-            label="rassine"
+            label=<<i>rassine</i>>
             "rassine1" [label="rassine", shape="box", href="../cli/rassine.html", target="_top"]
             "rassine2" [label="rassine", shape="box", href="../cli/rassine.html", target="_top"]
 
@@ -108,7 +108,7 @@ File processing
 
         }
         subgraph cluster_matching {
-            label="matching"
+            label=<<i>matching</i>>
             "stacked_basic.csv" -> "matching_anchors_scan"
             "STACKED/RASSINE_{name}.p" -> "matching_anchors_scan"
             "MASTER/RASSINE_Master_spectrum_{tag}.p" -> "matching_anchors_scan" [style="dashed"]

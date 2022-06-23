@@ -19,6 +19,8 @@ class DACE:
     mjd: np.float64
 
     #: Optional RV shift correction km/s
+    #:
+    #: If not used, set the column values to zero
     model: np.float64
 
     @staticmethod

@@ -22,7 +22,7 @@ license = "BSD-3-Clause"
 name = "rassine"
 readme = "README.md"
 repository = "https://github.com/denisrosset/rassine.git"
-version = "0.1.2"
+version = "0.1.3"
 
 [tool.poetry.scripts]
 enumerate_table_column_unique_values = "rassine.tools.enumerate_table_column_unique_values:cli"
@@ -52,7 +52,6 @@ PyQt5-sip = "^12.9.1"
 astropy = "^5.0.4"
 configpile = {version = "^10.0.3", extras = ["parsy", "rich"]}
 filelock = "^3.6.0"
-h5py = "^2.10.0"
 matplotlib = "^3.3.4"
 nptyping = "^1.4.4"
 numpy = "^1.23.0"

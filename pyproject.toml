@@ -25,25 +25,25 @@ repository = "https://github.com/denisrosset/rassine.git"
 version = "0.1.0"
 
 [tool.poetry.scripts]
-preprocess_import = "rassine.cli.preprocess_import:cli"
-preprocess_table = "rassine.cli.preprocess_table:cli"
+enumerate_table_column_unique_values = "rassine.tools.enumerate_table_column_unique_values:cli"
+enumerate_table_rows = "rassine.tools.enumerate_table_rows:cli"
+pickle_compare = "rassine.tools.pickle_compare:cli"
+reorder_csv = "rassine.tools.reorder_csv:cli"
+sort_csv = "rassine.tools.sort_csv:cli"
 
-enumerate_table_column_unique_values = "rassine.cli.enumerate_table_column_unique_values:cli"
-enumerate_table_rows = "rassine.cli.enumerate_table_rows:cli"
+preprocess_import = "rassine.imports.preprocess_import:cli"
+preprocess_table = "rassine.imports.preprocess_table:cli"
+reinterpolate = "rassine.imports.reinterpolate:cli"
 
-matching_anchors_filter = "rassine.cli.matching_anchors_filter:cli"
-matching_anchors_scan = "rassine.cli.matching_anchors_scan:cli"
-matching_diff = "rassine.cli.matching_diff:cli"
-pickle_compare = "rassine.cli.pickle_compare:cli"
-rassine = "rassine.cli.main.rassine:cli"
-reinterpolate = "rassine.cli.reinterpolate:cli"
-reorder_csv = "rassine.cli.reorder_csv:cli"
-sort_csv = "rassine.cli.sort_csv:cli"
-spectrum_csv2pickle = "rassine.cli.spectrum_csv2pickle:cli"
-spectrum_pickle2csv = "rassine.cli.spectrum_pickle2csv:cli"
-stacking_create_groups = "rassine.cli.stacking_create_groups:cli"
-stacking_master_spectrum = "rassine.cli.stacking_master_spectrum:cli"
-stacking_stack = "rassine.cli.stacking_stack:cli"
+stacking_create_groups = "rassine.stacking.stacking_create_groups:cli"
+stacking_master_spectrum = "rassine.stacking.stacking_master_spectrum:cli"
+stacking_stack = "rassine.stacking.stacking_stack:cli"
+
+rassine = "rassine.rassine.rassine:cli"
+
+matching_anchors_filter = "rassine.matching.matching_anchors_filter:cli"
+matching_anchors_scan = "rassine.matching.matching_anchors_scan:cli"
+matching_diff = "rassine.matching.matching_diff:cli"
 
 [tool.poetry.dependencies]
 PyQt5 = "^5.15.6"

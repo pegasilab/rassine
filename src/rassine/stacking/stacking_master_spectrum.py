@@ -13,87 +13,12 @@ import numpy.typing as npt
 import tybles as tb
 from typing_extensions import Annotated
 
-from ..analysis import find_nearest1
-from ..io import open_pickle, save_pickle
-from ..math import create_grid
-from .data import LoggingLevel, PickleProtocol
-from .stacking_stack import StackedBasicRow, StackedPickle
-from .util import log_task_name_and_time
-
-
-@dataclass(frozen=True)
-class MasterRow:
-    name: str
-    SNR_5500: np.float64
-    acc_sec: np.float64
-    berv: np.float64
-    berv_min: np.float64
-    berv_max: np.float64
-    instrument: str
-    hole_left: np.float64
-    hole_right: np.float64
-    wave_min: np.float64
-    wave_max: np.float64
-    dwave: np.float64
-    nb_spectra_stacked: int
-
-    @staticmethod
-    def schema() -> tb.Schema[MasterRow]:
-        return tb.schema(
-            MasterRow,
-            order_columns=True,
-            missing_columns="error",
-            extra_columns="drop",
-        )
-
-
-class MasterPickle(TypedDict):
-    """
-    Data format of the pickle files produced by the stacking step
-
-    All the weighted averages are made using the bolometric flux
-    """
-
-    #: Flux, stacked
-    flux: npt.NDArray[np.float64]
-    #: Tells it is the master spectrum
-    master_spectrum: Literal[True]
-    #: Average rv correction (median), same for all spectra
-    RV_sys: np.float64
-    #: RV correction, shift compared to the median, weighted average
-    RV_shift: Annotated[np.float64, np.float64(0.0)]
-    #: Corresponds to the square root of the 95th percentile for 100 bins around the wavelength=5500
-    SNR_5500: np.float64
-    #: lamp_offset, weighted average
-    lamp_offset: Annotated[np.float64, np.float64(0.0)]
-    #: acc_sec, taken from first spectrum
-    acc_sec: np.float64
-    #: berv, weighted average according to SNR
-    berv: np.float64
-    #: np.min(berv) of the individual spectra
-    berv_min: np.float64
-    #: np.max(berv) of the individual spectra
-    berv_max: np.float64
-    #: Instrument
-    instrument: str
-    #: mjd weighted average
-    mjd: Annotated[np.float64, np.float64(0.0)]
-    #: jdb weighted average
-    jdb: Annotated[np.float64, np.float64(0.0)]
-    #: Left boundary of hole, or -99.9 if not present
-    hole_left: np.float64
-    #: Right boundary of hole, or -99.9 if not present
-    hole_right: np.float64
-    #: Minimum wavelength
-    wave_min: np.float64
-    #: Maximum wavelength, not necessarily equal to np.max(static_grid)
-    wave_max: np.float64
-    #: delta between two bins, synonym dlambda
-    dwave: np.float64
-    #: Number of individual spectra using for this individual spectrum
-    nb_spectra_stacked: int
-    #: Paths of files used in this stacked spectrum
-    arcfiles: Literal["none"]
+from ..lib.analysis import find_nearest1
+from ..lib.data import LoggingLevel, PickleProtocol
+from ..lib.io import open_pickle, save_pickle
+from ..lib.math import create_grid
+from ..lib.util import log_task_name_and_time
+from .types import MasterPickle, MasterRow, StackedBasicRow, StackedPickle
 
 
 @dataclass(frozen=True)

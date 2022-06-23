@@ -14,13 +14,12 @@ from scipy.optimize import curve_fit
 from scipy.special import erf
 from typing_extensions import assert_never
 
-from ...analysis import find_nearest1, grouping
-from ...math import c_lum, create_grid, doppler_r, gaussian, local_max, make_continuum, smooth
-from ..stacking_master_spectrum import MasterPickle
-from ..stacking_stack import StackedBasicRow, StackedPickle
-from .formats import ExtraPlotData, RassineBasicOutput, RassineParameters, RassinePickle
+from ..lib.analysis import find_nearest1, grouping
+from ..lib.math import c_lum, create_grid, doppler_r, gaussian, local_max, make_continuum, smooth
+from ..stacking.types import MasterPickle, StackedBasicRow, StackedPickle
 from .functions import empty_ccd_gap
-from .types import Auto, Reg, RegPoly, RegSigmoid, Stretching
+from .parsing import Auto, Reg, RegPoly, RegSigmoid, Stretching
+from .types import ExtraPlotData, RassineBasicOutput, RassineParameters, RassinePickle
 
 
 def clustering(

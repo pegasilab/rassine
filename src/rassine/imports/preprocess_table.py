@@ -11,78 +11,13 @@ from typing import List, Sequence, Set
 import configpile as cp
 import numpy as np
 import tybles as tb
-from numpy.typing import NDArray
 from typing_extensions import Annotated
 
-from .data import LoggingLevel, PickleProtocol
-from .util import log_task_name_and_time
+from ..lib.data import LoggingLevel, PickleProtocol
+from ..lib.util import log_task_name_and_time
+from .types import DACE, IndividualBasicRow
 
 # CHECKME: how to sort spectra?
-
-
-@dataclass(frozen=True)
-class DACE:
-    """Columns of the DACE table we import"""
-
-    #: Full filename including folders, folders may be outdated
-    fileroot: str
-
-    #: Observation date/time in MJD
-    mjd: np.float64
-
-    #: Optional RV shift correction km/s
-    model: np.float64
-
-    @staticmethod
-    def schema() -> tb.Schema[DACE]:
-        return tb.schema(DACE, order_columns=True, missing_columns="error", extra_columns="drop")
-
-    #: Radial velocity
-    vrad: np.float64
-
-    #: Radial velocity uncertainty
-    svrad: np.float64
-
-    #: Instrumental drift
-    drift_used: np.float64
-
-
-@dataclass(frozen=True)
-class IndividualBasicRow:
-    """Columns of the DACE data we extract for the rest of the processing"""
-
-    #: Spectrum name without path and extension
-    name: str
-
-    #: Raw filename
-    raw_filename: str
-
-    #: Observation date/time in MJD
-    mjd: np.float64
-
-    #: Optional RV shift correction in km/s
-    model: np.float64
-
-    #: Median value of model (same for all spectra) in km/s
-    rv_mean: np.float64
-
-    #: Difference model - rv_mean in km/s
-    rv_shift: np.float64
-
-    #: Radial velocity
-    vrad: np.float64
-
-    #: Radial velocity uncertainty
-    svrad: np.float64
-
-    #: Instrumental drift
-    drift: np.float64
-
-    @staticmethod
-    def schema() -> tb.Schema[IndividualBasicRow]:
-        return tb.schema(
-            IndividualBasicRow, order_columns=True, missing_columns="error", extra_columns="drop"
-        )
 
 
 @dataclass(frozen=True)

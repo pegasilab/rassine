@@ -8,80 +8,25 @@ import logging
 import typing
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, List, Optional, Sequence, TypedDict, Union, cast
+from typing import Any, List, Optional, Sequence, Union, cast
 
 import configpile as cp
 import numpy as np
-import tybles as tb
 from filelock import FileLock
-from numpy.typing import NDArray
 from typing_extensions import Annotated
 
-from ..io import open_pickle, save_pickle
-from ..math import local_max, make_continuum
-from .data import LoggingLevel, NameRow, PathPattern, PickleProtocol
-from .main.formats import RassineBasicOutput, RassineParameters, RassinePickle
-from .matching_anchors_scan import MasterToolPickle
-from .util import log_task_name_and_time
-
-
-@dataclass(frozen=True)
-class MatchingAnchorsRow:
-    """
-    Describes the effect of the matching_anchors step
-    """
-
-    name: str
-    is_master: bool
-    n_anchors_before: int
-    n_anchors_ooc: int
-    n_anchors_twin: int
-    n_anchors_adding: int
-
-    @staticmethod
-    def schema() -> tb.Schema[MatchingAnchorsRow]:
-        return tb.schema(
-            MatchingAnchorsRow,
-            order_columns=True,
-            missing_columns="error",
-            extra_columns="drop",
-        )
-
-
-class AnchorParameters(TypedDict):
-    #: Master tool file used to compute the matching anchors
-    master_tool: str
-    master_filename: Optional[str]
-    threshold: float
-    tolerance: float
-    fraction: float
-    nb_copies_master: int
-    sub_dico_used: str
-
-
-class AnchorOutput(TypedDict):
-    parameters: AnchorParameters
-    continuum_linear: NDArray[np.float64]
-    anchor_wave: NDArray[np.float64]
-    anchor_flux: NDArray[np.float64]
-    anchor_index: NDArray[np.int64]
-
-
-class AnchorPickle(TypedDict):
-    #: Wavelength
-    wave: NDArray[np.float64]
-    #: Initial flux
-    flux: NDArray[np.float64]
-    #: Initial flux error, passed through by RASSINE
-    flux_err: Optional[NDArray[np.float64]]
-    #: Smoothed flux
-    flux_used: NDArray[np.float64]
-    #: Rassine output continuum
-    output: RassineBasicOutput
-    #: Rassine derived parameters
-    parameters: RassineParameters
-
-    matching_anchors: AnchorOutput
+from ..lib.data import LoggingLevel, NameRow, PathPattern, PickleProtocol
+from ..lib.io import open_pickle, save_pickle
+from ..lib.math import local_max, make_continuum
+from ..lib.util import log_task_name_and_time
+from ..rassine.types import RassinePickle
+from .types import (
+    AnchorOutput,
+    AnchorParameters,
+    AnchorPickle,
+    MasterToolPickle,
+    MatchingAnchorsRow,
+)
 
 
 def cast_as_anchor_pickle(arg: Any) -> AnchorPickle:

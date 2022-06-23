@@ -12,36 +12,11 @@ import numpy as np
 import tybles as tb
 from typing_extensions import Annotated
 
-from ..math import Float
-from .data import LoggingLevel, PickleProtocol
-from .reinterpolate import IndividualReinterpolatedRow
-from .util import log_task_name_and_time
-
-
-@dataclass(frozen=True)
-class IndividualGroupRow:
-    """Columns of the DACE data we extract for the rest of the processing"""
-
-    #: Spectrum name without path and extension
-    name: str
-
-    #: Group index
-    group: int
-
-    #: Number of days used for stacking
-    stacking_length: np.float64
-
-    #: dbin to shift the binning (0.5 for solar data)
-    dbin: np.float64
-
-    @staticmethod
-    def schema() -> tb.Schema[IndividualGroupRow]:
-        return tb.schema(
-            IndividualGroupRow,
-            order_columns=True,
-            missing_columns="error",
-            extra_columns="drop",
-        )
+from ..imports.reinterpolate import IndividualReinterpolatedRow
+from ..lib.data import LoggingLevel, PickleProtocol
+from ..lib.math import Float
+from ..lib.util import log_task_name_and_time
+from .types import IndividualGroupRow
 
 
 @dataclass(frozen=True)

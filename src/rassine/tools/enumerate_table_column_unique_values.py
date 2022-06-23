@@ -7,8 +7,8 @@ import configpile as cp
 import pandas as pd
 from typing_extensions import Annotated
 
-from .data import LoggingLevel
-from .util import log_task_name_and_time
+from ..lib.data import LoggingLevel
+from ..lib.util import log_task_name_and_time
 
 
 @dataclass(frozen=True)

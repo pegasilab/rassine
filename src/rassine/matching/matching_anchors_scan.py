@@ -3,34 +3,20 @@ import logging
 import typing
 from dataclasses import dataclass
 from pathlib import Path
-from typing import ClassVar, List, Optional, Sequence, TypedDict
+from typing import ClassVar, List, Optional, Sequence
 
 import configpile as cp
 import numpy as np
 from numpy.typing import NDArray
 from typing_extensions import Annotated
 
-from ..analysis import grouping
-from ..io import open_pickle, save_pickle
-from .data import LoggingLevel, PathPattern, PickleProtocol
-from .main.formats import RassinePickle
-from .stacking_stack import StackedBasicRow
-from .util import log_task_name_and_time
-
-
-class MasterToolPickle(TypedDict):
-    """Format of the master tool created by the matching_anchors_scan step"""
-
-    curve: NDArray[np.bool_]
-    border: NDArray[np.float64]
-    wave: NDArray[np.float64]
-    threshold: float
-    tolerance: float
-    fraction: float
-    nb_copies_master: int
-
-    #: Warning: only the final path component of the master file is included
-    master_filename: Optional[str]
+from ..lib.analysis import grouping
+from ..lib.data import LoggingLevel, PathPattern, PickleProtocol
+from ..lib.io import open_pickle, save_pickle
+from ..lib.util import log_task_name_and_time
+from ..rassine.types import RassinePickle
+from ..stacking.types import StackedBasicRow
+from .types import MasterToolPickle
 
 
 def intersect_all_continuum_sphinx(

@@ -6,7 +6,7 @@ from typing import Literal, Optional, Sequence, TypedDict, Union
 import numpy as np
 from numpy.typing import NDArray
 
-from ...math import Float
+from ..lib.math import Float
 
 
 class RassineBasicOutput(TypedDict):

@@ -16,131 +16,17 @@ from numpy.typing import NDArray
 from scipy.interpolate import interp1d
 from typing_extensions import Annotated
 
-from ..analysis import find_nearest1
-from ..cli.preprocess_import import IndividualImportedRow
-from ..io import open_pickle, save_pickle
-from ..math import absurd_minus_99_9, create_grid, doppler_r
-from .data import LoggingLevel, PickleProtocol
-from .preprocess_import import IndividualImportedRow, PickledIndividualSpectrum
-from .util import log_task_name_and_time
-
-
-# TODO: rename to Reinterpolated
-@dataclass(frozen=True)
-class IndividualReinterpolatedRow:
-    """
-    Describes the scalar data associated
-    Returns:
-
-    """
-
-    #: Spectrum name without path and extension
-    name: str
-
-    #: Instrument name
-    instrument: str
-
-    #: Observation date/time in MJD
-    mjd: np.float64
-
-    #: Optional RV shift correction in km/s
-    model: np.float64
-
-    #: Median value of model (same for all spectra) in km/s
-    rv_mean: np.float64
-
-    #: Difference model - rv_mean in km/s
-    rv_shift: np.float64
-
-    SNR_5500: np.float64
-
-    jdb: np.float64
-
-    berv: np.float64
-
-    lamp_offset: np.float64
-
-    plx_mas: np.float64
-
-    acc_sec: np.float64
-
-    # same for all spectra
-    hole_left: np.float64
-
-    # same for all spectra
-    hole_right: np.float64
-
-    # same for all spectra
-    wave_min: np.float64
-
-    # same for all spectra
-    wave_max: np.float64
-
-    # same for all spectra
-    dwave: np.float64
-
-    # same for all spectra, len(pickled_spectrum.flux)
-    nb_bins: np.int64
-
-    #: Radial velocity
-    vrad: np.float64
-
-    #: Radial velocity uncertainty
-    svrad: np.float64
-
-    #: Instrumental drift
-    drift: np.float64
-
-    @staticmethod
-    def schema() -> tb.Schema[IndividualReinterpolatedRow]:
-        return tb.schema(
-            IndividualReinterpolatedRow,
-            order_columns=True,
-            missing_columns="error",
-            extra_columns="drop",
-        )
-
-
-class ReinterpolatedSpectrumPickle(TypedDict):
-    """
-    Data format of the pickle files produced by the reinterpolation step
-    """
-
-    #: Flux
-    flux: npt.NDArray[np.float64]
-    #: Flux error
-    flux_err: npt.NDArray[np.float64]
-    #: Average rv correction (median), same for all spectra
-    RV_sys: np.float64
-    #: RV correction, shift compared to the median
-    RV_shift: np.float64
-    #: Corresponds to the square root of the 95th percentile for 100 bins around the wavelength=5500
-    SNR_5500: np.float64
-    #: what is berv?
-    berv: np.float64
-    #: what is lamp offset?
-    lamp_offset: np.float64
-    #: what is plx_mas?
-    plx_mas: np.float64
-    #: what is acc_sec?
-    acc_sec: np.float64
-    #: instrument name
-    instrument: str
-    #: observation time in mjd
-    mjd: np.float64
-    #: what is jdb?
-    jdb: np.float64
-    #: Left boundary of hole, or -99.9 if not present
-    hole_left: np.float64
-    #: Right boundary of hole, or -99.9 if not present
-    hole_right: np.float64
-    #: Minimum wavelength
-    wave_min: np.float64
-    # TOCHECK: here
-    #: Maximum wavelength, not necessarily equal to np.max(static_grid)
-    wave_max: np.float64
-    #: delta between two bins, synonym dlambda
-    dwave: np.float64
+from ..lib.analysis import find_nearest1
+from ..lib.data import LoggingLevel, PickleProtocol
+from ..lib.io import open_pickle, save_pickle
+from ..lib.math import absurd_minus_99_9, create_grid, doppler_r
+from ..lib.util import log_task_name_and_time
+from .types import (
+    IndividualImportedRow,
+    IndividualReinterpolatedRow,
+    PickledIndividualSpectrum,
+    ReinterpolatedSpectrumPickle,
+)
 
 
 @dataclass(frozen=True)

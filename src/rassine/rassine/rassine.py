@@ -23,14 +23,10 @@ from matplotlib.ticker import MultipleLocator
 from typeguard import check_type
 from typing_extensions import Annotated
 
-from rassine.cli.data import LoggingLevel, PickleProtocol
-
-from ...io import open_pickle, save_pickle
-from ..stacking_master_spectrum import MasterPickle
-from ..stacking_stack import StackedBasicRow, StackedPickle
-from .formats import ExtraPlotData, RassineParameters, RassinePickle
-from .process import rassine_process
-from .types import (
+from ..lib.data import LoggingLevel, PickleProtocol
+from ..lib.io import open_pickle, save_pickle
+from ..stacking.types import MasterPickle, StackedBasicRow, StackedPickle
+from .parsing import (
     Auto,
     Reg,
     Stretching,
@@ -40,6 +36,8 @@ from .types import (
     reg_parser,
     stretching_parser,
 )
+from .process import rassine_process
+from .types import ExtraPlotData, RassineParameters, RassinePickle
 
 
 @dataclass(frozen=True)
@@ -399,6 +397,9 @@ def print_parameters_according_to_paper(parameters: RassineParameters):
         "continuum_denoised_saved": "continuum_denoised_saved",
         "nb_spectra_stacked": "nb_spectra_stacked",
         "arcfiles": "arcfiles",
+        "rv_mean_jdb": "rv_mean_jdb",
+        "rv_dace": "rv_dace",
+        "rv_dace_std": "rv_dace_std",
     }
     rich.print("[bold red]Output parameters[/bold red]")
     new_dict = {translation[key]: value for key, value in parameters.items()}

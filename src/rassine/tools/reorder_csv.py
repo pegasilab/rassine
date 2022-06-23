@@ -8,14 +8,17 @@ import configpile as cp
 import pandas as pd
 from typing_extensions import Annotated
 
-from .data import LoggingLevel
-from .util import log_task_name_and_time
+from ..lib.data import LoggingLevel
+from ..lib.util import log_task_name_and_time
 
 
 @dataclass(frozen=True)
 class Task(cp.Config):
     """
-    Sorts the rows of a CSV file according to a specified column
+    Orders the rows of a CSV file according to the order given by a reference file
+
+    Both files must have the same number of rows, and both must have a column of a given
+    name with the same values, possibly ordered differently.
     """
 
     #
@@ -45,8 +48,11 @@ class Task(cp.Config):
     #
     prog_ = Path(__file__).stem
 
-    #: Column to sort by
+    #: Column to order by
     column: Annotated[str, cp.Param.store(cp.parsers.stripped_str_parser, short_flag_name="-c")]
+
+    #: Reference file for ordering
+    reference: Annotated[Path, cp.Param.store(cp.parsers.path_parser, short_flag_name="-r")]
 
     #: CSV file to reorder
     file: Annotated[
@@ -68,16 +74,28 @@ def get_parser() -> argparse.ArgumentParser:
 @log_task_name_and_time(name=Path(__file__).stem)
 def run(t: Task) -> None:
     t.logging_level.set()
-    data = pd.read_csv(t.root / t.file)
-    assert t.column in data.columns
-    data.sort_values(t.column, inplace=True)
+    col = t.column
+    ref = pd.read_csv(t.root / t.reference)
+    file = pd.read_csv(t.root / t.file)
+    assert col in ref.columns
+    assert col in file.columns
+    ref_values = ref[col]
+    file_values = file[col]
+    file_pos = {name: index for index, name in enumerate(file_values)}
 
     # reread file lines
     with open(t.root / t.file, "r") as f:
         lines = f.readlines()
 
     header = lines[0]
-    output_lines: List[str] = [header, *[lines[i + 1] for i in data.index]]
+    data: Sequence[str] = lines[1:]
+    output_lines: List[str] = [header]
+    for value in list(ref_values):
+        assert value in file_pos, f"Value {value} not in CSV file to reorder"
+        output_lines.append(data[file_pos[value]])
+        del file_pos[value]
+    assert not file_pos, f"Values {file_pos.keys()} are present in the reference file"
+
     with open(t.root / t.file, "w") as f:
         f.writelines(output_lines)
 

@@ -22,7 +22,6 @@ Changelog
 
 .. toctree::
    :hidden:
-   :maxdepth: 3
 
    important
    tutorial

@@ -11,7 +11,7 @@ from typing import Optional
 import configpile as cp
 import tybles as tb
 
-from .. import io
+from . import io
 
 
 @dataclass(frozen=True)

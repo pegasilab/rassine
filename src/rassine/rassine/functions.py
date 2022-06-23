@@ -3,7 +3,7 @@ from typing import Optional
 import numpy as np
 from numpy.typing import NDArray
 
-from ...math import Float, doppler_r
+from ..lib.math import Float, doppler_r
 
 
 def empty_ccd_gap(

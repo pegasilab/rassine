@@ -11,43 +11,19 @@ import numpy as np
 from numpy.typing import NDArray
 from typing_extensions import Annotated
 
-from ..analysis import rolling_iq
-from ..io import open_pickle, save_pickle
-from ..math import smooth
-from .data import LoggingLevel, NameRow, PathPattern, PickleProtocol
-from .main.formats import RassineBasicOutput, RassineParameters
-from .matching_anchors_filter import AnchorOutput, AnchorPickle
-from .util import log_task_name_and_time
-
-
-class MatchingDiffParameters(TypedDict):
-    reference_continuum: str
-    savgol_window: int
-    recenter: bool
-    sub_dico_used: str  # always matching_nachors
-
-
-class MatchingDiffOutput(TypedDict):
-    parameters: MatchingDiffParameters
-    continuum_linear: NDArray[np.float64]
-
-
-class MatchingPickle(TypedDict):
-    #: Wavelength
-    wave: NDArray[np.float64]
-    #: Initial flux
-    flux: NDArray[np.float64]
-    #: Initial flux error, passed through by RASSINE
-    flux_err: Optional[NDArray[np.float64]]
-    #: Smoothed flux
-    flux_used: NDArray[np.float64]
-    #: Rassine output continuum
-    output: RassineBasicOutput
-    #: Rassine derived parameters
-    parameters: RassineParameters
-
-    matching_anchors: AnchorOutput
-    matching_diff: MatchingDiffOutput
+from ..lib.analysis import rolling_iq
+from ..lib.data import LoggingLevel, NameRow, PathPattern, PickleProtocol
+from ..lib.io import open_pickle, save_pickle
+from ..lib.math import smooth
+from ..lib.util import log_task_name_and_time
+from ..rassine.types import RassineBasicOutput, RassineParameters
+from .types import (
+    AnchorOutput,
+    AnchorPickle,
+    MatchingDiffOutput,
+    MatchingDiffParameters,
+    MatchingPickle,
+)
 
 
 def matching_diff_continuum(

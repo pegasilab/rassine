@@ -1,23 +1,21 @@
-import logging
+import argparse
+import typing
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Sequence
+from typing import List, Sequence
 
 import configpile as cp
 import pandas as pd
 from typing_extensions import Annotated
 
-from .data import LoggingLevel
-from .util import log_task_name_and_time
+from ..lib.data import LoggingLevel
+from ..lib.util import log_task_name_and_time
 
 
 @dataclass(frozen=True)
 class Task(cp.Config):
     """
-    Enumerates the row indices of a CSV table, one per row, into the standard output
-
-    Specifically, this prints the integers 0 to n-1 included, where n is the number of rows
-    in the CSV file.
+    Sorts the rows of a CSV file according to a specified column
     """
 
     #
@@ -45,29 +43,43 @@ class Task(cp.Config):
     #
     # Task specific information
     #
-
     prog_ = Path(__file__).stem
 
-    #: Input table to enumerate the row indices of
-    input_table: Annotated[
+    #: Column to sort by
+    column: Annotated[str, cp.Param.store(cp.parsers.stripped_str_parser, short_flag_name="-c")]
+
+    #: CSV file to reorder
+    file: Annotated[
         Path,
         cp.Param.store(
             cp.parsers.path_parser,
-            long_flag_name=None,
             short_flag_name=None,
+            long_flag_name=None,
             positional=cp.Positional.ONCE,
         ),
     ]
 
 
+def get_parser() -> argparse.ArgumentParser:
+    """Returns the argument parser for Sphinx doc purposes"""
+    return Task.get_argument_parser_()
+
+
 @log_task_name_and_time(name=Path(__file__).stem)
 def run(t: Task) -> None:
     t.logging_level.set()
-    table_path = t.root / t.input_table
-    table = pd.read_csv(table_path)
-    logging.info(f"Enumerating rows of table {table_path} with {len(table)} rows")
-    for i in range(0, len(table)):
-        print(i)
+    data = pd.read_csv(t.root / t.file)
+    assert t.column in data.columns
+    data.sort_values(t.column, inplace=True)
+
+    # reread file lines
+    with open(t.root / t.file, "r") as f:
+        lines = f.readlines()
+
+    header = lines[0]
+    output_lines: List[str] = [header, *[lines[i + 1] for i in data.index]]
+    with open(t.root / t.file, "w") as f:
+        f.writelines(output_lines)
 
 
 def cli() -> None:

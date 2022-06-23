@@ -22,7 +22,7 @@ license = "BSD-3-Clause"
 name = "rassine"
 readme = "README.md"
 repository = "https://github.com/denisrosset/rassine.git"
-version = "0.1.0"
+version = "0.1.1"
 
 [tool.poetry.scripts]
 enumerate_table_column_unique_values = "rassine.tools.enumerate_table_column_unique_values:cli"

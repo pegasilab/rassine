@@ -6,3 +6,5 @@ __pycache__/
 /docs/source/_autosummary/
 /.history/
 /dist/
+poetry.lock
+

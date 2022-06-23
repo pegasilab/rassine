@@ -1,7 +1,18 @@
 #!/bin/bash
 set -u
-
-script_path=$(realpath "${BASH_SOURCE[-1]}")
+myrealpath() (
+  OURPWD=$PWD
+  cd "$(dirname "$1")"
+  LINK=$(readlink "$(basename "$1")")
+  while [ "$LINK" ]; do
+    cd "$(dirname "$LINK")"
+    LINK=$(readlink "$(basename "$1")")
+  done
+  REALPATH="$PWD/$(basename "$1")"
+  cd "$OURPWD"
+  echo "$REALPATH"
+)
+script_path=$(myrealpath "$0")
 script_folder=$(dirname "$script_path")
 export RASSINE_ROOT=$script_folder/spectra_library/HD110315/data/s1d/HARPN
 export RASSINE_CONFIG=$script_folder/harpn.ini

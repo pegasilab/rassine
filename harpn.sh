@@ -127,7 +127,7 @@ then
 # See Fig D7
 
 # rm /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED
-matching_anchors_scan --input-table stacked_basic.csv --input-pattern STACKED/RASSINE_{name}.p --output-file MASTER/Master_tool_$tag.p --no-master-spectrum --copies-master 0  --fraction 0.2 --threshold 0.66 --tolerance 0.5 
+matching_anchors_scan --input-table stacked_basic.csv --input-pattern STACKED/RASSINE_{name}.p --output-file MASTER/Master_tool_$tag.p --no-master-spectrum
 
 # Step 5B: application in parallel
 # Done in place
@@ -151,7 +151,7 @@ then
 # Step 6B done in parallel
 # "matching_diff"
 enumerate_table_rows stacked_basic.csv | ./parallel $PARALLEL_OPTIONS \
-  matching_diff --anchor-file MASTER/RASSINE_$master_table --savgol-window 200 --process-table stacked_basic.csv --process-pattern STACKED/RASSINE_{name}.p
+  matching_diff --anchor-file MASTER/RASSINE_$master_table --process-table stacked_basic.csv --process-pattern STACKED/RASSINE_{name}.p
 touch $RASSINE_ROOT/rassine_finished.txt
 
 fi

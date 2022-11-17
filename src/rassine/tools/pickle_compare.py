@@ -12,6 +12,14 @@ from typing_extensions import Annotated
 
 @dataclass(frozen=True)
 class Task(cp.Config):
+
+    #
+    # Common information
+    #
+
+    prog_ = Path(__file__).stem
+    ini_strict_sections_ = [Path(__file__).stem]
+    ini_relaxed_sections_ = [Path(__file__).stem.split("_")[0]]
     env_prefix_ = "RASSINE"
 
     #: Use the specified configuration files.
@@ -22,7 +30,9 @@ class Task(cp.Config):
     #: Root path of the data, used as a base for other relative paths
     root: Annotated[Path, cp.Param.root_path(env_var_name="RASSINE_ROOT")]
 
-    prog_ = Path(__file__).stem
+    #
+    # Task specific information
+    #
 
     #: First pickle to compare
     input1: Annotated[

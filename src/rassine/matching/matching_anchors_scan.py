@@ -244,6 +244,9 @@ class Task(cp.Config):
     # Common information
     #
 
+    prog_ = Path(__file__).stem
+    ini_strict_sections_ = [Path(__file__).stem]
+    ini_relaxed_sections_ = [Path(__file__).stem.split("_")[0]]
     env_prefix_ = "RASSINE"
 
     #: Use the specified configuration files.
@@ -252,7 +255,7 @@ class Task(cp.Config):
     config: Annotated[Sequence[Path], cp.Param.config(env_var_name="RASSINE_CONFIG")]
 
     #: Root path of the data, used as a base for other relative paths
-    root: Annotated[Path, cp.Param.store(cp.parsers.path_parser, env_var_name="RASSINE_ROOT")]
+    root: Annotated[Path, cp.Param.root_path(env_var_name="RASSINE_ROOT")]
 
     #: Pickle protocol version to use
     pickle_protocol: Annotated[
@@ -266,6 +269,10 @@ class Task(cp.Config):
             LoggingLevel.parser(), default_value="WARNING", env_var_name="RASSINE_LOGGING_LEVEL"
         ),
     ]
+
+    #
+    # Task specific information
+    #
 
     #: Table of spectra from which to read the individual file names (produced by stacking step)
     input_table: Annotated[

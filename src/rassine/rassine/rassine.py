@@ -1,5 +1,6 @@
 """
 Main file for the RASSINE script
+
 """
 
 from __future__ import annotations

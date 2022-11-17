@@ -211,7 +211,7 @@ def intersect_all_continuum_sphinx(
 
     output_cluster: MasterToolPickle = {
         "curve": curve,
-        "border": border2,
+        "border": border2.astype(np.float64),
         "wave": gri,
         "threshold": threshold,
         "tolerance": tolerance,

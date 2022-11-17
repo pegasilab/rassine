@@ -7,4 +7,5 @@ __pycache__/
 /.history/
 /dist/
 poetry.lock
+/.venv
 

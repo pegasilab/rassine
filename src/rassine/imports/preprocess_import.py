@@ -150,7 +150,7 @@ def preprocess_import(
             header["CRVAL1"] + (len(spectre) - 1) * spectre_step, 8
         )  # to round float32
         wave: NDArray[np.float64] = np.round(
-            np.linspace(wave_min, wave_max, len(spectre), dtype=np.float64)
+            np.linspace(wave_min, wave_max, len(spectre), dtype=np.float64), 8
         )
 
         # cut left and right parts with zero flux

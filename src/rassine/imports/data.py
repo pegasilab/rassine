@@ -151,48 +151,6 @@ class IndividualReinterpolatedRow:
         )
 
 
-class ReinterpolatedSpectrumPickle(TypedDict):
-    """
-    Data format of the pickle files produced by the reinterpolation step
-    """
-
-    #: Flux
-    flux: NDArray[np.float64]
-    #: Flux error
-    flux_err: NDArray[np.float64]
-    #: Average rv correction (median), same for all spectra
-    RV_sys: np.float64
-    #: RV correction, shift compared to the median
-    RV_shift: np.float64
-    #: Corresponds to the square root of the 95th percentile for 100 bins around the wavelength=5500
-    SNR_5500: np.float64
-    #: what is berv?
-    berv: np.float64
-    #: what is lamp offset?
-    lamp_offset: np.float64
-    #: what is plx_mas?
-    plx_mas: np.float64
-    #: what is acc_sec?
-    acc_sec: np.float64
-    #: instrument name
-    instrument: str
-    #: observation time in mjd
-    mjd: np.float64
-    #: what is jdb?
-    jdb: np.float64
-    #: Left boundary of hole, or -99.9 if not present
-    hole_left: np.float64
-    #: Right boundary of hole, or -99.9 if not present
-    hole_right: np.float64
-    #: Minimum wavelength
-    wave_min: np.float64
-    # TOCHECK: here
-    #: Maximum wavelength, not necessarily equal to np.max(static_grid)
-    wave_max: np.float64
-    #: delta between two bins, synonym dlambda
-    dwave: np.float64
-
-
 class PickledIndividualSpectrum(TypedDict):
     """
     Data format of the pickle files produced by the preprocessing step
@@ -235,6 +193,48 @@ class PickledIndividualSpectrum(TypedDict):
     wave_max: np.float64
 
     #: Average delta between bins (note that dlambda is now set by a config parameter)
+    dwave: np.float64
+
+
+class ReinterpolatedSpectrumPickle(TypedDict):
+    """
+    Data format of the pickle files produced by the reinterpolation step
+    """
+
+    #: Flux
+    flux: NDArray[np.float64]
+    #: Flux error
+    flux_err: NDArray[np.float64]
+    #: Average rv correction (median), same for all spectra
+    RV_sys: np.float64
+    #: RV correction, shift compared to the median
+    RV_shift: np.float64
+    #: Corresponds to the square root of the 95th percentile for 100 bins around the wavelength=5500
+    SNR_5500: np.float64
+    #: what is berv?
+    berv: np.float64
+    #: what is lamp offset?
+    lamp_offset: np.float64
+    #: what is plx_mas?
+    plx_mas: np.float64
+    #: what is acc_sec?
+    acc_sec: np.float64
+    #: instrument name
+    instrument: str
+    #: observation time in mjd
+    mjd: np.float64
+    #: what is jdb?
+    jdb: np.float64
+    #: Left boundary of hole, or -99.9 if not present
+    hole_left: np.float64
+    #: Right boundary of hole, or -99.9 if not present
+    hole_right: np.float64
+    #: Minimum wavelength
+    wave_min: np.float64
+    # TOCHECK: here
+    #: Maximum wavelength, not necessarily equal to np.max(static_grid)
+    wave_max: np.float64
+    #: delta between two bins, synonym dlambda
     dwave: np.float64
 
 

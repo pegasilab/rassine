@@ -4,6 +4,7 @@ RASSINE is a tool to ...
 
 ```
 git clone https://github.com/pegasilab/rassine
+cd rassine
 git submodule update --init
 
 # create a virtual environment for RASSINE

@@ -39,7 +39,7 @@ class Task(cp.Config):
     config: Annotated[Sequence[Path], cp.Param.config(env_var_name="RASSINE_CONFIG")]
 
     #: Root path of the data, used as a base for other relative paths
-    root: Annotated[Path, cp.Param.store(cp.parsers.path_parser, env_var_name="RASSINE_ROOT")]
+    root: Annotated[Path, cp.Param.root_path(env_var_name="RASSINE_ROOT")]
 
     #: Pickle protocol version to use
     pickle_protocol: Annotated[
@@ -143,14 +143,16 @@ def preprocess_import(
 ) -> Tuple[PickledIndividualSpectrum, IndividualImportedRow]:
 
     if drs_style == "old":
-        spectre = data.astype("float64")  # the flux of your spectrum
+        spectre: NDArray[np.float64] = data.astype("float64")  # the flux of your spectrum
         spectre_step = np.round(header["CDELT1"], 8)
-        spectre_error = np.zeros(len(spectre))
+        spectre_error = np.zeros(len(spectre), dtype=np.float64)
         wave_min = np.round(header["CRVAL1"], 8)  # to round float32
         wave_max = np.round(
             header["CRVAL1"] + (len(spectre) - 1) * spectre_step, 8
         )  # to round float32
-        wave = np.round(np.linspace(wave_min, wave_max, len(spectre)), 8)
+        wave: NDArray[np.float64] = np.round(
+            np.linspace(wave_min, wave_max, len(spectre), dtype=np.float64)
+        )
 
         # cut left and right parts with zero flux
         # and reevaluate wave_min and wave_max
@@ -166,10 +168,12 @@ def preprocess_import(
         berv = np.float64(header[f"HIERARCH {kw} DRS BERV"])
         lamp = np.float64(header[f"HIERARCH {kw} DRS CAL TH LAMP OFFSET"])
     else:
-        spectre = data["flux"].astype("float64")  # the flux of your spectrum
-        spectre_error = data["error"].astype("float64")  # the flux of your spectrum
+        spectre: NDArray[np.float64] = data["flux"].astype("float64")  # the flux of your spectrum
+        spectre_error: NDArray[np.float64] = data["error"].astype(
+            "float64"
+        )  # the flux of your spectrum
         # wave was grid in the previous code
-        wave = data["wavelength_air"].astype(
+        wave: NDArray[np.float64] = data["wavelength_air"].astype(
             "float64"
         )  # the grid of wavelength of your spectrum (assumed equidistant in lambda)
         begin = np.min(np.arange(len(spectre))[spectre > 0])  # remove border spectrum with 0 value
@@ -215,7 +219,6 @@ def preprocess_import(
     hole_left, hole_right = find_hole(wave, spectre)
     if hole_left != absurd_minus_99_9 and hole_right != absurd_minus_99_9:
         logging.info(f"Gap detected in s1d between {hole_left:.2f} and {hole_right:.2f}")
-
     output_pickle: PickledIndividualSpectrum = {
         "wave": wave,
         "flux": spectre,
@@ -229,7 +232,7 @@ def preprocess_import(
         "acc_sec": np.float64(acc_sec),
         "wave_min": wave_min,
         "wave_max": wave_max,
-        "dwave": spectre_step,
+        "dwave": np.float64(spectre_step),
     }
 
     output_row = IndividualImportedRow(
@@ -246,7 +249,7 @@ def preprocess_import(
         acc_sec=np.float64(acc_sec),
         wave_min=wave_min,
         wave_max=wave_max,
-        dwave=spectre_step,
+        dwave=np.float64(spectre_step),
         hole_left=np.float64(hole_left),
         hole_right=np.float64(hole_right),
         vrad=row.vrad,

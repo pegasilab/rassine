@@ -30,7 +30,7 @@ class Task(cp.Config):
     config: Annotated[Sequence[Path], cp.Param.config(env_var_name="RASSINE_CONFIG")]
 
     #: Root path of the data, used as a base for other relative paths
-    root: Annotated[Path, cp.Param.store(cp.parsers.path_parser, env_var_name="RASSINE_ROOT")]
+    root: Annotated[Path, cp.Param.root_path(env_var_name="RASSINE_ROOT")]
 
     #: Logging level to use
     logging_level: Annotated[

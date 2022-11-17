@@ -1,5 +1,9 @@
 #!/bin/bash
+
+# treat unset variables as an error
 set -u
+
+
 myrealpath() (
   OURPWD=$PWD
   cd "$(dirname "$1")"
@@ -18,9 +22,10 @@ export RASSINE_ROOT=$script_folder/spectra_library/HD110315/data/s1d/HARPN
 export RASSINE_CONFIG=$script_folder/harpn.ini
 export RASSINE_LOGGING_LEVEL=INFO
 
-nthreads=4 # number of concurrent jobs
-nchunks=10 # number of items per Python script invocation
-PARALLEL_OPTIONS="--nice 18 --will-cite --verbose -N$nchunks --jobs $nthreads --keep-order"
+nprocesses=$(python3 -c "import configparser; c = configparser.ConfigParser(); c.read('harpn.ini'); print(c['jobs']['nprocesses'])") # number of concurrent jobs
+nchunks=$(python3 -c "import configparser; c = configparser.ConfigParser(); c.read('harpn.ini'); print(c['jobs']['nchunks'])") # number of items per Python script invocation
+nice=$(python3 -c "import configparser; c = configparser.ConfigParser(); c.read('harpn.ini'); print(c['jobs']['nice'])") # number of items per Python script invocation
+PARALLEL_OPTIONS="--nice $nice --will-cite --verbose -N$nchunks --jobs $nprocesses --keep-order"
 
 if [ ! -f $RASSINE_ROOT/tag ]
 then
@@ -47,7 +52,7 @@ preprocess_table -I DACE_TABLE/Dace_extracted_table.csv -i RAW -O individual_bas
 individual_imported=$RASSINE_ROOT/individual_imported.csv
 [ -f $individual_imported ] && rm $individual_imported 
 enumerate_table_rows individual_basic.csv | ./parallel $PARALLEL_OPTIONS \
-  preprocess_import --drs-style new -i RAW -o PREPROCESSED/{name}.p -I individual_basic.csv -O individual_imported.csv
+  preprocess_import -i RAW -o PREPROCESSED/{name}.p -I individual_basic.csv -O individual_imported.csv
 reorder_csv --column name --reference individual_basic.csv individual_imported.csv 
 fi
 
@@ -147,7 +152,7 @@ then
 # "matching_diff"
 enumerate_table_rows stacked_basic.csv | ./parallel $PARALLEL_OPTIONS \
   matching_diff --anchor-file MASTER/RASSINE_$master_table --savgol-window 200 --process-table stacked_basic.csv --process-pattern STACKED/RASSINE_{name}.p
-touch /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/rassine_finished.txt
+touch $RASSINE_ROOT/rassine_finished.txt
 
 fi
 

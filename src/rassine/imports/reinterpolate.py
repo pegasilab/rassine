@@ -45,7 +45,7 @@ class Task(cp.Config):
     config: Annotated[Sequence[Path], cp.Param.config(env_var_name="RASSINE_CONFIG")]
 
     #: Root path of the data, used as a base for other relative paths
-    root: Annotated[Path, cp.Param.store(cp.parsers.path_parser, env_var_name="RASSINE_ROOT")]
+    root: Annotated[Path, cp.Param.root_path(env_var_name="RASSINE_ROOT")]
 
     #: Pickle protocol version to use
     pickle_protocol: Annotated[
@@ -266,8 +266,12 @@ def run(t: Task) -> None:
 
     # compute hole boundaries
     settings = ReinterpolationSettings.from_spectrum_data(
-        wave_min=np.round(df["wave_min"].to_numpy(), 8),  # to take into account float32
-        wave_max=np.round(df["wave_max"].to_numpy(), 8),  # to take into account float32
+        wave_min=np.round(df["wave_min"].to_numpy(), 8).astype(
+            np.float64
+        ),  # to take into account float32
+        wave_max=np.round(df["wave_max"].to_numpy(), 8).astype(
+            np.float64
+        ),  # to take into account float32
         hole_left=df["hole_left"].to_numpy(),
         hole_right=df["hole_right"].to_numpy(),
         dlambda=np.float64(t.dlambda),

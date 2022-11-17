@@ -21,7 +21,7 @@ from ..lib.data import LoggingLevel, NameRow, PathPattern, PickleProtocol
 from ..lib.io import open_pickle, save_pickle
 from ..lib.math import local_max, make_continuum
 from ..lib.util import log_task_name_and_time
-from ..rassine.types import RassineBasicOutput, RassineParameters, RassinePickle
+from ..rassine.data import RassineBasicOutput, RassineParameters, RassinePickle
 
 
 @dataclass(frozen=True)

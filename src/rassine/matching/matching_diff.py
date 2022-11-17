@@ -16,8 +16,8 @@ from ..lib.data import LoggingLevel, NameRow, PathPattern, PickleProtocol
 from ..lib.io import open_pickle, save_pickle
 from ..lib.math import smooth
 from ..lib.util import log_task_name_and_time
-from ..rassine.types import RassineBasicOutput, RassineParameters
-from .types import (
+from ..rassine.data import RassineBasicOutput, RassineParameters
+from .data import (
     AnchorOutput,
     AnchorPickle,
     MatchingDiffOutput,

@@ -25,7 +25,8 @@ from typing_extensions import Annotated
 
 from ..lib.data import LoggingLevel, PickleProtocol
 from ..lib.io import open_pickle, save_pickle
-from ..stacking.types import MasterPickle, StackedBasicRow, StackedPickle
+from ..stacking.data import MasterPickle, StackedBasicRow, StackedPickle
+from .data import ExtraPlotData, RassineParameters, RassinePickle
 from .parsing import (
     Auto,
     Reg,
@@ -37,7 +38,6 @@ from .parsing import (
     stretching_parser,
 )
 from .process import rassine_process
-from .types import ExtraPlotData, RassineParameters, RassinePickle
 
 
 @dataclass(frozen=True)

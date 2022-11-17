@@ -20,7 +20,7 @@ from ..lib.data import LoggingLevel, PathPattern, PickleProtocol
 from ..lib.io import save_pickle
 from ..lib.math import absurd_minus_99_9
 from ..lib.util import log_task_name_and_time
-from .types import IndividualBasicRow, IndividualImportedRow, PickledIndividualSpectrum
+from .data import IndividualBasicRow, IndividualImportedRow, PickledIndividualSpectrum
 
 
 @dataclass(frozen=True)

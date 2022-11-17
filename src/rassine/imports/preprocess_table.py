@@ -15,7 +15,7 @@ from typing_extensions import Annotated
 
 from ..lib.data import LoggingLevel, PickleProtocol
 from ..lib.util import log_task_name_and_time
-from .types import DACE, IndividualBasicRow
+from .data import DACE, IndividualBasicRow
 
 # CHECKME: how to sort spectra?
 

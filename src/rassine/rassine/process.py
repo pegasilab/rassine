@@ -16,10 +16,10 @@ from typing_extensions import assert_never
 
 from ..lib.analysis import find_nearest1, grouping
 from ..lib.math import c_lum, create_grid, doppler_r, gaussian, local_max, make_continuum, smooth
-from ..stacking.types import MasterPickle, StackedBasicRow, StackedPickle
+from ..stacking.data import MasterPickle, StackedBasicRow, StackedPickle
+from .data import ExtraPlotData, RassineBasicOutput, RassineParameters, RassinePickle
 from .functions import empty_ccd_gap
 from .parsing import Auto, Reg, RegPoly, RegSigmoid, Stretching
-from .types import ExtraPlotData, RassineBasicOutput, RassineParameters, RassinePickle
 
 
 def clustering(

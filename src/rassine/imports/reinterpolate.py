@@ -21,7 +21,7 @@ from ..lib.data import LoggingLevel, PickleProtocol
 from ..lib.io import open_pickle, save_pickle
 from ..lib.math import absurd_minus_99_9, create_grid, doppler_r
 from ..lib.util import log_task_name_and_time
-from .types import (
+from .data import (
     IndividualImportedRow,
     IndividualReinterpolatedRow,
     PickledIndividualSpectrum,

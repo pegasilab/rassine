@@ -16,7 +16,7 @@ from ..imports.reinterpolate import IndividualReinterpolatedRow
 from ..lib.data import LoggingLevel, PickleProtocol
 from ..lib.math import Float
 from ..lib.util import log_task_name_and_time
-from .types import IndividualGroupRow
+from .data import IndividualGroupRow
 
 
 @dataclass(frozen=True)

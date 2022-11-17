@@ -24,6 +24,9 @@ class Task(cp.Config):
     # Common information
     #
 
+    prog_ = Path(__file__).stem
+    ini_strict_sections_ = [Path(__file__).stem]
+    ini_relaxed_sections_ = [Path(__file__).stem.split("_")[0]]
     env_prefix_ = "RASSINE"
 
     #: Use the specified configuration files.
@@ -45,8 +48,6 @@ class Task(cp.Config):
     #
     # Task specific information
     #
-
-    prog_ = Path(__file__).stem
 
     #: Input table to enumerate the row indices of
     input_table: Annotated[

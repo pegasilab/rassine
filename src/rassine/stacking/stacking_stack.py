@@ -22,7 +22,7 @@ from ..lib.data import LoggingLevel, PickleProtocol
 from ..lib.io import open_pickle, save_pickle
 from ..lib.math import create_grid
 from ..lib.util import log_task_name_and_time
-from .types import IndividualGroupRow, StackedBasicRow, StackedPickle
+from .data import IndividualGroupRow, StackedBasicRow, StackedPickle
 
 
 @dataclass(frozen=True)

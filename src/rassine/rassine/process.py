@@ -23,7 +23,7 @@ from .types import ExtraPlotData, RassineBasicOutput, RassineParameters, Rassine
 
 
 def clustering(
-    array: NDArray[np.float64], threshold: float, num: int
+    array: np.ndarray, threshold: float, num: int
 ) -> Union[List[np.ndarray], np.ndarray]:
     """
     Detect and form 1D-cluster on an array. A new cluster is formed once the next vector value is farther than a threshold value.
@@ -821,12 +821,15 @@ def rassine_process(
                     cluster_length[largest_cluster, 2] * dgrid
                 )  # largest radius in vrad unit
 
-                par_Rmax_ = 2 * np.round(
-                    largest_radius
-                    * wave_min
-                    / cluster_length[largest_cluster, 5]
-                    / cluster_length[largest_cluster, 3],
-                    0,
+                par_Rmax_ = float(
+                    2
+                    * np.round(
+                        largest_radius
+                        * wave_min
+                        / cluster_length[largest_cluster, 5]
+                        / cluster_length[largest_cluster, 3],
+                        0,
+                    )
                 )
             else:
                 if out_of_calibration:
@@ -1115,11 +1118,11 @@ def rassine_process(
         "vicinity_local_max": par_vicinity,
         "smoothing_box": par_smoothing_box,
         "smoothing_kernel": par_smoothing_kernel,
-        "fwhm_ccf": np.round(par_fwhm / conversion_fwhm_sig, 2),
+        "fwhm_ccf": float(np.round(par_fwhm / conversion_fwhm_sig, 2)),
         "CCF_mask": CCF_mask,
         "RV_sys": float(RV_sys),
-        "min_radius": np.round(R_old, 1),
-        "max_radius": np.round(par_Rmax, 1),
+        "min_radius": float(np.round(R_old, 1)),
+        "max_radius": float(np.round(par_Rmax, 1)),
         "model_penality_radius": reg.string,
         "denoising_dist": denoising_dist,
         "number_of_cut": count_cut,

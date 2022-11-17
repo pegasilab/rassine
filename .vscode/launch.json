@@ -37,5 +37,28 @@
                 "0",
             ]
         },
+        {
+            "name": "HD23249:reinterpolate",
+            "type": "python",
+            "request": "launch",
+            "program": ".venv/bin/reinterpolate",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "RASSINE_CONFIG": "${workspaceFolder}/harps03.ini",
+                "RASSINE_ROOT": "${workspaceFolder}/spectra_library/HD23249/data/s1d/HARPS03",
+            },
+            "args": [
+                "-i",
+                "PREPROCESSED",
+                "-o",
+                "PREPROCESSED",
+                "-I",
+                "individual_imported.csv",
+                "-O",
+                "individual_reinterpolated.csv",
+                "50",
+            ]
+        },
     ]
 }

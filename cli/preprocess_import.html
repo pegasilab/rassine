@@ -1,0 +1,581 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="preprocess_table" href="preprocess_table.html" /><link rel="prev" title="Command-line tools" href="index.html" />
+
+    <link rel="shortcut icon" href="../_static/favicon.png"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
+        <title>preprocess_import - RASSINE</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">RASSINE</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">RASSINE</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../important.html">Important informations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Command-line tools</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">preprocess_import</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocess_table.html">preprocess_table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reinterpolate.html">reinterpolate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stacking_create_groups.html">stacking_create_groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stacking_stack.html">stacking_stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stacking_master_spectrum.html">stacking_master_spectrum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rassine.html">rassine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching_anchors_scan.html">matching_anchors_scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching_anchors_filter.html">matching_anchors_filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching_diff.html">matching_diff</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../graph.html">File processing</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">Public API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../_autosummary/rassine.imports.html">imports</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.imports.data.html">data</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.data.DACE.html">DACE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.data.IndividualBasicRow.html">IndividualBasicRow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.data.IndividualImportedRow.html">IndividualImportedRow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html">IndividualReinterpolatedRow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.data.PickledIndividualSpectrum.html">PickledIndividualSpectrum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html">ReinterpolatedSpectrumPickle</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.imports.preprocess_import.html">preprocess_import</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.preprocess_import.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.preprocess_import.find_hole.html">find_hole</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.preprocess_import.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.preprocess_import.preprocess_import.html">preprocess_import</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.preprocess_import.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.preprocess_import.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.imports.preprocess_table.html">preprocess_table</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.preprocess_table.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.preprocess_table.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.preprocess_table.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.preprocess_table.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.imports.reinterpolate.html">reinterpolate</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.reinterpolate.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.reinterpolate.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.reinterpolate.reinterpolate.html">reinterpolate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.reinterpolate.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.reinterpolate.ReinterpolationSettings.html">ReinterpolationSettings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.imports.reinterpolate.Task.html">Task</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../_autosummary/rassine.stacking.html">stacking</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.stacking.data.html">data</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.stacking.data.IndividualGroupRow.html">IndividualGroupRow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.stacking.data.MasterPickle.html">MasterPickle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.stacking.data.MasterRow.html">MasterRow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.stacking.data.StackedBasicRow.html">StackedBasicRow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.stacking.data.StackedPickle.html">StackedPickle</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.stacking.stacking_create_groups.html">stacking_create_groups</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.stacking.stacking_create_groups.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.stacking.stacking_create_groups.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.stacking.stacking_create_groups.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.stacking.stacking_create_groups.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.stacking.stacking_master_spectrum.html">stacking_master_spectrum</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.stacking.stacking_master_spectrum.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.stacking.stacking_master_spectrum.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.stacking.stacking_master_spectrum.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.stacking.stacking_master_spectrum.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.stacking.stacking_stack.html">stacking_stack</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.stacking.stacking_stack.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.stacking.stacking_stack.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.stacking.stacking_stack.perform_stacking.html">perform_stacking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.stacking.stacking_stack.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.stacking.stacking_stack.Task.html">Task</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../_autosummary/rassine.rassine.html">rassine</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.rassine.data.html">data</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.data.ExtraPlotData.html">ExtraPlotData</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.data.RassineBasicOutput.html">RassineBasicOutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.data.RassineParameters.html">RassineParameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.data.RassinePickle.html">RassinePickle</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.rassine.functions.html">functions</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.functions.empty_ccd_gap.html">empty_ccd_gap</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.rassine.parsing.html">parsing</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.parsing.stretching_to_string.html">stretching_to_string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.parsing.Auto.html">Auto</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.parsing.RegPoly.html">RegPoly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.parsing.RegSigmoid.html">RegSigmoid</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.rassine.process.html">process</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.process.ccf_fun.html">ccf_fun</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.process.clustering.html">clustering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.process.produce_line.html">produce_line</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.process.rassine_process.html">rassine_process</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.rassine.rassine.html">rassine</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.rassine.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.rassine.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.rassine.make_ini_contents_from_parameters.html">make_ini_contents_from_parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.rassine.plot_output.html">plot_output</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.rassine.print_parameters_according_to_paper.html">print_parameters_according_to_paper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.rassine.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.rassine.update_using_anchor_file.html">update_using_anchor_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.rassine.rassine.Task.html">Task</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../_autosummary/rassine.matching.html">matching</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.matching.data.html">data</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.data.AnchorOutput.html">AnchorOutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.data.AnchorParameters.html">AnchorParameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.data.AnchorPickle.html">AnchorPickle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.data.MasterToolPickle.html">MasterToolPickle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.data.MatchingAnchorsRow.html">MatchingAnchorsRow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.data.MatchingDiffOutput.html">MatchingDiffOutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.data.MatchingDiffParameters.html">MatchingDiffParameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.data.MatchingPickle.html">MatchingPickle</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.matching.matching_anchors_filter.html">matching_anchors_filter</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.matching_anchors_filter.cast_as_anchor_pickle.html">cast_as_anchor_pickle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.matching_anchors_filter.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.matching_anchors_filter.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.matching_anchors_filter.intersect_all_continuum_single.html">intersect_all_continuum_single</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.matching_anchors_filter.match_nearest.html">match_nearest</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.matching_anchors_filter.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.matching_anchors_filter.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.matching.matching_anchors_scan.html">matching_anchors_scan</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.matching_anchors_scan.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.matching_anchors_scan.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.matching_anchors_scan.intersect_all_continuum_sphinx.html">intersect_all_continuum_sphinx</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.matching_anchors_scan.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.matching_anchors_scan.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.matching.matching_diff.html">matching_diff</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" role="switch" type="checkbox"/><label for="toctree-checkbox-23"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.matching_diff.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.matching_diff.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.matching_diff.matching_diff_continuum.html">matching_diff_continuum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.matching_diff.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.matching.matching_diff.Task.html">Task</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../_autosummary/rassine.tools.html">tools</a><input class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.tools.enumerate_table_column_unique_values.html">enumerate_table_column_unique_values</a><input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.tools.enumerate_table_column_unique_values.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.tools.enumerate_table_column_unique_values.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.tools.enumerate_table_column_unique_values.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.tools.enumerate_table_rows.html">enumerate_table_rows</a><input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.tools.enumerate_table_rows.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.tools.enumerate_table_rows.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.tools.enumerate_table_rows.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.tools.pickle_compare.html">pickle_compare</a><input class="toctree-checkbox" id="toctree-checkbox-27" name="toctree-checkbox-27" role="switch" type="checkbox"/><label for="toctree-checkbox-27"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.tools.pickle_compare.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.tools.pickle_compare.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.tools.pickle_compare.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.tools.reorder_csv.html">reorder_csv</a><input class="toctree-checkbox" id="toctree-checkbox-28" name="toctree-checkbox-28" role="switch" type="checkbox"/><label for="toctree-checkbox-28"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.tools.reorder_csv.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.tools.reorder_csv.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.tools.reorder_csv.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.tools.reorder_csv.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.tools.sort_csv.html">sort_csv</a><input class="toctree-checkbox" id="toctree-checkbox-29" name="toctree-checkbox-29" role="switch" type="checkbox"/><label for="toctree-checkbox-29"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.tools.sort_csv.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.tools.sort_csv.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.tools.sort_csv.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.tools.sort_csv.Task.html">Task</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../_autosummary/rassine.lib.html">lib</a><input class="toctree-checkbox" id="toctree-checkbox-30" name="toctree-checkbox-30" role="switch" type="checkbox"/><label for="toctree-checkbox-30"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.lib.analysis.html">analysis</a><input class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" role="switch" type="checkbox"/><label for="toctree-checkbox-31"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.analysis.find_nearest1.html">find_nearest1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.analysis.grouping.html">grouping</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.analysis.rolling_iq.html">rolling_iq</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.lib.data.html">data</a><input class="toctree-checkbox" id="toctree-checkbox-32" name="toctree-checkbox-32" role="switch" type="checkbox"/><label for="toctree-checkbox-32"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.data.LoggingLevel.html">LoggingLevel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.data.NameRow.html">NameRow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.data.PathPattern.html">PathPattern</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.data.PickleProtocol.html">PickleProtocol</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.lib.io.html">io</a><input class="toctree-checkbox" id="toctree-checkbox-33" name="toctree-checkbox-33" role="switch" type="checkbox"/><label for="toctree-checkbox-33"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.io.open_pickle.html">open_pickle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.io.save_pickle.html">save_pickle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.io.NoCheck.html">NoCheck</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.lib.math.html">math</a><input class="toctree-checkbox" id="toctree-checkbox-34" name="toctree-checkbox-34" role="switch" type="checkbox"/><label for="toctree-checkbox-34"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.math.check_none_negative_values.html">check_none_negative_values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.math.create_grid.html">create_grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.math.doppler_r.html">doppler_r</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.math.gaussian.html">gaussian</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.math.local_max.html">local_max</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.math.make_continuum.html">make_continuum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.math.smooth.html">smooth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.math.truncated.html">truncated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.math.DopplerResult.html">DopplerResult</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/rassine.lib.util.html">util</a><input class="toctree-checkbox" id="toctree-checkbox-35" name="toctree-checkbox-35" role="switch" type="checkbox"/><label for="toctree-checkbox-35"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/rassine.lib.util.log_task_name_and_time.html">log_task_name_and_time</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="preprocess-import">
+<h1>preprocess_import<a class="headerlink" href="#preprocess-import" title="Permalink to this heading">#</a></h1>
+<p><p>Import FITS files into pickle files that can be processed by RASSINE</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">preprocess_import</span> <span class="p">[</span><span class="o">--</span><span class="n">config</span> <span class="n">CONFIG</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">root</span> <span class="n">ROOT</span><span class="p">]</span>
+                         <span class="p">[</span><span class="o">--</span><span class="n">pickle</span><span class="o">-</span><span class="n">protocol</span> <span class="n">PICKLE_PROTOCOL</span><span class="p">]</span>
+                         <span class="p">[</span><span class="o">--</span><span class="n">logging</span><span class="o">-</span><span class="n">level</span> <span class="n">LOGGING_LEVEL</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">I</span> <span class="n">INPUT_TABLE</span><span class="p">]</span>
+                         <span class="p">[</span><span class="o">-</span><span class="n">O</span> <span class="n">OUTPUT_TABLE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="n">INPUT_FOLDER</span><span class="p">]</span>
+                         <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT_PATTERN</span><span class="p">]</span>
+                         <span class="p">[</span><span class="o">--</span><span class="n">instrument</span> <span class="p">{</span><span class="n">HARPS</span><span class="p">,</span><span class="n">CORALIE</span><span class="p">,</span><span class="n">HARPN</span><span class="p">,</span><span class="n">ESPRESSO</span><span class="p">,</span><span class="n">EXPRESS</span><span class="p">}]</span>
+                         <span class="p">[</span><span class="o">--</span><span class="n">plx</span><span class="o">-</span><span class="n">mas</span> <span class="n">PLX_MAS</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">drs</span><span class="o">-</span><span class="n">style</span> <span class="p">{</span><span class="n">old</span><span class="p">,</span><span class="n">new</span><span class="p">}]</span>
+                         <span class="n">inputs</span>
+</pre></div>
+</div>
+<section id="named-arguments">
+<h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading">#</a></h2>
+<dl class="option-list">
+<dt><kbd>--config</kbd></dt>
+<dd><p>Use the specified configuration files.</p>
+<p>Files can be separated by commas/the command can be invoked multiple times.</p>
+</dd>
+<dt><kbd>--pickle-protocol</kbd></dt>
+<dd><p>Pickle protocol version to use</p>
+</dd>
+<dt><kbd>--logging-level</kbd></dt>
+<dd><p>Logging level to use</p>
+</dd>
+<dt><kbd>inputs</kbd></dt>
+<dd><p>Indices of spectrum to process</p>
+<p>If not provided, all spectra are processed</p>
+</dd>
+<dt><kbd>--instrument</kbd></dt>
+<dd><p>Possible choices: HARPS, CORALIE, HARPN, ESPRESSO, EXPRESS</p>
+<p>Instrument format of the s1d spectra</p>
+</dd>
+<dt><kbd>--plx-mas</kbd></dt>
+<dd><p>Parallax in mas (no more necessary ?)</p>
+</dd>
+</dl>
+</section>
+<section id="required-arguments">
+<h2>required arguments<a class="headerlink" href="#required-arguments" title="Permalink to this heading">#</a></h2>
+<dl class="option-list">
+<dt><kbd>--root</kbd></dt>
+<dd><p>Root path of the data, used as a base for other relative paths</p>
+</dd>
+<dt><kbd>-I, --input-table</kbd></dt>
+<dd><p>Input spectrum table</p>
+</dd>
+<dt><kbd>-O, --output-table</kbd></dt>
+<dd><p>Output spectrum table</p>
+</dd>
+<dt><kbd>-i, --input-folder</kbd></dt>
+<dd><p>Relative path to the folder containing the raw spectra</p>
+</dd>
+<dt><kbd>-o, --output-pattern</kbd></dt>
+<dd><p>Path pattern for output files</p>
+</dd>
+<dt><kbd>--drs-style</kbd></dt>
+<dd><p>Possible choices: old, new</p>
+<p>Type of DRS format</p>
+</dd>
+</dl>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="preprocess_table.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">preprocess_table</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Command-line tools</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2019-2022, Michael Cretignier, Xavier Dumusque, Denis Rosset &amp; contributors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">preprocess_import</a><ul>
+<li><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
+<li><a class="reference internal" href="#required-arguments">required arguments</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    </body>
+</html>

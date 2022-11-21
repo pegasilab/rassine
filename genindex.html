@@ -1,0 +1,2226 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="#" /><link rel="search" title="Search" href="search.html" />
+
+    <link rel="shortcut icon" href="_static/favicon.png"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/><title>Index - RASSINE</title>
+<link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">RASSINE</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">RASSINE</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="important.html">Important informations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="cli/index.html">Command-line tools</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli/preprocess_import.html">preprocess_import</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/preprocess_table.html">preprocess_table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/reinterpolate.html">reinterpolate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/stacking_create_groups.html">stacking_create_groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/stacking_stack.html">stacking_stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/stacking_master_spectrum.html">stacking_master_spectrum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/rassine.html">rassine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/matching_anchors_scan.html">matching_anchors_scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/matching_anchors_filter.html">matching_anchors_filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/matching_diff.html">matching_diff</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="graph.html">File processing</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api.html">Public API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="_autosummary/rassine.imports.html">imports</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.imports.data.html">data</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.data.DACE.html">DACE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.data.IndividualBasicRow.html">IndividualBasicRow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.data.IndividualImportedRow.html">IndividualImportedRow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html">IndividualReinterpolatedRow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.data.PickledIndividualSpectrum.html">PickledIndividualSpectrum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html">ReinterpolatedSpectrumPickle</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.imports.preprocess_import.html">preprocess_import</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.preprocess_import.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.preprocess_import.find_hole.html">find_hole</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.preprocess_import.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.preprocess_import.preprocess_import.html">preprocess_import</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.preprocess_import.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.preprocess_import.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.imports.preprocess_table.html">preprocess_table</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.preprocess_table.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.preprocess_table.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.preprocess_table.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.preprocess_table.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.imports.reinterpolate.html">reinterpolate</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.reinterpolate.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.reinterpolate.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.reinterpolate.reinterpolate.html">reinterpolate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.reinterpolate.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.reinterpolate.ReinterpolationSettings.html">ReinterpolationSettings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.imports.reinterpolate.Task.html">Task</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="_autosummary/rassine.stacking.html">stacking</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.stacking.data.html">data</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.stacking.data.IndividualGroupRow.html">IndividualGroupRow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.stacking.data.MasterPickle.html">MasterPickle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.stacking.data.MasterRow.html">MasterRow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.stacking.data.StackedBasicRow.html">StackedBasicRow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.stacking.data.StackedPickle.html">StackedPickle</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.stacking.stacking_create_groups.html">stacking_create_groups</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.stacking.stacking_create_groups.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.stacking.stacking_create_groups.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.stacking.stacking_create_groups.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.stacking.stacking_create_groups.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.stacking.stacking_master_spectrum.html">stacking_master_spectrum</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.stacking.stacking_master_spectrum.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.stacking.stacking_master_spectrum.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.stacking.stacking_master_spectrum.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.stacking.stacking_master_spectrum.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.stacking.stacking_stack.html">stacking_stack</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.stacking.stacking_stack.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.stacking.stacking_stack.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.stacking.stacking_stack.perform_stacking.html">perform_stacking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.stacking.stacking_stack.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.stacking.stacking_stack.Task.html">Task</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="_autosummary/rassine.rassine.html">rassine</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.rassine.data.html">data</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.data.ExtraPlotData.html">ExtraPlotData</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.data.RassineBasicOutput.html">RassineBasicOutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.data.RassineParameters.html">RassineParameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.data.RassinePickle.html">RassinePickle</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.rassine.functions.html">functions</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.functions.empty_ccd_gap.html">empty_ccd_gap</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.rassine.parsing.html">parsing</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.parsing.stretching_to_string.html">stretching_to_string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.parsing.Auto.html">Auto</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.parsing.RegPoly.html">RegPoly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.parsing.RegSigmoid.html">RegSigmoid</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.rassine.process.html">process</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.process.ccf_fun.html">ccf_fun</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.process.clustering.html">clustering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.process.produce_line.html">produce_line</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.process.rassine_process.html">rassine_process</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.rassine.rassine.html">rassine</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.rassine.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.rassine.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.rassine.make_ini_contents_from_parameters.html">make_ini_contents_from_parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.rassine.plot_output.html">plot_output</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.rassine.print_parameters_according_to_paper.html">print_parameters_according_to_paper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.rassine.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.rassine.update_using_anchor_file.html">update_using_anchor_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.rassine.rassine.Task.html">Task</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="_autosummary/rassine.matching.html">matching</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.matching.data.html">data</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.data.AnchorOutput.html">AnchorOutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.data.AnchorParameters.html">AnchorParameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.data.AnchorPickle.html">AnchorPickle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.data.MasterToolPickle.html">MasterToolPickle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.data.MatchingAnchorsRow.html">MatchingAnchorsRow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.data.MatchingDiffOutput.html">MatchingDiffOutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.data.MatchingDiffParameters.html">MatchingDiffParameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.data.MatchingPickle.html">MatchingPickle</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.matching.matching_anchors_filter.html">matching_anchors_filter</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.matching_anchors_filter.cast_as_anchor_pickle.html">cast_as_anchor_pickle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.matching_anchors_filter.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.matching_anchors_filter.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.matching_anchors_filter.intersect_all_continuum_single.html">intersect_all_continuum_single</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.matching_anchors_filter.match_nearest.html">match_nearest</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.matching_anchors_filter.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.matching_anchors_filter.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.matching.matching_anchors_scan.html">matching_anchors_scan</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.matching_anchors_scan.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.matching_anchors_scan.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.matching_anchors_scan.intersect_all_continuum_sphinx.html">intersect_all_continuum_sphinx</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.matching_anchors_scan.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.matching_anchors_scan.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.matching.matching_diff.html">matching_diff</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" role="switch" type="checkbox"/><label for="toctree-checkbox-23"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.matching_diff.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.matching_diff.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.matching_diff.matching_diff_continuum.html">matching_diff_continuum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.matching_diff.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.matching.matching_diff.Task.html">Task</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="_autosummary/rassine.tools.html">tools</a><input class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.tools.enumerate_table_column_unique_values.html">enumerate_table_column_unique_values</a><input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.tools.enumerate_table_column_unique_values.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.tools.enumerate_table_column_unique_values.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.tools.enumerate_table_column_unique_values.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.tools.enumerate_table_rows.html">enumerate_table_rows</a><input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.tools.enumerate_table_rows.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.tools.enumerate_table_rows.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.tools.enumerate_table_rows.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.tools.pickle_compare.html">pickle_compare</a><input class="toctree-checkbox" id="toctree-checkbox-27" name="toctree-checkbox-27" role="switch" type="checkbox"/><label for="toctree-checkbox-27"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.tools.pickle_compare.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.tools.pickle_compare.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.tools.pickle_compare.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.tools.reorder_csv.html">reorder_csv</a><input class="toctree-checkbox" id="toctree-checkbox-28" name="toctree-checkbox-28" role="switch" type="checkbox"/><label for="toctree-checkbox-28"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.tools.reorder_csv.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.tools.reorder_csv.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.tools.reorder_csv.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.tools.reorder_csv.Task.html">Task</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.tools.sort_csv.html">sort_csv</a><input class="toctree-checkbox" id="toctree-checkbox-29" name="toctree-checkbox-29" role="switch" type="checkbox"/><label for="toctree-checkbox-29"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.tools.sort_csv.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.tools.sort_csv.get_parser.html">get_parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.tools.sort_csv.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.tools.sort_csv.Task.html">Task</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="_autosummary/rassine.lib.html">lib</a><input class="toctree-checkbox" id="toctree-checkbox-30" name="toctree-checkbox-30" role="switch" type="checkbox"/><label for="toctree-checkbox-30"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.lib.analysis.html">analysis</a><input class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" role="switch" type="checkbox"/><label for="toctree-checkbox-31"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.analysis.find_nearest1.html">find_nearest1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.analysis.grouping.html">grouping</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.analysis.rolling_iq.html">rolling_iq</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.lib.data.html">data</a><input class="toctree-checkbox" id="toctree-checkbox-32" name="toctree-checkbox-32" role="switch" type="checkbox"/><label for="toctree-checkbox-32"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.data.LoggingLevel.html">LoggingLevel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.data.NameRow.html">NameRow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.data.PathPattern.html">PathPattern</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.data.PickleProtocol.html">PickleProtocol</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.lib.io.html">io</a><input class="toctree-checkbox" id="toctree-checkbox-33" name="toctree-checkbox-33" role="switch" type="checkbox"/><label for="toctree-checkbox-33"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.io.open_pickle.html">open_pickle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.io.save_pickle.html">save_pickle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.io.NoCheck.html">NoCheck</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.lib.math.html">math</a><input class="toctree-checkbox" id="toctree-checkbox-34" name="toctree-checkbox-34" role="switch" type="checkbox"/><label for="toctree-checkbox-34"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.math.check_none_negative_values.html">check_none_negative_values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.math.create_grid.html">create_grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.math.doppler_r.html">doppler_r</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.math.gaussian.html">gaussian</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.math.local_max.html">local_max</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.math.make_continuum.html">make_continuum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.math.smooth.html">smooth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.math.truncated.html">truncated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.math.DopplerResult.html">DopplerResult</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.lib.util.html">util</a><input class="toctree-checkbox" id="toctree-checkbox-35" name="toctree-checkbox-35" role="switch" type="checkbox"/><label for="toctree-checkbox-35"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_autosummary/rassine.lib.util.log_task_name_and_time.html">log_task_name_and_time</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          
+<section class="genindex-section">
+  <h1 id="index">Index</h1>
+  <div class="genindex-jumpbox"><a href="#_"><strong>_</strong></a> | <a href="#A"><strong>A</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#E"><strong>E</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#H"><strong>H</strong></a> | <a href="#I"><strong>I</strong></a> | <a href="#J"><strong>J</strong></a> | <a href="#K"><strong>K</strong></a> | <a href="#L"><strong>L</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#N"><strong>N</strong></a> | <a href="#O"><strong>O</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a> | <a href="#U"><strong>U</strong></a> | <a href="#V"><strong>V</strong></a> | <a href="#W"><strong>W</strong></a> | <a href="#Z"><strong>Z</strong></a></div>
+</section>
+<section id="_" class="genindex-section">
+  <h2>_</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.lib.util.log_task_name_and_time.html#rassine.lib.util.log_task_name_and_time.__call__">__call__() (log_task_name_and_time method)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.parsing.Auto.html#rassine.rassine.parsing.Auto.__init__">__init__() (Auto method)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.DACE.html#rassine.imports.data.DACE.__init__">(DACE method)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.ExtraPlotData.html#rassine.rassine.data.ExtraPlotData.__init__">(ExtraPlotData method)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.IndividualBasicRow.html#rassine.imports.data.IndividualBasicRow.__init__">(IndividualBasicRow method)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.IndividualGroupRow.html#rassine.stacking.data.IndividualGroupRow.__init__">(IndividualGroupRow method)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.__init__">(IndividualImportedRow method)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.__init__">(IndividualReinterpolatedRow method)</a>
+</li>
+          <li><a href="_autosummary/rassine.lib.util.log_task_name_and_time.html#rassine.lib.util.log_task_name_and_time.__init__">(log_task_name_and_time method)</a>
+</li>
+          <li><a href="_autosummary/rassine.lib.data.LoggingLevel.html#rassine.lib.data.LoggingLevel.__init__">(LoggingLevel method)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterRow.html#rassine.stacking.data.MasterRow.__init__">(MasterRow method)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.data.MatchingAnchorsRow.html#rassine.matching.data.MatchingAnchorsRow.__init__">(MatchingAnchorsRow method)</a>
+</li>
+          <li><a href="_autosummary/rassine.lib.data.NameRow.html#rassine.lib.data.NameRow.__init__">(NameRow method)</a>
+</li>
+          <li><a href="_autosummary/rassine.lib.data.PathPattern.html#rassine.lib.data.PathPattern.__init__">(PathPattern method)</a>
+</li>
+          <li><a href="_autosummary/rassine.lib.data.PickleProtocol.html#rassine.lib.data.PickleProtocol.__init__">(PickleProtocol method)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.parsing.RegPoly.html#rassine.rassine.parsing.RegPoly.__init__">(RegPoly method)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.parsing.RegSigmoid.html#rassine.rassine.parsing.RegSigmoid.__init__">(RegSigmoid method)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.reinterpolate.ReinterpolationSettings.html#rassine.imports.reinterpolate.ReinterpolationSettings.__init__">(ReinterpolationSettings method)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.__init__">(StackedBasicRow method)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.preprocess_import.Task.html#rassine.imports.preprocess_import.Task.__init__">(Task method)</a>, <a href="_autosummary/rassine.imports.preprocess_table.Task.html#rassine.imports.preprocess_table.Task.__init__">[1]</a>, <a href="_autosummary/rassine.imports.reinterpolate.Task.html#rassine.imports.reinterpolate.Task.__init__">[2]</a>, <a href="_autosummary/rassine.matching.matching_anchors_filter.Task.html#rassine.matching.matching_anchors_filter.Task.__init__">[3]</a>, <a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.__init__">[4]</a>, <a href="_autosummary/rassine.matching.matching_diff.Task.html#rassine.matching.matching_diff.Task.__init__">[5]</a>, <a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.__init__">[6]</a>, <a href="_autosummary/rassine.stacking.stacking_create_groups.Task.html#rassine.stacking.stacking_create_groups.Task.__init__">[7]</a>, <a href="_autosummary/rassine.stacking.stacking_master_spectrum.Task.html#rassine.stacking.stacking_master_spectrum.Task.__init__">[8]</a>, <a href="_autosummary/rassine.stacking.stacking_stack.Task.html#rassine.stacking.stacking_stack.Task.__init__">[9]</a>, <a href="_autosummary/rassine.tools.enumerate_table_column_unique_values.Task.html#rassine.tools.enumerate_table_column_unique_values.Task.__init__">[10]</a>, <a href="_autosummary/rassine.tools.enumerate_table_rows.Task.html#rassine.tools.enumerate_table_rows.Task.__init__">[11]</a>, <a href="_autosummary/rassine.tools.pickle_compare.Task.html#rassine.tools.pickle_compare.Task.__init__">[12]</a>, <a href="_autosummary/rassine.tools.reorder_csv.Task.html#rassine.tools.reorder_csv.Task.__init__">[13]</a>, <a href="_autosummary/rassine.tools.sort_csv.Task.html#rassine.tools.sort_csv.Task.__init__">[14]</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.matching.data.AnchorOutput.html#rassine.matching.data.AnchorOutput.__new__">__new__() (AnchorOutput static method)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.data.AnchorParameters.html#rassine.matching.data.AnchorParameters.__new__">(AnchorParameters static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.data.AnchorPickle.html#rassine.matching.data.AnchorPickle.__new__">(AnchorPickle static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.__new__">(MasterPickle static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.data.MasterToolPickle.html#rassine.matching.data.MasterToolPickle.__new__">(MasterToolPickle static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.data.MatchingDiffOutput.html#rassine.matching.data.MatchingDiffOutput.__new__">(MatchingDiffOutput static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.data.MatchingDiffParameters.html#rassine.matching.data.MatchingDiffParameters.__new__">(MatchingDiffParameters static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.data.MatchingPickle.html#rassine.matching.data.MatchingPickle.__new__">(MatchingPickle static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.PickledIndividualSpectrum.html#rassine.imports.data.PickledIndividualSpectrum.__new__">(PickledIndividualSpectrum static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassineBasicOutput.html#rassine.rassine.data.RassineBasicOutput.__new__">(RassineBasicOutput static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.__new__">(RassineParameters static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassinePickle.html#rassine.rassine.data.RassinePickle.__new__">(RassinePickle static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle.__new__">(ReinterpolatedSpectrumPickle static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.__new__">(StackedPickle static method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="A" class="genindex-section">
+  <h2>A</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.acc_sec">acc_sec (IndividualImportedRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.acc_sec">(IndividualReinterpolatedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.acc_sec">(MasterPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterRow.html#rassine.stacking.data.MasterRow.acc_sec">(MasterRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.PickledIndividualSpectrum.html#rassine.imports.data.PickledIndividualSpectrum.acc_sec">(PickledIndividualSpectrum attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.acc_sec">(RassineParameters attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle.acc_sec">(ReinterpolatedSpectrumPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.acc_sec">(StackedBasicRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.acc_sec">(StackedPickle attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.matching.matching_anchors_filter.Task.html#rassine.matching.matching_anchors_filter.Task.add_new">add_new (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.matching_diff.Task.html#rassine.matching.matching_diff.Task.anchor_file">anchor_file (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.AnchorOutput.html#rassine.matching.data.AnchorOutput.anchor_flux">anchor_flux (AnchorOutput attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.rassine.data.RassineBasicOutput.html#rassine.rassine.data.RassineBasicOutput.anchor_flux">(RassineBasicOutput attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.matching.data.AnchorOutput.html#rassine.matching.data.AnchorOutput.anchor_index">anchor_index (AnchorOutput attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.rassine.data.RassineBasicOutput.html#rassine.rassine.data.RassineBasicOutput.anchor_index">(RassineBasicOutput attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.matching.data.AnchorOutput.html#rassine.matching.data.AnchorOutput.anchor_wave">anchor_wave (AnchorOutput attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.rassine.data.RassineBasicOutput.html#rassine.rassine.data.RassineBasicOutput.anchor_wave">(RassineBasicOutput attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.matching.data.AnchorOutput.html#rassine.matching.data.AnchorOutput">AnchorOutput (class in rassine.matching.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.AnchorParameters.html#rassine.matching.data.AnchorParameters">AnchorParameters (class in rassine.matching.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.AnchorPickle.html#rassine.matching.data.AnchorPickle">AnchorPickle (class in rassine.matching.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.arcfiles">arcfiles (MasterPickle attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.arcfiles">(RassineParameters attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.arcfiles">(StackedPickle attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.rassine.parsing.Auto.html#rassine.rassine.parsing.Auto">Auto (class in rassine.rassine.parsing)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.axes_stretching">axes_stretching (RassineParameters attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="B" class="genindex-section">
+  <h2>B</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.berv">berv (IndividualImportedRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.berv">(IndividualReinterpolatedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.berv">(MasterPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterRow.html#rassine.stacking.data.MasterRow.berv">(MasterRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.PickledIndividualSpectrum.html#rassine.imports.data.PickledIndividualSpectrum.berv">(PickledIndividualSpectrum attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.berv">(RassineParameters attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle.berv">(ReinterpolatedSpectrumPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.berv">(StackedBasicRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.berv">(StackedPickle attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.berv_max">berv_max (MasterPickle attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.stacking.data.MasterRow.html#rassine.stacking.data.MasterRow.berv_max">(MasterRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.berv_max">(StackedBasicRow attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.berv_min">berv_min (MasterPickle attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.stacking.data.MasterRow.html#rassine.stacking.data.MasterRow.berv_min">(MasterRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.berv_min">(StackedBasicRow attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.stacking.stacking_create_groups.Task.html#rassine.stacking.stacking_create_groups.Task.bin_length">bin_length (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.MasterToolPickle.html#rassine.matching.data.MasterToolPickle.border">border (MasterToolPickle attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="C" class="genindex-section">
+  <h2>C</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.matching.matching_anchors_filter.cast_as_anchor_pickle.html#rassine.matching.matching_anchors_filter.cast_as_anchor_pickle">cast_as_anchor_pickle() (in module rassine.matching.matching_anchors_filter)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.process.ccf_fun.html#rassine.rassine.process.ccf_fun">ccf_fun() (in module rassine.rassine.process)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.CCF_mask">CCF_mask (RassineParameters attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.CCF_mask">(Task attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.rassine.parsing.RegSigmoid.html#rassine.rassine.parsing.RegSigmoid.center">center (RegSigmoid attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.lib.math.check_none_negative_values.html#rassine.lib.math.check_none_negative_values">check_none_negative_values() (in module rassine.lib.math)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.cli.html#rassine.imports.preprocess_import.cli">cli() (in module rassine.imports.preprocess_import)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.preprocess_table.cli.html#rassine.imports.preprocess_table.cli">(in module rassine.imports.preprocess_table)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.reinterpolate.cli.html#rassine.imports.reinterpolate.cli">(in module rassine.imports.reinterpolate)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.matching_anchors_filter.cli.html#rassine.matching.matching_anchors_filter.cli">(in module rassine.matching.matching_anchors_filter)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.matching_anchors_scan.cli.html#rassine.matching.matching_anchors_scan.cli">(in module rassine.matching.matching_anchors_scan)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.matching_diff.cli.html#rassine.matching.matching_diff.cli">(in module rassine.matching.matching_diff)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.rassine.cli.html#rassine.rassine.rassine.cli">(in module rassine.rassine.rassine)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.stacking_create_groups.cli.html#rassine.stacking.stacking_create_groups.cli">(in module rassine.stacking.stacking_create_groups)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.stacking_master_spectrum.cli.html#rassine.stacking.stacking_master_spectrum.cli">(in module rassine.stacking.stacking_master_spectrum)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.stacking_stack.cli.html#rassine.stacking.stacking_stack.cli">(in module rassine.stacking.stacking_stack)</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.enumerate_table_column_unique_values.cli.html#rassine.tools.enumerate_table_column_unique_values.cli">(in module rassine.tools.enumerate_table_column_unique_values)</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.enumerate_table_rows.cli.html#rassine.tools.enumerate_table_rows.cli">(in module rassine.tools.enumerate_table_rows)</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.pickle_compare.cli.html#rassine.tools.pickle_compare.cli">(in module rassine.tools.pickle_compare)</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.reorder_csv.cli.html#rassine.tools.reorder_csv.cli">(in module rassine.tools.reorder_csv)</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.sort_csv.cli.html#rassine.tools.sort_csv.cli">(in module rassine.tools.sort_csv)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.rassine.process.clustering.html#rassine.rassine.process.clustering">clustering() (in module rassine.rassine.process)</a>
+</li>
+        <li><a href="_autosummary/rassine.tools.enumerate_table_column_unique_values.Task.html#rassine.tools.enumerate_table_column_unique_values.Task.column">column (Task attribute)</a>, <a href="_autosummary/rassine.tools.reorder_csv.Task.html#rassine.tools.reorder_csv.Task.column">[1]</a>, <a href="_autosummary/rassine.tools.sort_csv.Task.html#rassine.tools.sort_csv.Task.column">[2]</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.Task.html#rassine.imports.preprocess_import.Task.config">config (Task attribute)</a>, <a href="_autosummary/rassine.imports.preprocess_table.Task.html#rassine.imports.preprocess_table.Task.config">[1]</a>, <a href="_autosummary/rassine.imports.reinterpolate.Task.html#rassine.imports.reinterpolate.Task.config">[2]</a>, <a href="_autosummary/rassine.matching.matching_anchors_filter.Task.html#rassine.matching.matching_anchors_filter.Task.config">[3]</a>, <a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.config">[4]</a>, <a href="_autosummary/rassine.matching.matching_diff.Task.html#rassine.matching.matching_diff.Task.config">[5]</a>, <a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.config">[6]</a>, <a href="_autosummary/rassine.stacking.stacking_create_groups.Task.html#rassine.stacking.stacking_create_groups.Task.config">[7]</a>, <a href="_autosummary/rassine.stacking.stacking_master_spectrum.Task.html#rassine.stacking.stacking_master_spectrum.Task.config">[8]</a>, <a href="_autosummary/rassine.stacking.stacking_stack.Task.html#rassine.stacking.stacking_stack.Task.config">[9]</a>, <a href="_autosummary/rassine.tools.enumerate_table_column_unique_values.Task.html#rassine.tools.enumerate_table_column_unique_values.Task.config">[10]</a>, <a href="_autosummary/rassine.tools.enumerate_table_rows.Task.html#rassine.tools.enumerate_table_rows.Task.config">[11]</a>, <a href="_autosummary/rassine.tools.pickle_compare.Task.html#rassine.tools.pickle_compare.Task.config">[12]</a>, <a href="_autosummary/rassine.tools.reorder_csv.Task.html#rassine.tools.reorder_csv.Task.config">[13]</a>, <a href="_autosummary/rassine.tools.sort_csv.Task.html#rassine.tools.sort_csv.Task.config">[14]</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.ExtraPlotData.html#rassine.rassine.data.ExtraPlotData.conti">conti (ExtraPlotData attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.continuum_denoised_saved">continuum_denoised_saved (RassineParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.continuum_interpolated_saved">continuum_interpolated_saved (RassineParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.AnchorOutput.html#rassine.matching.data.AnchorOutput.continuum_linear">continuum_linear (AnchorOutput attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.data.MatchingDiffOutput.html#rassine.matching.data.MatchingDiffOutput.continuum_linear">(MatchingDiffOutput attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassineBasicOutput.html#rassine.rassine.data.RassineBasicOutput.continuum_linear">(RassineBasicOutput attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.copies_master">copies_master (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.count_cut_lim">count_cut_lim (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.count_out_lim">count_out_lim (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.lib.math.create_grid.html#rassine.lib.math.create_grid">create_grid() (in module rassine.lib.math)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.MasterToolPickle.html#rassine.matching.data.MasterToolPickle.curve">curve (MasterToolPickle attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="D" class="genindex-section">
+  <h2>D</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.imports.data.DACE.html#rassine.imports.data.DACE">DACE (class in rassine.imports.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_table.Task.html#rassine.imports.preprocess_table.Task.dace_table">dace_table (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.stacking.data.IndividualGroupRow.html#rassine.stacking.data.IndividualGroupRow.dbin">dbin (IndividualGroupRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.stacking.stacking_create_groups.Task.html#rassine.stacking.stacking_create_groups.Task.dbin">(Task attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.denoising_dist">denoising_dist (RassineParameters attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.denoising_dist">(Task attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.imports.reinterpolate.ReinterpolationSettings.html#rassine.imports.reinterpolate.ReinterpolationSettings.dlambda">dlambda (ReinterpolationSettings attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.reinterpolate.Task.html#rassine.imports.reinterpolate.Task.dlambda">(Task attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.lib.math.doppler_r.html#rassine.lib.math.doppler_r">doppler_r() (in module rassine.lib.math)</a>
+</li>
+        <li><a href="_autosummary/rassine.lib.math.DopplerResult.html#rassine.lib.math.DopplerResult">DopplerResult (class in rassine.lib.math)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.data.IndividualBasicRow.html#rassine.imports.data.IndividualBasicRow.drift">drift (IndividualBasicRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.drift">(IndividualImportedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.drift">(IndividualReinterpolatedRow attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.imports.data.DACE.html#rassine.imports.data.DACE.drift_used">drift_used (DACE attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.Task.html#rassine.imports.preprocess_import.Task.drs_style">drs_style (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.dwave">dwave (IndividualImportedRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.dwave">(IndividualReinterpolatedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.dwave">(MasterPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterRow.html#rassine.stacking.data.MasterRow.dwave">(MasterRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.PickledIndividualSpectrum.html#rassine.imports.data.PickledIndividualSpectrum.dwave">(PickledIndividualSpectrum attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.dwave">(RassineParameters attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle.dwave">(ReinterpolatedSpectrumPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.dwave">(StackedBasicRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.dwave">(StackedPickle attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="E" class="genindex-section">
+  <h2>E</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.rassine.functions.empty_ccd_gap.html#rassine.rassine.functions.empty_ccd_gap">empty_ccd_gap() (in module rassine.rassine.functions)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.Task.html#rassine.imports.preprocess_import.Task.env_prefix_">env_prefix_ (Task attribute)</a>, <a href="_autosummary/rassine.imports.preprocess_table.Task.html#rassine.imports.preprocess_table.Task.env_prefix_">[1]</a>, <a href="_autosummary/rassine.imports.reinterpolate.Task.html#rassine.imports.reinterpolate.Task.env_prefix_">[2]</a>, <a href="_autosummary/rassine.matching.matching_anchors_filter.Task.html#rassine.matching.matching_anchors_filter.Task.env_prefix_">[3]</a>, <a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.env_prefix_">[4]</a>, <a href="_autosummary/rassine.matching.matching_diff.Task.html#rassine.matching.matching_diff.Task.env_prefix_">[5]</a>, <a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.env_prefix_">[6]</a>, <a href="_autosummary/rassine.stacking.stacking_create_groups.Task.html#rassine.stacking.stacking_create_groups.Task.env_prefix_">[7]</a>, <a href="_autosummary/rassine.stacking.stacking_master_spectrum.Task.html#rassine.stacking.stacking_master_spectrum.Task.env_prefix_">[8]</a>, <a href="_autosummary/rassine.stacking.stacking_stack.Task.html#rassine.stacking.stacking_stack.Task.env_prefix_">[9]</a>, <a href="_autosummary/rassine.tools.enumerate_table_column_unique_values.Task.html#rassine.tools.enumerate_table_column_unique_values.Task.env_prefix_">[10]</a>, <a href="_autosummary/rassine.tools.enumerate_table_rows.Task.html#rassine.tools.enumerate_table_rows.Task.env_prefix_">[11]</a>, <a href="_autosummary/rassine.tools.pickle_compare.Task.html#rassine.tools.pickle_compare.Task.env_prefix_">[12]</a>, <a href="_autosummary/rassine.tools.reorder_csv.Task.html#rassine.tools.reorder_csv.Task.env_prefix_">[13]</a>, <a href="_autosummary/rassine.tools.sort_csv.Task.html#rassine.tools.sort_csv.Task.env_prefix_">[14]</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.rassine.parsing.RegPoly.html#rassine.rassine.parsing.RegPoly.expo">expo (RegPoly attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.ExtraPlotData.html#rassine.rassine.data.ExtraPlotData">ExtraPlotData (class in rassine.rassine.data)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="F" class="genindex-section">
+  <h2>F</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.tools.reorder_csv.Task.html#rassine.tools.reorder_csv.Task.file">file (Task attribute)</a>, <a href="_autosummary/rassine.tools.sort_csv.Task.html#rassine.tools.sort_csv.Task.file">[1]</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.filename">filename (RassineParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.data.DACE.html#rassine.imports.data.DACE.fileroot">fileroot (DACE attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.find_hole.html#rassine.imports.preprocess_import.find_hole">find_hole() (in module rassine.imports.preprocess_import)</a>
+</li>
+        <li><a href="_autosummary/rassine.lib.analysis.find_nearest1.html#rassine.lib.analysis.find_nearest1">find_nearest1() (in module rassine.lib.analysis)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.AnchorPickle.html#rassine.matching.data.AnchorPickle.flux">flux (AnchorPickle attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.flux">(MasterPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.data.MatchingPickle.html#rassine.matching.data.MatchingPickle.flux">(MatchingPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.PickledIndividualSpectrum.html#rassine.imports.data.PickledIndividualSpectrum.flux">(PickledIndividualSpectrum attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassinePickle.html#rassine.rassine.data.RassinePickle.flux">(RassinePickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle.flux">(ReinterpolatedSpectrumPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.flux">(StackedPickle attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.matching.data.AnchorPickle.html#rassine.matching.data.AnchorPickle.flux_err">flux_err (AnchorPickle attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.data.MatchingPickle.html#rassine.matching.data.MatchingPickle.flux_err">(MatchingPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.PickledIndividualSpectrum.html#rassine.imports.data.PickledIndividualSpectrum.flux_err">(PickledIndividualSpectrum attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassinePickle.html#rassine.rassine.data.RassinePickle.flux_err">(RassinePickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle.flux_err">(ReinterpolatedSpectrumPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.flux_err">(StackedPickle attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.matching.data.AnchorPickle.html#rassine.matching.data.AnchorPickle.flux_used">flux_used (AnchorPickle attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.data.MatchingPickle.html#rassine.matching.data.MatchingPickle.flux_used">(MatchingPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassinePickle.html#rassine.rassine.data.RassinePickle.flux_used">(RassinePickle attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.matching.data.AnchorParameters.html#rassine.matching.data.AnchorParameters.fraction">fraction (AnchorParameters attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.data.MasterToolPickle.html#rassine.matching.data.MasterToolPickle.fraction">(MasterToolPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.fraction">(Task attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.imports.reinterpolate.ReinterpolationSettings.html#rassine.imports.reinterpolate.ReinterpolationSettings.from_spectrum_data">from_spectrum_data() (ReinterpolationSettings static method)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.fwhm_ccf">fwhm_ccf (RassineParameters attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="G" class="genindex-section">
+  <h2>G</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.lib.math.gaussian.html#rassine.lib.math.gaussian">gaussian() (in module rassine.lib.math)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.get_parser.html#rassine.imports.preprocess_import.get_parser">get_parser() (in module rassine.imports.preprocess_import)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.preprocess_table.get_parser.html#rassine.imports.preprocess_table.get_parser">(in module rassine.imports.preprocess_table)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.reinterpolate.get_parser.html#rassine.imports.reinterpolate.get_parser">(in module rassine.imports.reinterpolate)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.matching_anchors_filter.get_parser.html#rassine.matching.matching_anchors_filter.get_parser">(in module rassine.matching.matching_anchors_filter)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.matching_anchors_scan.get_parser.html#rassine.matching.matching_anchors_scan.get_parser">(in module rassine.matching.matching_anchors_scan)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.matching_diff.get_parser.html#rassine.matching.matching_diff.get_parser">(in module rassine.matching.matching_diff)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.rassine.get_parser.html#rassine.rassine.rassine.get_parser">(in module rassine.rassine.rassine)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.stacking_create_groups.get_parser.html#rassine.stacking.stacking_create_groups.get_parser">(in module rassine.stacking.stacking_create_groups)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.stacking_master_spectrum.get_parser.html#rassine.stacking.stacking_master_spectrum.get_parser">(in module rassine.stacking.stacking_master_spectrum)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.stacking_stack.get_parser.html#rassine.stacking.stacking_stack.get_parser">(in module rassine.stacking.stacking_stack)</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.reorder_csv.get_parser.html#rassine.tools.reorder_csv.get_parser">(in module rassine.tools.reorder_csv)</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.sort_csv.get_parser.html#rassine.tools.sort_csv.get_parser">(in module rassine.tools.sort_csv)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.imports.preprocess_table.Task.html#rassine.imports.preprocess_table.Task.glob_pattern">glob_pattern (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.stacking.data.IndividualGroupRow.html#rassine.stacking.data.IndividualGroupRow.group">group (IndividualGroupRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.group">(StackedBasicRow attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.stacking.stacking_stack.Task.html#rassine.stacking.stacking_stack.Task.group_table">group_table (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.lib.analysis.grouping.html#rassine.lib.analysis.grouping">grouping() (in module rassine.lib.analysis)</a>
+</li>
+        <li><a href="_autosummary/rassine.stacking.stacking_master_spectrum.Task.html#rassine.stacking.stacking_master_spectrum.Task.groups">groups (Task attribute)</a>, <a href="_autosummary/rassine.stacking.stacking_stack.Task.html#rassine.stacking.stacking_stack.Task.groups">[1]</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="H" class="genindex-section">
+  <h2>H</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.hole_left">hole_left (IndividualImportedRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.hole_left">(IndividualReinterpolatedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.hole_left">(MasterPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterRow.html#rassine.stacking.data.MasterRow.hole_left">(MasterRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.hole_left">(RassineParameters attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle.hole_left">(ReinterpolatedSpectrumPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.hole_left">(StackedBasicRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.hole_left">(StackedPickle attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.imports.reinterpolate.ReinterpolationSettings.html#rassine.imports.reinterpolate.ReinterpolationSettings.hole_left_k">hole_left_k (ReinterpolationSettings attribute)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.hole_right">hole_right (IndividualImportedRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.hole_right">(IndividualReinterpolatedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.hole_right">(MasterPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterRow.html#rassine.stacking.data.MasterRow.hole_right">(MasterRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.hole_right">(RassineParameters attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle.hole_right">(ReinterpolatedSpectrumPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.hole_right">(StackedBasicRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.hole_right">(StackedPickle attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.imports.reinterpolate.ReinterpolationSettings.html#rassine.imports.reinterpolate.ReinterpolationSettings.hole_right_k">hole_right_k (ReinterpolationSettings attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="I" class="genindex-section">
+  <h2>I</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.imports.data.IndividualBasicRow.html#rassine.imports.data.IndividualBasicRow">IndividualBasicRow (class in rassine.imports.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.stacking.data.IndividualGroupRow.html#rassine.stacking.data.IndividualGroupRow">IndividualGroupRow (class in rassine.stacking.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow">IndividualImportedRow (class in rassine.imports.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow">IndividualReinterpolatedRow (class in rassine.imports.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.Task.html#rassine.imports.preprocess_import.Task.ini_relaxed_sections_">ini_relaxed_sections_ (Task attribute)</a>, <a href="_autosummary/rassine.imports.preprocess_table.Task.html#rassine.imports.preprocess_table.Task.ini_relaxed_sections_">[1]</a>, <a href="_autosummary/rassine.imports.reinterpolate.Task.html#rassine.imports.reinterpolate.Task.ini_relaxed_sections_">[2]</a>, <a href="_autosummary/rassine.matching.matching_anchors_filter.Task.html#rassine.matching.matching_anchors_filter.Task.ini_relaxed_sections_">[3]</a>, <a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.ini_relaxed_sections_">[4]</a>, <a href="_autosummary/rassine.matching.matching_diff.Task.html#rassine.matching.matching_diff.Task.ini_relaxed_sections_">[5]</a>, <a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.ini_relaxed_sections_">[6]</a>, <a href="_autosummary/rassine.stacking.stacking_create_groups.Task.html#rassine.stacking.stacking_create_groups.Task.ini_relaxed_sections_">[7]</a>, <a href="_autosummary/rassine.stacking.stacking_master_spectrum.Task.html#rassine.stacking.stacking_master_spectrum.Task.ini_relaxed_sections_">[8]</a>, <a href="_autosummary/rassine.stacking.stacking_stack.Task.html#rassine.stacking.stacking_stack.Task.ini_relaxed_sections_">[9]</a>, <a href="_autosummary/rassine.tools.enumerate_table_column_unique_values.Task.html#rassine.tools.enumerate_table_column_unique_values.Task.ini_relaxed_sections_">[10]</a>, <a href="_autosummary/rassine.tools.enumerate_table_rows.Task.html#rassine.tools.enumerate_table_rows.Task.ini_relaxed_sections_">[11]</a>, <a href="_autosummary/rassine.tools.pickle_compare.Task.html#rassine.tools.pickle_compare.Task.ini_relaxed_sections_">[12]</a>, <a href="_autosummary/rassine.tools.reorder_csv.Task.html#rassine.tools.reorder_csv.Task.ini_relaxed_sections_">[13]</a>, <a href="_autosummary/rassine.tools.sort_csv.Task.html#rassine.tools.sort_csv.Task.ini_relaxed_sections_">[14]</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.Task.html#rassine.imports.preprocess_import.Task.ini_strict_sections_">ini_strict_sections_ (Task attribute)</a>, <a href="_autosummary/rassine.imports.preprocess_table.Task.html#rassine.imports.preprocess_table.Task.ini_strict_sections_">[1]</a>, <a href="_autosummary/rassine.imports.reinterpolate.Task.html#rassine.imports.reinterpolate.Task.ini_strict_sections_">[2]</a>, <a href="_autosummary/rassine.matching.matching_anchors_filter.Task.html#rassine.matching.matching_anchors_filter.Task.ini_strict_sections_">[3]</a>, <a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.ini_strict_sections_">[4]</a>, <a href="_autosummary/rassine.matching.matching_diff.Task.html#rassine.matching.matching_diff.Task.ini_strict_sections_">[5]</a>, <a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.ini_strict_sections_">[6]</a>, <a href="_autosummary/rassine.stacking.stacking_create_groups.Task.html#rassine.stacking.stacking_create_groups.Task.ini_strict_sections_">[7]</a>, <a href="_autosummary/rassine.stacking.stacking_master_spectrum.Task.html#rassine.stacking.stacking_master_spectrum.Task.ini_strict_sections_">[8]</a>, <a href="_autosummary/rassine.stacking.stacking_stack.Task.html#rassine.stacking.stacking_stack.Task.ini_strict_sections_">[9]</a>, <a href="_autosummary/rassine.tools.enumerate_table_column_unique_values.Task.html#rassine.tools.enumerate_table_column_unique_values.Task.ini_strict_sections_">[10]</a>, <a href="_autosummary/rassine.tools.enumerate_table_rows.Task.html#rassine.tools.enumerate_table_rows.Task.ini_strict_sections_">[11]</a>, <a href="_autosummary/rassine.tools.pickle_compare.Task.html#rassine.tools.pickle_compare.Task.ini_strict_sections_">[12]</a>, <a href="_autosummary/rassine.tools.reorder_csv.Task.html#rassine.tools.reorder_csv.Task.ini_strict_sections_">[13]</a>, <a href="_autosummary/rassine.tools.sort_csv.Task.html#rassine.tools.sort_csv.Task.ini_strict_sections_">[14]</a>
+</li>
+        <li><a href="_autosummary/rassine.tools.pickle_compare.Task.html#rassine.tools.pickle_compare.Task.input1">input1 (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.tools.pickle_compare.Task.html#rassine.tools.pickle_compare.Task.input2">input2 (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.input_anchor_pickle">input_anchor_pickle (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.Task.html#rassine.imports.preprocess_import.Task.input_folder">input_folder (Task attribute)</a>, <a href="_autosummary/rassine.imports.preprocess_table.Task.html#rassine.imports.preprocess_table.Task.input_folder">[1]</a>, <a href="_autosummary/rassine.imports.reinterpolate.Task.html#rassine.imports.reinterpolate.Task.input_folder">[2]</a>, <a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.input_folder">[3]</a>, <a href="_autosummary/rassine.stacking.stacking_master_spectrum.Task.html#rassine.stacking.stacking_master_spectrum.Task.input_folder">[4]</a>, <a href="_autosummary/rassine.stacking.stacking_stack.Task.html#rassine.stacking.stacking_stack.Task.input_folder">[5]</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.input_indices">input_indices (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.input_pattern">input_pattern (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.input_spectrum">input_spectrum (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.Task.html#rassine.imports.preprocess_import.Task.input_table">input_table (Task attribute)</a>, <a href="_autosummary/rassine.imports.reinterpolate.Task.html#rassine.imports.reinterpolate.Task.input_table">[1]</a>, <a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.input_table">[2]</a>, <a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.input_table">[3]</a>, <a href="_autosummary/rassine.stacking.stacking_create_groups.Task.html#rassine.stacking.stacking_create_groups.Task.input_table">[4]</a>, <a href="_autosummary/rassine.stacking.stacking_master_spectrum.Task.html#rassine.stacking.stacking_master_spectrum.Task.input_table">[5]</a>, <a href="_autosummary/rassine.stacking.stacking_stack.Task.html#rassine.stacking.stacking_stack.Task.input_table">[6]</a>, <a href="_autosummary/rassine.tools.enumerate_table_column_unique_values.Task.html#rassine.tools.enumerate_table_column_unique_values.Task.input_table">[7]</a>, <a href="_autosummary/rassine.tools.enumerate_table_rows.Task.html#rassine.tools.enumerate_table_rows.Task.input_table">[8]</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.Task.html#rassine.imports.preprocess_import.Task.inputs">inputs (Task attribute)</a>, <a href="_autosummary/rassine.imports.reinterpolate.Task.html#rassine.imports.reinterpolate.Task.inputs">[1]</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.instrument">instrument (IndividualImportedRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.instrument">(IndividualReinterpolatedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.instrument">(MasterPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterRow.html#rassine.stacking.data.MasterRow.instrument">(MasterRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.PickledIndividualSpectrum.html#rassine.imports.data.PickledIndividualSpectrum.instrument">(PickledIndividualSpectrum attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle.instrument">(ReinterpolatedSpectrumPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.instrument">(StackedBasicRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.preprocess_import.Task.html#rassine.imports.preprocess_import.Task.instrument">(Task attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.lib.data.LoggingLevel.html#rassine.lib.data.LoggingLevel.int_value">int_value (LoggingLevel attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.interpolation">interpolation (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.matching_anchors_filter.intersect_all_continuum_single.html#rassine.matching.matching_anchors_filter.intersect_all_continuum_single">intersect_all_continuum_single() (in module rassine.matching.matching_anchors_filter)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.matching_anchors_scan.intersect_all_continuum_sphinx.html#rassine.matching.matching_anchors_scan.intersect_all_continuum_sphinx">intersect_all_continuum_sphinx() (in module rassine.matching.matching_anchors_scan)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.MatchingAnchorsRow.html#rassine.matching.data.MatchingAnchorsRow.is_master">is_master (MatchingAnchorsRow attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="J" class="genindex-section">
+  <h2>J</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.jdb">jdb (IndividualImportedRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.jdb">(IndividualReinterpolatedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.jdb">(MasterPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.PickledIndividualSpectrum.html#rassine.imports.data.PickledIndividualSpectrum.jdb">(PickledIndividualSpectrum attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.jdb">(RassineParameters attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle.jdb">(ReinterpolatedSpectrumPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.jdb">(StackedBasicRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.jdb">(StackedPickle attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="K" class="genindex-section">
+  <h2>K</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.K_factors">K_factors (RassineParameters attribute)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.tools.pickle_compare.Task.html#rassine.tools.pickle_compare.Task.key">key (Task attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="L" class="genindex-section">
+  <h2>L</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.lamp_offset">lamp_offset (IndividualImportedRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.lamp_offset">(IndividualReinterpolatedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.lamp_offset">(MasterPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.PickledIndividualSpectrum.html#rassine.imports.data.PickledIndividualSpectrum.lamp_offset">(PickledIndividualSpectrum attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.lamp_offset">(RassineParameters attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle.lamp_offset">(ReinterpolatedSpectrumPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.lamp_offset">(StackedBasicRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.lamp_offset">(StackedPickle attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.large_window_penality">large_window_penality (RassineParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.lib.data.PickleProtocol.html#rassine.lib.data.PickleProtocol.level">level (PickleProtocol attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.light_file">light_file (RassineParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.lib.math.local_max.html#rassine.lib.math.local_max">local_max() (in module rassine.lib.math)</a>
+</li>
+        <li><a href="_autosummary/rassine.lib.util.log_task_name_and_time.html#rassine.lib.util.log_task_name_and_time">log_task_name_and_time (class in rassine.lib.util)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.Task.html#rassine.imports.preprocess_import.Task.logging_level">logging_level (Task attribute)</a>, <a href="_autosummary/rassine.imports.preprocess_table.Task.html#rassine.imports.preprocess_table.Task.logging_level">[1]</a>, <a href="_autosummary/rassine.imports.reinterpolate.Task.html#rassine.imports.reinterpolate.Task.logging_level">[2]</a>, <a href="_autosummary/rassine.matching.matching_anchors_filter.Task.html#rassine.matching.matching_anchors_filter.Task.logging_level">[3]</a>, <a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.logging_level">[4]</a>, <a href="_autosummary/rassine.matching.matching_diff.Task.html#rassine.matching.matching_diff.Task.logging_level">[5]</a>, <a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.logging_level">[6]</a>, <a href="_autosummary/rassine.stacking.stacking_create_groups.Task.html#rassine.stacking.stacking_create_groups.Task.logging_level">[7]</a>, <a href="_autosummary/rassine.stacking.stacking_master_spectrum.Task.html#rassine.stacking.stacking_master_spectrum.Task.logging_level">[8]</a>, <a href="_autosummary/rassine.stacking.stacking_stack.Task.html#rassine.stacking.stacking_stack.Task.logging_level">[9]</a>, <a href="_autosummary/rassine.tools.enumerate_table_column_unique_values.Task.html#rassine.tools.enumerate_table_column_unique_values.Task.logging_level">[10]</a>, <a href="_autosummary/rassine.tools.enumerate_table_rows.Task.html#rassine.tools.enumerate_table_rows.Task.logging_level">[11]</a>, <a href="_autosummary/rassine.tools.reorder_csv.Task.html#rassine.tools.reorder_csv.Task.logging_level">[12]</a>, <a href="_autosummary/rassine.tools.sort_csv.Task.html#rassine.tools.sort_csv.Task.logging_level">[13]</a>
+</li>
+        <li><a href="_autosummary/rassine.lib.data.LoggingLevel.html#rassine.lib.data.LoggingLevel">LoggingLevel (class in rassine.lib.data)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="M" class="genindex-section">
+  <h2>M</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.imports.reinterpolate.ReinterpolationSettings.html#rassine.imports.reinterpolate.ReinterpolationSettings.make">make() (ReinterpolationSettings static method)</a>
+</li>
+        <li><a href="_autosummary/rassine.lib.math.make_continuum.html#rassine.lib.math.make_continuum">make_continuum() (in module rassine.lib.math)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.make_ini_contents_from_parameters.html#rassine.rassine.rassine.make_ini_contents_from_parameters">make_ini_contents_from_parameters() (in module rassine.rassine.rassine)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.mask_telluric">mask_telluric (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.AnchorParameters.html#rassine.matching.data.AnchorParameters.master_filename">master_filename (AnchorParameters attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.data.MasterToolPickle.html#rassine.matching.data.MasterToolPickle.master_filename">(MasterToolPickle attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.master_spectrum">master_spectrum (MasterPickle attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.master_spectrum">(Task attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.matching.data.AnchorParameters.html#rassine.matching.data.AnchorParameters.master_tool">master_tool (AnchorParameters attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.matching_anchors_filter.Task.html#rassine.matching.matching_anchors_filter.Task.master_tool">(Task attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle">MasterPickle (class in rassine.stacking.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.stacking.data.MasterRow.html#rassine.stacking.data.MasterRow">MasterRow (class in rassine.stacking.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.MasterToolPickle.html#rassine.matching.data.MasterToolPickle">MasterToolPickle (class in rassine.matching.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.matching_anchors_filter.match_nearest.html#rassine.matching.matching_anchors_filter.match_nearest">match_nearest() (in module rassine.matching.matching_anchors_filter)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.AnchorPickle.html#rassine.matching.data.AnchorPickle.matching_anchors">matching_anchors (AnchorPickle attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.data.MatchingPickle.html#rassine.matching.data.MatchingPickle.matching_anchors">(MatchingPickle attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.matching.data.MatchingPickle.html#rassine.matching.data.MatchingPickle.matching_diff">matching_diff (MatchingPickle attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.matching_diff.matching_diff_continuum.html#rassine.matching.matching_diff.matching_diff_continuum">matching_diff_continuum() (in module rassine.matching.matching_diff)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.MatchingAnchorsRow.html#rassine.matching.data.MatchingAnchorsRow">MatchingAnchorsRow (class in rassine.matching.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.MatchingDiffOutput.html#rassine.matching.data.MatchingDiffOutput">MatchingDiffOutput (class in rassine.matching.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.MatchingDiffParameters.html#rassine.matching.data.MatchingDiffParameters">MatchingDiffParameters (class in rassine.matching.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.MatchingPickle.html#rassine.matching.data.MatchingPickle">MatchingPickle (class in rassine.matching.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.max_radius">max_radius (RassineParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.mean_jdb">mean_jdb (StackedBasicRow attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.mean_svrad">mean_svrad (StackedBasicRow attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.mean_vrad">mean_vrad (StackedBasicRow attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.min_radius">min_radius (RassineParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.lib.math.DopplerResult.html#rassine.lib.math.DopplerResult.minus_v">minus_v (DopplerResult attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.data.DACE.html#rassine.imports.data.DACE.mjd">mjd (DACE attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualBasicRow.html#rassine.imports.data.IndividualBasicRow.mjd">(IndividualBasicRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.mjd">(IndividualImportedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.mjd">(IndividualReinterpolatedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.mjd">(MasterPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.PickledIndividualSpectrum.html#rassine.imports.data.PickledIndividualSpectrum.mjd">(PickledIndividualSpectrum attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.mjd">(RassineParameters attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle.mjd">(ReinterpolatedSpectrumPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.mjd">(StackedBasicRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.mjd">(StackedPickle attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.imports.data.DACE.html#rassine.imports.data.DACE.model">model (DACE attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualBasicRow.html#rassine.imports.data.IndividualBasicRow.model">(IndividualBasicRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.model">(IndividualImportedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.model">(IndividualReinterpolatedRow attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.model_penality_radius">model_penality_radius (RassineParameters attribute)</a>
+</li>
+        <li>
+    module
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.html#module-rassine.imports">rassine.imports</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.html#module-rassine.imports.data">rassine.imports.data</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.preprocess_import.html#module-rassine.imports.preprocess_import">rassine.imports.preprocess_import</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.preprocess_table.html#module-rassine.imports.preprocess_table">rassine.imports.preprocess_table</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.reinterpolate.html#module-rassine.imports.reinterpolate">rassine.imports.reinterpolate</a>
+</li>
+          <li><a href="_autosummary/rassine.lib.html#module-rassine.lib">rassine.lib</a>
+</li>
+          <li><a href="_autosummary/rassine.lib.analysis.html#module-rassine.lib.analysis">rassine.lib.analysis</a>
+</li>
+          <li><a href="_autosummary/rassine.lib.data.html#module-rassine.lib.data">rassine.lib.data</a>
+</li>
+          <li><a href="_autosummary/rassine.lib.io.html#module-rassine.lib.io">rassine.lib.io</a>
+</li>
+          <li><a href="_autosummary/rassine.lib.math.html#module-rassine.lib.math">rassine.lib.math</a>
+</li>
+          <li><a href="_autosummary/rassine.lib.util.html#module-rassine.lib.util">rassine.lib.util</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.html#module-rassine.matching">rassine.matching</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.data.html#module-rassine.matching.data">rassine.matching.data</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.matching_anchors_filter.html#module-rassine.matching.matching_anchors_filter">rassine.matching.matching_anchors_filter</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.matching_anchors_scan.html#module-rassine.matching.matching_anchors_scan">rassine.matching.matching_anchors_scan</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.matching_diff.html#module-rassine.matching.matching_diff">rassine.matching.matching_diff</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.html#module-rassine.rassine">rassine.rassine</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.html#module-rassine.rassine.data">rassine.rassine.data</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.functions.html#module-rassine.rassine.functions">rassine.rassine.functions</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.parsing.html#module-rassine.rassine.parsing">rassine.rassine.parsing</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.process.html#module-rassine.rassine.process">rassine.rassine.process</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.rassine.html#module-rassine.rassine.rassine">rassine.rassine.rassine</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.html#module-rassine.stacking">rassine.stacking</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.html#module-rassine.stacking.data">rassine.stacking.data</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.stacking_create_groups.html#module-rassine.stacking.stacking_create_groups">rassine.stacking.stacking_create_groups</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.stacking_master_spectrum.html#module-rassine.stacking.stacking_master_spectrum">rassine.stacking.stacking_master_spectrum</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.stacking_stack.html#module-rassine.stacking.stacking_stack">rassine.stacking.stacking_stack</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.html#module-rassine.tools">rassine.tools</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.enumerate_table_column_unique_values.html#module-rassine.tools.enumerate_table_column_unique_values">rassine.tools.enumerate_table_column_unique_values</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.enumerate_table_rows.html#module-rassine.tools.enumerate_table_rows">rassine.tools.enumerate_table_rows</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.pickle_compare.html#module-rassine.tools.pickle_compare">rassine.tools.pickle_compare</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.reorder_csv.html#module-rassine.tools.reorder_csv">rassine.tools.reorder_csv</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.sort_csv.html#module-rassine.tools.sort_csv">rassine.tools.sort_csv</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="N" class="genindex-section">
+  <h2>N</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.matching.data.MatchingAnchorsRow.html#rassine.matching.data.MatchingAnchorsRow.n_anchors_adding">n_anchors_adding (MatchingAnchorsRow attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.MatchingAnchorsRow.html#rassine.matching.data.MatchingAnchorsRow.n_anchors_before">n_anchors_before (MatchingAnchorsRow attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.MatchingAnchorsRow.html#rassine.matching.data.MatchingAnchorsRow.n_anchors_ooc">n_anchors_ooc (MatchingAnchorsRow attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.MatchingAnchorsRow.html#rassine.matching.data.MatchingAnchorsRow.n_anchors_twin">n_anchors_twin (MatchingAnchorsRow attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.data.IndividualBasicRow.html#rassine.imports.data.IndividualBasicRow.name">name (IndividualBasicRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.stacking.data.IndividualGroupRow.html#rassine.stacking.data.IndividualGroupRow.name">(IndividualGroupRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.name">(IndividualImportedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.name">(IndividualReinterpolatedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.lib.util.log_task_name_and_time.html#rassine.lib.util.log_task_name_and_time.name">(log_task_name_and_time attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterRow.html#rassine.stacking.data.MasterRow.name">(MasterRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.data.MatchingAnchorsRow.html#rassine.matching.data.MatchingAnchorsRow.name">(MatchingAnchorsRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.lib.data.NameRow.html#rassine.lib.data.NameRow.name">(NameRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.name">(StackedBasicRow attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.rassine.parsing.RegPoly.html#rassine.rassine.parsing.RegPoly.name">name() (RegPoly method)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.rassine.parsing.RegSigmoid.html#rassine.rassine.parsing.RegSigmoid.name">(RegSigmoid method)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.lib.data.NameRow.html#rassine.lib.data.NameRow">NameRow (class in rassine.lib.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.nb_bins">nb_bins (IndividualReinterpolatedRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.reinterpolate.ReinterpolationSettings.html#rassine.imports.reinterpolate.ReinterpolationSettings.nb_bins">(ReinterpolationSettings attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.nb_bins">(StackedBasicRow attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.matching.data.AnchorParameters.html#rassine.matching.data.AnchorParameters.nb_copies_master">nb_copies_master (AnchorParameters attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.data.MasterToolPickle.html#rassine.matching.data.MasterToolPickle.nb_copies_master">(MasterToolPickle attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.nb_spectra_stacked">nb_spectra_stacked (MasterPickle attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.stacking.data.MasterRow.html#rassine.stacking.data.MasterRow.nb_spectra_stacked">(MasterRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.nb_spectra_stacked">(RassineParameters attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.nb_spectra_stacked">(StackedBasicRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.nb_spectra_stacked">(StackedPickle attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.no_master_spectrum">no_master_spectrum (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.lib.io.NoCheck.html#rassine.lib.io.NoCheck">NoCheck (class in rassine.lib.io)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.ExtraPlotData.html#rassine.rassine.data.ExtraPlotData.normalisation">normalisation (ExtraPlotData attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.nthreads">nthreads (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.number_anchors">number_anchors (RassineParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.number_iteration">number_iteration (RassineParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.number_of_cut">number_of_cut (RassineParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.number_points">number_points (RassineParameters attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="O" class="genindex-section">
+  <h2>O</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.lib.io.open_pickle.html#rassine.lib.io.open_pickle">open_pickle() (in module rassine.lib.io)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.AnchorPickle.html#rassine.matching.data.AnchorPickle.output">output (AnchorPickle attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.data.MatchingPickle.html#rassine.matching.data.MatchingPickle.output">(MatchingPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassinePickle.html#rassine.rassine.data.RassinePickle.output">(RassinePickle attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.output_anchor_ini">output_anchor_ini (Task attribute)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.output_file">output_file (Task attribute)</a>, <a href="_autosummary/rassine.stacking.stacking_master_spectrum.Task.html#rassine.stacking.stacking_master_spectrum.Task.output_file">[1]</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.reinterpolate.Task.html#rassine.imports.reinterpolate.Task.output_folder">output_folder (Task attribute)</a>, <a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.output_folder">[1]</a>, <a href="_autosummary/rassine.stacking.stacking_stack.Task.html#rassine.stacking.stacking_stack.Task.output_folder">[2]</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.Task.html#rassine.imports.preprocess_import.Task.output_pattern">output_pattern (Task attribute)</a>, <a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.output_pattern">[1]</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.output_plot_folder">output_plot_folder (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.output_plot_pattern">output_plot_pattern (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.Task.html#rassine.imports.preprocess_import.Task.output_table">output_table (Task attribute)</a>, <a href="_autosummary/rassine.imports.preprocess_table.Task.html#rassine.imports.preprocess_table.Task.output_table">[1]</a>, <a href="_autosummary/rassine.imports.reinterpolate.Task.html#rassine.imports.reinterpolate.Task.output_table">[2]</a>, <a href="_autosummary/rassine.matching.matching_anchors_filter.Task.html#rassine.matching.matching_anchors_filter.Task.output_table">[3]</a>, <a href="_autosummary/rassine.stacking.stacking_create_groups.Task.html#rassine.stacking.stacking_create_groups.Task.output_table">[4]</a>, <a href="_autosummary/rassine.stacking.stacking_master_spectrum.Task.html#rassine.stacking.stacking_master_spectrum.Task.output_table">[5]</a>, <a href="_autosummary/rassine.stacking.stacking_stack.Task.html#rassine.stacking.stacking_stack.Task.output_table">[6]</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="P" class="genindex-section">
+  <h2>P</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.par_fwhm">par_fwhm (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.par_R">par_R (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.par_reg_nu">par_reg_nu (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.par_Rmax">par_Rmax (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.par_smoothing_box">par_smoothing_box (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.par_smoothing_kernel">par_smoothing_kernel (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.par_stretching">par_stretching (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.par_vicinity">par_vicinity (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.AnchorOutput.html#rassine.matching.data.AnchorOutput.parameters">parameters (AnchorOutput attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.data.AnchorPickle.html#rassine.matching.data.AnchorPickle.parameters">(AnchorPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.data.MatchingDiffOutput.html#rassine.matching.data.MatchingDiffOutput.parameters">(MatchingDiffOutput attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.data.MatchingPickle.html#rassine.matching.data.MatchingPickle.parameters">(MatchingPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassinePickle.html#rassine.rassine.data.RassinePickle.parameters">(RassinePickle attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.lib.data.LoggingLevel.html#rassine.lib.data.LoggingLevel.parser">parser() (LoggingLevel class method)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.lib.data.PathPattern.html#rassine.lib.data.PathPattern.parser">(PathPattern static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.lib.data.PickleProtocol.html#rassine.lib.data.PickleProtocol.parser">(PickleProtocol class method)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.lib.data.PathPattern.html#rassine.lib.data.PathPattern.path">path (PathPattern attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.lib.data.PathPattern.html#rassine.lib.data.PathPattern">PathPattern (class in rassine.lib.data)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.stacking.stacking_stack.perform_stacking.html#rassine.stacking.stacking_stack.perform_stacking">perform_stacking() (in module rassine.stacking.stacking_stack)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.Task.html#rassine.imports.preprocess_import.Task.pickle_protocol">pickle_protocol (Task attribute)</a>, <a href="_autosummary/rassine.imports.preprocess_table.Task.html#rassine.imports.preprocess_table.Task.pickle_protocol">[1]</a>, <a href="_autosummary/rassine.imports.reinterpolate.Task.html#rassine.imports.reinterpolate.Task.pickle_protocol">[2]</a>, <a href="_autosummary/rassine.matching.matching_anchors_filter.Task.html#rassine.matching.matching_anchors_filter.Task.pickle_protocol">[3]</a>, <a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.pickle_protocol">[4]</a>, <a href="_autosummary/rassine.matching.matching_diff.Task.html#rassine.matching.matching_diff.Task.pickle_protocol">[5]</a>, <a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.pickle_protocol">[6]</a>, <a href="_autosummary/rassine.stacking.stacking_create_groups.Task.html#rassine.stacking.stacking_create_groups.Task.pickle_protocol">[7]</a>, <a href="_autosummary/rassine.stacking.stacking_master_spectrum.Task.html#rassine.stacking.stacking_master_spectrum.Task.pickle_protocol">[8]</a>, <a href="_autosummary/rassine.stacking.stacking_stack.Task.html#rassine.stacking.stacking_stack.Task.pickle_protocol">[9]</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.data.PickledIndividualSpectrum.html#rassine.imports.data.PickledIndividualSpectrum">PickledIndividualSpectrum (class in rassine.imports.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.lib.data.PickleProtocol.html#rassine.lib.data.PickleProtocol">PickleProtocol (class in rassine.lib.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.plot_output.html#rassine.rassine.rassine.plot_output">plot_output() (in module rassine.rassine.rassine)</a>
+</li>
+        <li><a href="_autosummary/rassine.lib.math.DopplerResult.html#rassine.lib.math.DopplerResult.plus_v">plus_v (DopplerResult attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.plx_mas">plx_mas (IndividualImportedRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.plx_mas">(IndividualReinterpolatedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.PickledIndividualSpectrum.html#rassine.imports.data.PickledIndividualSpectrum.plx_mas">(PickledIndividualSpectrum attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle.plx_mas">(ReinterpolatedSpectrumPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.preprocess_import.Task.html#rassine.imports.preprocess_import.Task.plx_mas">(Task attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.preprocess_import.html#rassine.imports.preprocess_import.preprocess_import">preprocess_import() (in module rassine.imports.preprocess_import)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.print_parameters_according_to_paper.html#rassine.rassine.rassine.print_parameters_according_to_paper">print_parameters_according_to_paper() (in module rassine.rassine.rassine)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.matching_anchors_filter.Task.html#rassine.matching.matching_anchors_filter.Task.process_indices">process_indices (Task attribute)</a>, <a href="_autosummary/rassine.matching.matching_diff.Task.html#rassine.matching.matching_diff.Task.process_indices">[1]</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.matching_anchors_filter.Task.html#rassine.matching.matching_anchors_filter.Task.process_master">process_master (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.matching_anchors_filter.Task.html#rassine.matching.matching_anchors_filter.Task.process_pattern">process_pattern (Task attribute)</a>, <a href="_autosummary/rassine.matching.matching_diff.Task.html#rassine.matching.matching_diff.Task.process_pattern">[1]</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.matching_anchors_filter.Task.html#rassine.matching.matching_anchors_filter.Task.process_table">process_table (Task attribute)</a>, <a href="_autosummary/rassine.matching.matching_diff.Task.html#rassine.matching.matching_diff.Task.process_table">[1]</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.process.produce_line.html#rassine.rassine.process.produce_line">produce_line() (in module rassine.rassine.process)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.Task.html#rassine.imports.preprocess_import.Task.prog_">prog_ (Task attribute)</a>, <a href="_autosummary/rassine.imports.preprocess_table.Task.html#rassine.imports.preprocess_table.Task.prog_">[1]</a>, <a href="_autosummary/rassine.imports.reinterpolate.Task.html#rassine.imports.reinterpolate.Task.prog_">[2]</a>, <a href="_autosummary/rassine.matching.matching_anchors_filter.Task.html#rassine.matching.matching_anchors_filter.Task.prog_">[3]</a>, <a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.prog_">[4]</a>, <a href="_autosummary/rassine.matching.matching_diff.Task.html#rassine.matching.matching_diff.Task.prog_">[5]</a>, <a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.prog_">[6]</a>, <a href="_autosummary/rassine.stacking.stacking_create_groups.Task.html#rassine.stacking.stacking_create_groups.Task.prog_">[7]</a>, <a href="_autosummary/rassine.stacking.stacking_master_spectrum.Task.html#rassine.stacking.stacking_master_spectrum.Task.prog_">[8]</a>, <a href="_autosummary/rassine.stacking.stacking_stack.Task.html#rassine.stacking.stacking_stack.Task.prog_">[9]</a>, <a href="_autosummary/rassine.tools.enumerate_table_column_unique_values.Task.html#rassine.tools.enumerate_table_column_unique_values.Task.prog_">[10]</a>, <a href="_autosummary/rassine.tools.enumerate_table_rows.Task.html#rassine.tools.enumerate_table_rows.Task.prog_">[11]</a>, <a href="_autosummary/rassine.tools.pickle_compare.Task.html#rassine.tools.pickle_compare.Task.prog_">[12]</a>, <a href="_autosummary/rassine.tools.reorder_csv.Task.html#rassine.tools.reorder_csv.Task.prog_">[13]</a>, <a href="_autosummary/rassine.tools.sort_csv.Task.html#rassine.tools.sort_csv.Task.prog_">[14]</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="R" class="genindex-section">
+  <h2>R</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.random_seed">random_seed (Task attribute)</a>
+</li>
+        <li>
+    rassine.imports
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.html#module-rassine.imports">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.imports.data
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.html#module-rassine.imports.data">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.imports.preprocess_import
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.preprocess_import.html#module-rassine.imports.preprocess_import">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.imports.preprocess_table
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.preprocess_table.html#module-rassine.imports.preprocess_table">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.imports.reinterpolate
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.reinterpolate.html#module-rassine.imports.reinterpolate">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.lib
+
+        <ul>
+          <li><a href="_autosummary/rassine.lib.html#module-rassine.lib">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.lib.analysis
+
+        <ul>
+          <li><a href="_autosummary/rassine.lib.analysis.html#module-rassine.lib.analysis">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.lib.data
+
+        <ul>
+          <li><a href="_autosummary/rassine.lib.data.html#module-rassine.lib.data">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.lib.io
+
+        <ul>
+          <li><a href="_autosummary/rassine.lib.io.html#module-rassine.lib.io">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.lib.math
+
+        <ul>
+          <li><a href="_autosummary/rassine.lib.math.html#module-rassine.lib.math">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.lib.util
+
+        <ul>
+          <li><a href="_autosummary/rassine.lib.util.html#module-rassine.lib.util">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.matching
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.html#module-rassine.matching">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.matching.data
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.data.html#module-rassine.matching.data">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.matching.matching_anchors_filter
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.matching_anchors_filter.html#module-rassine.matching.matching_anchors_filter">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.matching.matching_anchors_scan
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.matching_anchors_scan.html#module-rassine.matching.matching_anchors_scan">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.matching.matching_diff
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.matching_diff.html#module-rassine.matching.matching_diff">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.rassine
+
+        <ul>
+          <li><a href="_autosummary/rassine.rassine.html#module-rassine.rassine">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.rassine.data
+
+        <ul>
+          <li><a href="_autosummary/rassine.rassine.data.html#module-rassine.rassine.data">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.rassine.functions
+
+        <ul>
+          <li><a href="_autosummary/rassine.rassine.functions.html#module-rassine.rassine.functions">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.rassine.parsing
+
+        <ul>
+          <li><a href="_autosummary/rassine.rassine.parsing.html#module-rassine.rassine.parsing">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.rassine.process
+
+        <ul>
+          <li><a href="_autosummary/rassine.rassine.process.html#module-rassine.rassine.process">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.rassine.rassine
+
+        <ul>
+          <li><a href="_autosummary/rassine.rassine.rassine.html#module-rassine.rassine.rassine">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.stacking
+
+        <ul>
+          <li><a href="_autosummary/rassine.stacking.html#module-rassine.stacking">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.stacking.data
+
+        <ul>
+          <li><a href="_autosummary/rassine.stacking.data.html#module-rassine.stacking.data">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.stacking.stacking_create_groups
+
+        <ul>
+          <li><a href="_autosummary/rassine.stacking.stacking_create_groups.html#module-rassine.stacking.stacking_create_groups">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.stacking.stacking_master_spectrum
+
+        <ul>
+          <li><a href="_autosummary/rassine.stacking.stacking_master_spectrum.html#module-rassine.stacking.stacking_master_spectrum">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.stacking.stacking_stack
+
+        <ul>
+          <li><a href="_autosummary/rassine.stacking.stacking_stack.html#module-rassine.stacking.stacking_stack">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.tools
+
+        <ul>
+          <li><a href="_autosummary/rassine.tools.html#module-rassine.tools">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.tools.enumerate_table_column_unique_values
+
+        <ul>
+          <li><a href="_autosummary/rassine.tools.enumerate_table_column_unique_values.html#module-rassine.tools.enumerate_table_column_unique_values">module</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li>
+    rassine.tools.enumerate_table_rows
+
+        <ul>
+          <li><a href="_autosummary/rassine.tools.enumerate_table_rows.html#module-rassine.tools.enumerate_table_rows">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.tools.pickle_compare
+
+        <ul>
+          <li><a href="_autosummary/rassine.tools.pickle_compare.html#module-rassine.tools.pickle_compare">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.tools.reorder_csv
+
+        <ul>
+          <li><a href="_autosummary/rassine.tools.reorder_csv.html#module-rassine.tools.reorder_csv">module</a>
+</li>
+        </ul></li>
+        <li>
+    rassine.tools.sort_csv
+
+        <ul>
+          <li><a href="_autosummary/rassine.tools.sort_csv.html#module-rassine.tools.sort_csv">module</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.rassine.process.rassine_process.html#rassine.rassine.process.rassine_process">rassine_process() (in module rassine.rassine.process)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineBasicOutput.html#rassine.rassine.data.RassineBasicOutput">RassineBasicOutput (class in rassine.rassine.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters">RassineParameters (class in rassine.rassine.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassinePickle.html#rassine.rassine.data.RassinePickle">RassinePickle (class in rassine.rassine.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.parsing.Auto.html#rassine.rassine.parsing.Auto.ratio">ratio (Auto attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.data.IndividualBasicRow.html#rassine.imports.data.IndividualBasicRow.raw_filename">raw_filename (IndividualBasicRow attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.MatchingDiffParameters.html#rassine.matching.data.MatchingDiffParameters.recenter">recenter (MatchingDiffParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.tools.reorder_csv.Task.html#rassine.tools.reorder_csv.Task.reference">reference (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.MatchingDiffParameters.html#rassine.matching.data.MatchingDiffParameters.reference_continuum">reference_continuum (MatchingDiffParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.parsing.RegPoly.html#rassine.rassine.parsing.RegPoly">RegPoly (class in rassine.rassine.parsing)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.parsing.RegSigmoid.html#rassine.rassine.parsing.RegSigmoid">RegSigmoid (class in rassine.rassine.parsing)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.reinterpolate.reinterpolate.html#rassine.imports.reinterpolate.reinterpolate">reinterpolate() (in module rassine.imports.reinterpolate)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle">ReinterpolatedSpectrumPickle (class in rassine.imports.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.reinterpolate.ReinterpolationSettings.html#rassine.imports.reinterpolate.ReinterpolationSettings">ReinterpolationSettings (class in rassine.imports.reinterpolate)</a>
+</li>
+        <li><a href="_autosummary/rassine.lib.analysis.rolling_iq.html#rassine.lib.analysis.rolling_iq">rolling_iq() (in module rassine.lib.analysis)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.Task.html#rassine.imports.preprocess_import.Task.root">root (Task attribute)</a>, <a href="_autosummary/rassine.imports.preprocess_table.Task.html#rassine.imports.preprocess_table.Task.root">[1]</a>, <a href="_autosummary/rassine.imports.reinterpolate.Task.html#rassine.imports.reinterpolate.Task.root">[2]</a>, <a href="_autosummary/rassine.matching.matching_anchors_filter.Task.html#rassine.matching.matching_anchors_filter.Task.root">[3]</a>, <a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.root">[4]</a>, <a href="_autosummary/rassine.matching.matching_diff.Task.html#rassine.matching.matching_diff.Task.root">[5]</a>, <a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.root">[6]</a>, <a href="_autosummary/rassine.stacking.stacking_create_groups.Task.html#rassine.stacking.stacking_create_groups.Task.root">[7]</a>, <a href="_autosummary/rassine.stacking.stacking_master_spectrum.Task.html#rassine.stacking.stacking_master_spectrum.Task.root">[8]</a>, <a href="_autosummary/rassine.stacking.stacking_stack.Task.html#rassine.stacking.stacking_stack.Task.root">[9]</a>, <a href="_autosummary/rassine.tools.enumerate_table_column_unique_values.Task.html#rassine.tools.enumerate_table_column_unique_values.Task.root">[10]</a>, <a href="_autosummary/rassine.tools.enumerate_table_rows.Task.html#rassine.tools.enumerate_table_rows.Task.root">[11]</a>, <a href="_autosummary/rassine.tools.pickle_compare.Task.html#rassine.tools.pickle_compare.Task.root">[12]</a>, <a href="_autosummary/rassine.tools.reorder_csv.Task.html#rassine.tools.reorder_csv.Task.root">[13]</a>, <a href="_autosummary/rassine.tools.sort_csv.Task.html#rassine.tools.sort_csv.Task.root">[14]</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.run.html#rassine.imports.preprocess_import.run">run() (in module rassine.imports.preprocess_import)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.preprocess_table.run.html#rassine.imports.preprocess_table.run">(in module rassine.imports.preprocess_table)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.reinterpolate.run.html#rassine.imports.reinterpolate.run">(in module rassine.imports.reinterpolate)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.matching_anchors_filter.run.html#rassine.matching.matching_anchors_filter.run">(in module rassine.matching.matching_anchors_filter)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.matching_anchors_scan.run.html#rassine.matching.matching_anchors_scan.run">(in module rassine.matching.matching_anchors_scan)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.matching_diff.run.html#rassine.matching.matching_diff.run">(in module rassine.matching.matching_diff)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.rassine.run.html#rassine.rassine.rassine.run">(in module rassine.rassine.rassine)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.stacking_create_groups.run.html#rassine.stacking.stacking_create_groups.run">(in module rassine.stacking.stacking_create_groups)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.stacking_master_spectrum.run.html#rassine.stacking.stacking_master_spectrum.run">(in module rassine.stacking.stacking_master_spectrum)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.stacking_stack.run.html#rassine.stacking.stacking_stack.run">(in module rassine.stacking.stacking_stack)</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.enumerate_table_column_unique_values.run.html#rassine.tools.enumerate_table_column_unique_values.run">(in module rassine.tools.enumerate_table_column_unique_values)</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.enumerate_table_rows.run.html#rassine.tools.enumerate_table_rows.run">(in module rassine.tools.enumerate_table_rows)</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.pickle_compare.run.html#rassine.tools.pickle_compare.run">(in module rassine.tools.pickle_compare)</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.reorder_csv.run.html#rassine.tools.reorder_csv.run">(in module rassine.tools.reorder_csv)</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.sort_csv.run.html#rassine.tools.sort_csv.run">(in module rassine.tools.sort_csv)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.rv_dace">rv_dace (RassineParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.rv_dace_std">rv_dace_std (RassineParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.data.IndividualBasicRow.html#rassine.imports.data.IndividualBasicRow.rv_mean">rv_mean (IndividualBasicRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.rv_mean">(IndividualImportedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.rv_mean">(IndividualReinterpolatedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.rv_mean">(StackedBasicRow attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.rv_mean_jdb">rv_mean_jdb (RassineParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.data.IndividualBasicRow.html#rassine.imports.data.IndividualBasicRow.rv_shift">rv_shift (IndividualBasicRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.rv_shift">(IndividualImportedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.rv_shift">(IndividualReinterpolatedRow attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.RV_shift">RV_shift (MasterPickle attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.RV_shift">(RassineParameters attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle.RV_shift">(ReinterpolatedSpectrumPickle attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.rv_shift">rv_shift (StackedBasicRow attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.RV_shift">RV_shift (StackedPickle attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.RV_sys">RV_sys (MasterPickle attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.RV_sys">(RassineParameters attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle.RV_sys">(ReinterpolatedSpectrumPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.RV_sys">(StackedPickle attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="S" class="genindex-section">
+  <h2>S</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.lib.io.save_pickle.html#rassine.lib.io.save_pickle">save_pickle() (in module rassine.lib.io)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.MatchingDiffParameters.html#rassine.matching.data.MatchingDiffParameters.savgol_window">savgol_window (MatchingDiffParameters attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.matching_diff.Task.html#rassine.matching.matching_diff.Task.savgol_window">(Task attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.imports.data.DACE.html#rassine.imports.data.DACE.schema">schema() (DACE static method)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualBasicRow.html#rassine.imports.data.IndividualBasicRow.schema">(IndividualBasicRow static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.IndividualGroupRow.html#rassine.stacking.data.IndividualGroupRow.schema">(IndividualGroupRow static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.schema">(IndividualImportedRow static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.schema">(IndividualReinterpolatedRow static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterRow.html#rassine.stacking.data.MasterRow.schema">(MasterRow static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.data.MatchingAnchorsRow.html#rassine.matching.data.MatchingAnchorsRow.schema">(MatchingAnchorsRow static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.lib.data.NameRow.html#rassine.lib.data.NameRow.schema">(NameRow static method)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.schema">(StackedBasicRow static method)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.lib.data.LoggingLevel.html#rassine.lib.data.LoggingLevel.set">set() (LoggingLevel method)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.lib.data.PickleProtocol.html#rassine.lib.data.PickleProtocol.set">(PickleProtocol method)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.lib.math.smooth.html#rassine.lib.math.smooth">smooth() (in module rassine.lib.math)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.smoothing_box">smoothing_box (RassineParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.smoothing_kernel">smoothing_kernel (RassineParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.SNR_5500">SNR_5500 (IndividualReinterpolatedRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.SNR_5500">(MasterPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterRow.html#rassine.stacking.data.MasterRow.SNR_5500">(MasterRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.SNR_5500">(RassineParameters attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle.SNR_5500">(ReinterpolatedSpectrumPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.SNR_5500">(StackedBasicRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.SNR_5500">(StackedPickle attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.rassine.data.ExtraPlotData.html#rassine.rassine.data.ExtraPlotData.spectre">spectre (ExtraPlotData attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.speedup">speedup (RassineParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow">StackedBasicRow (class in rassine.stacking.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle">StackedPickle (class in rassine.stacking.data)</a>
+</li>
+        <li><a href="_autosummary/rassine.stacking.data.IndividualGroupRow.html#rassine.stacking.data.IndividualGroupRow.stacking_length">stacking_length (IndividualGroupRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.stacking_length">(StackedBasicRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.stacking_length">(StackedPickle attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.imports.reinterpolate.ReinterpolationSettings.html#rassine.imports.reinterpolate.ReinterpolationSettings.static_grid">static_grid (ReinterpolationSettings attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.parsing.RegSigmoid.html#rassine.rassine.parsing.RegSigmoid.steepness">steepness (RegSigmoid attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.parsing.stretching_to_string.html#rassine.rassine.parsing.stretching_to_string">stretching_to_string() (in module rassine.rassine.parsing)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_table.Task.html#rassine.imports.preprocess_table.Task.strict">strict (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.parsing.RegPoly.html#rassine.rassine.parsing.RegPoly.string">string (RegPoly attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.rassine.parsing.RegSigmoid.html#rassine.rassine.parsing.RegSigmoid.string">(RegSigmoid attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.matching.data.AnchorParameters.html#rassine.matching.data.AnchorParameters.sub_dico_used">sub_dico_used (AnchorParameters attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.data.MatchingDiffParameters.html#rassine.matching.data.MatchingDiffParameters.sub_dico_used">(MatchingDiffParameters attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.imports.data.DACE.html#rassine.imports.data.DACE.svrad">svrad (DACE attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualBasicRow.html#rassine.imports.data.IndividualBasicRow.svrad">(IndividualBasicRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.svrad">(IndividualImportedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.svrad">(IndividualReinterpolatedRow attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.synthetic_spectrum">synthetic_spectrum (Task attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="T" class="genindex-section">
+  <h2>T</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.imports.preprocess_import.Task.html#rassine.imports.preprocess_import.Task">Task (class in rassine.imports.preprocess_import)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.preprocess_table.Task.html#rassine.imports.preprocess_table.Task">(class in rassine.imports.preprocess_table)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.reinterpolate.Task.html#rassine.imports.reinterpolate.Task">(class in rassine.imports.reinterpolate)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.matching_anchors_filter.Task.html#rassine.matching.matching_anchors_filter.Task">(class in rassine.matching.matching_anchors_filter)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task">(class in rassine.matching.matching_anchors_scan)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.matching_diff.Task.html#rassine.matching.matching_diff.Task">(class in rassine.matching.matching_diff)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task">(class in rassine.rassine.rassine)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.stacking_create_groups.Task.html#rassine.stacking.stacking_create_groups.Task">(class in rassine.stacking.stacking_create_groups)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.stacking_master_spectrum.Task.html#rassine.stacking.stacking_master_spectrum.Task">(class in rassine.stacking.stacking_master_spectrum)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.stacking_stack.Task.html#rassine.stacking.stacking_stack.Task">(class in rassine.stacking.stacking_stack)</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.enumerate_table_column_unique_values.Task.html#rassine.tools.enumerate_table_column_unique_values.Task">(class in rassine.tools.enumerate_table_column_unique_values)</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.enumerate_table_rows.Task.html#rassine.tools.enumerate_table_rows.Task">(class in rassine.tools.enumerate_table_rows)</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.pickle_compare.Task.html#rassine.tools.pickle_compare.Task">(class in rassine.tools.pickle_compare)</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.reorder_csv.Task.html#rassine.tools.reorder_csv.Task">(class in rassine.tools.reorder_csv)</a>
+</li>
+          <li><a href="_autosummary/rassine.tools.sort_csv.Task.html#rassine.tools.sort_csv.Task">(class in rassine.tools.sort_csv)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.matching.data.AnchorParameters.html#rassine.matching.data.AnchorParameters.threshold">threshold (AnchorParameters attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.data.MasterToolPickle.html#rassine.matching.data.MasterToolPickle.threshold">(MasterToolPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.threshold">(Task attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.lib.data.PathPattern.html#rassine.lib.data.PathPattern.to_path">to_path() (PathPattern method)</a>
+</li>
+        <li><a href="_autosummary/rassine.lib.io.NoCheck.html#rassine.lib.io.NoCheck.TOKEN">TOKEN (NoCheck attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.matching.data.AnchorParameters.html#rassine.matching.data.AnchorParameters.tolerance">tolerance (AnchorParameters attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.data.MasterToolPickle.html#rassine.matching.data.MasterToolPickle.tolerance">(MasterToolPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.matching_anchors_scan.Task.html#rassine.matching.matching_anchors_scan.Task.tolerance">(Task attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.lib.math.truncated.html#rassine.lib.math.truncated">truncated() (in module rassine.lib.math)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="U" class="genindex-section">
+  <h2>U</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.rassine.rassine.update_using_anchor_file.html#rassine.rassine.rassine.update_using_anchor_file">update_using_anchor_file() (in module rassine.rassine.rassine)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="V" class="genindex-section">
+  <h2>V</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.matching.matching_anchors_filter.Task.html#rassine.matching.matching_anchors_filter.Task.validate_file">validate_file() (Task method)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.validate_input_anchor_pickle">validate_input_anchor_pickle() (Task method)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.validate_inputs">validate_inputs() (Task method)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.validate_output_anchor_ini">validate_output_anchor_ini() (Task method)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.reinterpolate.Task.html#rassine.imports.reinterpolate.Task.validate_output_folder">validate_output_folder() (Task method)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.validate_par_stretching">validate_par_stretching() (Task method)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.rassine.rassine.Task.html#rassine.rassine.rassine.Task.validate_smoothing">validate_smoothing() (Task method)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.preprocess_table.Task.html#rassine.imports.preprocess_table.Task.verify_sorted">verify_sorted (Task attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.vicinity_local_max">vicinity_local_max (RassineParameters attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.data.DACE.html#rassine.imports.data.DACE.vrad">vrad (DACE attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualBasicRow.html#rassine.imports.data.IndividualBasicRow.vrad">(IndividualBasicRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.vrad">(IndividualImportedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.vrad">(IndividualReinterpolatedRow attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="W" class="genindex-section">
+  <h2>W</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.matching.data.AnchorPickle.html#rassine.matching.data.AnchorPickle.wave">wave (AnchorPickle attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.matching.data.MasterToolPickle.html#rassine.matching.data.MasterToolPickle.wave">(MasterToolPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.matching.data.MatchingPickle.html#rassine.matching.data.MatchingPickle.wave">(MatchingPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.PickledIndividualSpectrum.html#rassine.imports.data.PickledIndividualSpectrum.wave">(PickledIndividualSpectrum attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassinePickle.html#rassine.rassine.data.RassinePickle.wave">(RassinePickle attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.wave_max">wave_max (IndividualImportedRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.wave_max">(IndividualReinterpolatedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.wave_max">(MasterPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterRow.html#rassine.stacking.data.MasterRow.wave_max">(MasterRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.PickledIndividualSpectrum.html#rassine.imports.data.PickledIndividualSpectrum.wave_max">(PickledIndividualSpectrum attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.wave_max">(RassineParameters attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle.wave_max">(ReinterpolatedSpectrumPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.wave_max">(StackedBasicRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.wave_max">(StackedPickle attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.imports.reinterpolate.ReinterpolationSettings.html#rassine.imports.reinterpolate.ReinterpolationSettings.wave_max_k">wave_max_k (ReinterpolationSettings attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.data.IndividualImportedRow.html#rassine.imports.data.IndividualImportedRow.wave_min">wave_min (IndividualImportedRow attribute)</a>
+
+        <ul>
+          <li><a href="_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html#rassine.imports.data.IndividualReinterpolatedRow.wave_min">(IndividualReinterpolatedRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterPickle.html#rassine.stacking.data.MasterPickle.wave_min">(MasterPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.MasterRow.html#rassine.stacking.data.MasterRow.wave_min">(MasterRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.PickledIndividualSpectrum.html#rassine.imports.data.PickledIndividualSpectrum.wave_min">(PickledIndividualSpectrum attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.wave_min">(RassineParameters attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html#rassine.imports.data.ReinterpolatedSpectrumPickle.wave_min">(ReinterpolatedSpectrumPickle attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedBasicRow.html#rassine.stacking.data.StackedBasicRow.wave_min">(StackedBasicRow attribute)</a>
+</li>
+          <li><a href="_autosummary/rassine.stacking.data.StackedPickle.html#rassine.stacking.data.StackedPickle.wave_min">(StackedPickle attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="_autosummary/rassine.imports.reinterpolate.ReinterpolationSettings.html#rassine.imports.reinterpolate.ReinterpolationSettings.wave_min_k">wave_min_k (ReinterpolationSettings attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.imports.reinterpolate.ReinterpolationSettings.html#rassine.imports.reinterpolate.ReinterpolationSettings.wave_ref">wave_ref (ReinterpolationSettings attribute)</a>
+</li>
+        <li><a href="_autosummary/rassine.rassine.data.RassineParameters.html#rassine.rassine.data.RassineParameters.windows_penality">windows_penality (RassineParameters attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="Z" class="genindex-section">
+  <h2>Z</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="_autosummary/rassine.matching.matching_diff.Task.html#rassine.matching.matching_diff.Task.zero_point">zero_point (Task attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2019-2022, Michael Cretignier, Xavier Dumusque, Denis Rosset &amp; contributors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    </body>
+</html>

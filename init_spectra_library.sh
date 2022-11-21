@@ -6,8 +6,8 @@ fi
 
 if [ ! -f spectra_library/download_successful ]; then
     echo Downloading sample spectra
-    wget -q --show-progress -O spectra_library/HD23249.tar.gz https://www.dropbox.com/s/c5e69deuia2wc5b/HD23249.tar.gz?dl=0
-    wget -q --show-progress -O spectra_library/HD110315.tar.gz https://www.dropbox.com/s/g8f8q40a66vqbw6/HD110315.tar.gz?dl=0
+    curl -L -o spectra_library/HD23249.tar.gz https://www.dropbox.com/s/c5e69deuia2wc5b/HD23249.tar.gz?dl=0
+    curl -L -o spectra_library/HD110315.tar.gz https://www.dropbox.com/s/g8f8q40a66vqbw6/HD110315.tar.gz?dl=0
     touch spectra_library/download_successful
 else
     echo Reusing already downloaded sample data

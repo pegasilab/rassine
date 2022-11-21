@@ -621,7 +621,7 @@ def run(t: Task):
         )
         params = output["parameters"]
         save_pickle(step.output_file, output)
-        print(
+        logging.info(
             f"Output file saved under : {step.output_file} (SNR at 5500 : {params['SNR_5500']:.0f})"
         )
 

@@ -2,7 +2,7 @@ File processing
 ===============
 
 .. graphviz::
-    
+
     digraph process {
         newrank=false
         subgraph cluster_input_data {

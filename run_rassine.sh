@@ -258,7 +258,7 @@ fi
 if [[ "$STEPS" == *"matching_diff"* ]]; then
   echo
   echo "Step: matching_diff"
-  time matching_diff
+  time matching_diff_step
 fi
 
 rm "$RASSINE_ROOT/"*.lock

@@ -1,0 +1,41 @@
+name: build-docs
+
+# Only run this when the main branch changes
+on:
+  pull_request:
+  push:
+    branches:
+    - main
+
+# This job installs dependencies, build the book, and pushes it to `gh-pages`
+jobs:
+  deploy-book:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    # Install dependencies
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+
+    - name: Install dependencies
+      run: |
+        poetry install 
+
+    # Build the site
+    - name: Build the site
+      run: |
+        poetry run make -C docs clean html
+
+    # If we've pushed to main, push the book's HTML to github-pages
+    - if: ${{ github.ref == 'refs/heads/main' }}
+      name: GitHub Pages action
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/build/html

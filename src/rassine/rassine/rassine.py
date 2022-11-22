@@ -570,7 +570,6 @@ def run(t: Task):
         ]
 
     if t.output_plot_folder is not None:
-        matplotlib.use("Qt5Agg", force=True)
         plt.close("all")
 
     for step in steps:

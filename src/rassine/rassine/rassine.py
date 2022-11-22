@@ -46,7 +46,7 @@ class Task(cp.Config):
     """
     Rolling Alpha Shape for a Spectral Improved Normalisation Estimator (RASSINE)
 
-    ..
+    ::
     
              ^                  .-=-.          .-==-.
             {}      __        .' O o '.       /   ^  )

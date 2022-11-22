@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="get_continuum_linear" href="rassine.tools.compare_matching_diff_output.get_continuum_linear.html" /><link rel="prev" title="cli" href="rassine.tools.compare_matching_diff_output.cli.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="cli" href="rassine.tools.compare_normalized_output.cli.html" /><link rel="prev" title="tools" href="rassine.tools.html" />
 
     <link rel="shortcut icon" href="../_static/favicon.png"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
-        <title>compute_distance - RASSINE</title>
+        <title>compare_normalized_output - RASSINE</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -324,12 +324,12 @@
 </ul>
 </li>
 <li class="toctree-l2 current has-children"><a class="reference internal" href="rassine.tools.html">tools</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l3 current has-children"><a class="reference internal" href="rassine.tools.compare_matching_diff_output.html">compare_matching_diff_output</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="rassine.tools.compare_matching_diff_output.cli.html">cli</a></li>
-<li class="toctree-l4 current current-page"><a class="current reference internal" href="#">compute_distance</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rassine.tools.compare_matching_diff_output.get_continuum_linear.html">get_continuum_linear</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rassine.tools.compare_matching_diff_output.run.html">run</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rassine.tools.compare_matching_diff_output.Task.html">Task</a></li>
+<li class="toctree-l3 current has-children current-page"><a class="current reference internal" href="#">compare_normalized_output</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="rassine.tools.compare_normalized_output.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rassine.tools.compare_normalized_output.compute_distance.html">compute_distance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rassine.tools.compare_normalized_output.get_continuum_linear.html">get_continuum_linear</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rassine.tools.compare_normalized_output.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rassine.tools.compare_normalized_output.Task.html">Task</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="rassine.tools.enumerate_table_column_unique_values.html">enumerate_table_column_unique_values</a><input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -441,26 +441,37 @@
           </label>
         </div>
         <article role="main">
-          <section id="compute-distance">
-<h1>compute_distance<a class="headerlink" href="#compute-distance" title="Permalink to this heading">#</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="rassine.tools.compare_matching_diff_output.compute_distance">
-<span class="sig-name descname"><span class="pre">compute_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rassine.tools.compare_matching_diff_output.compute_distance" title="Permalink to this definition">#</a></dt>
-<dd><p>Returns the distance between two outputs</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data1</strong> (<a class="reference internal" href="rassine.matching.data.MatchingPickle.html#rassine.matching.data.MatchingPickle" title="rassine.matching.data.MatchingPickle"><code class="xref py py-class docutils literal notranslate"><span class="pre">MatchingPickle</span></code></a>) – RASSINE output data (1st)</p></li>
-<li><p><strong>data2</strong> (<a class="reference internal" href="rassine.matching.data.MatchingPickle.html#rassine.matching.data.MatchingPickle" title="rassine.matching.data.MatchingPickle"><code class="xref py py-class docutils literal notranslate"><span class="pre">MatchingPickle</span></code></a>) – RASSINE output data (2nd)</p></li>
-<li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[‘output’, ‘matching_anchors’, ‘matching_diff’]) – Kind of output used for comparison</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float64</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
+          <section id="module-rassine.tools.compare_normalized_output">
+<span id="compare-normalized-output"></span><h1>compare_normalized_output<a class="headerlink" href="#module-rassine.tools.compare_normalized_output" title="Permalink to this heading">#</a></h1>
+<p class="rubric">Functions</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="rassine.tools.compare_normalized_output.cli.html#rassine.tools.compare_normalized_output.cli" title="rassine.tools.compare_normalized_output.cli"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cli</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="rassine.tools.compare_normalized_output.compute_distance.html#rassine.tools.compare_normalized_output.compute_distance" title="rassine.tools.compare_normalized_output.compute_distance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_distance</span></code></a></p></td>
+<td><p>Returns the distance between two outputs</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="rassine.tools.compare_normalized_output.get_continuum_linear.html#rassine.tools.compare_normalized_output.get_continuum_linear" title="rassine.tools.compare_normalized_output.get_continuum_linear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_continuum_linear</span></code></a></p></td>
+<td><p>Returns the flux data corresponding to the given key</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="rassine.tools.compare_normalized_output.run.html#rassine.tools.compare_normalized_output.run" title="rassine.tools.compare_normalized_output.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Classes</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="rassine.tools.compare_normalized_output.Task.html#rassine.tools.compare_normalized_output.Task" title="rassine.tools.compare_normalized_output.Task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Task</span></code></a></p></td>
+<td><p>Task(input1: typing_extensions.Annotated[pathlib.Path, Param(help=None, short_flag_name=None, long_flag_name=None, parser=_FromFunctionThatRaises(fun=&lt;class 'pathlib.Path'&gt;, catch=()), is_config=False, is_root_path=False, collector=&lt;configpile.collector.Collector.keep_last.&lt;locals&gt;._KeepLast object at 0x7f8671bc2550&gt;, default_value=None, name=None, positional=&lt;Positional.ONCE: 1&gt;, config_key_name=&lt;Derived.KEBAB_CASE: 3&gt;, env_var_name=None)], input2: typing_extensions.Annotated[pathlib.Path, Param(help=None, short_flag_name=None, long_flag_name=None, parser=_FromFunctionThatRaises(fun=&lt;class 'pathlib.Path'&gt;, catch=()), is_config=False, is_root_path=False, collector=&lt;configpile.collector.Collector.keep_last.&lt;locals&gt;._KeepLast object at 0x7f8671bc2f10&gt;, default_value=None, name=None, positional=&lt;Positional.ONCE: 1&gt;, config_key_name=&lt;Derived.KEBAB_CASE: 3&gt;, env_var_name=None)], kind: typing_extensions.Annotated[Literal['output', 'matching_anchors', 'matching_diff'], Param(help=None, short_flag_name=None, long_flag_name=&lt;Derived.KEBAB_CASE: 3&gt;, parser=_Choices(mapping={'output': 'output', 'matching_anchors': 'matching_anchors', 'matching_diff': 'matching_diff'}, strip=True, force_case=&lt;ForceCase.NO_CHANGE: 0&gt;, aliases={}), is_config=False, is_root_path=False, collector=&lt;configpile.collector.Collector.keep_last.&lt;locals&gt;._KeepLast object at 0x7f8671bc2fa0&gt;, default_value=None, name=None, positional=None, config_key_name=&lt;Derived.KEBAB_CASE: 3&gt;, env_var_name=None)], threshold: typing_extensions.Annotated[float, Param(help=None, short_flag_name=None, long_flag_name=&lt;Derived.KEBAB_CASE: 3&gt;, parser=_FromFunctionThatRaises(fun=&lt;class 'float'&gt;, catch=()), is_config=False, is_root_path=False, collector=&lt;configpile.collector.Collector.keep_last.&lt;locals&gt;._KeepLast object at 0x7f8671c14460&gt;, default_value='0.005', name=None, positional=None, config_key_name=&lt;Derived.KEBAB_CASE: 3&gt;, env_var_name=None)])</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 
         </article>
@@ -468,23 +479,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="rassine.tools.compare_matching_diff_output.get_continuum_linear.html">
+          <a class="next-page" href="rassine.tools.compare_normalized_output.cli.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">get_continuum_linear</div>
+                <div class="title">cli</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="rassine.tools.compare_matching_diff_output.cli.html">
+          <a class="prev-page" href="rassine.tools.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">cli</div>
+                <div class="title">tools</div>
                 
               </div>
             </a>
@@ -520,8 +531,7 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">compute_distance</a><ul>
-<li><a class="reference internal" href="#rassine.tools.compare_matching_diff_output.compute_distance"><code class="docutils literal notranslate"><span class="pre">compute_distance()</span></code></a></li>
+<li><a class="reference internal" href="#">compare_normalized_output</a><ul>
 </ul>
 </li>
 </ul>

@@ -25,7 +25,7 @@
    :toctree:
    :recursive:
 
-   rassine.tools.compare_matching_diff_output
+   rassine.tools.compare_normalized_output
    rassine.tools.enumerate_table_column_unique_values
    rassine.tools.enumerate_table_rows
    rassine.tools.pickle_compare

@@ -1,6 +1,6 @@
 compute\_distance
 =================
 
-.. currentmodule:: rassine.tools.compare_matching_diff_output
+.. currentmodule:: rassine.tools.compare_normalized_output
 
 .. autofunction:: compute_distance

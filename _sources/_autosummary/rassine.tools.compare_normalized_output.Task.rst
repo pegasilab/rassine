@@ -1,7 +1,7 @@
 Task
 ====
 
-.. currentmodule:: rassine.tools.compare_matching_diff_output
+.. currentmodule:: rassine.tools.compare_normalized_output
 
 .. autoclass:: Task
    :show-inheritance:

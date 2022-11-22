@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="enumerate_table_column_unique_values" href="rassine.tools.enumerate_table_column_unique_values.html" /><link rel="prev" title="run" href="rassine.tools.compare_matching_diff_output.run.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="compute_distance" href="rassine.tools.compare_normalized_output.compute_distance.html" /><link rel="prev" title="compare_normalized_output" href="rassine.tools.compare_normalized_output.html" />
 
     <link rel="shortcut icon" href="../_static/favicon.png"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
-        <title>Task - RASSINE</title>
+        <title>cli - RASSINE</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -324,12 +324,12 @@
 </ul>
 </li>
 <li class="toctree-l2 current has-children"><a class="reference internal" href="rassine.tools.html">tools</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l3 current has-children"><a class="reference internal" href="rassine.tools.compare_matching_diff_output.html">compare_matching_diff_output</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="rassine.tools.compare_matching_diff_output.cli.html">cli</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rassine.tools.compare_matching_diff_output.compute_distance.html">compute_distance</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rassine.tools.compare_matching_diff_output.get_continuum_linear.html">get_continuum_linear</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rassine.tools.compare_matching_diff_output.run.html">run</a></li>
-<li class="toctree-l4 current current-page"><a class="current reference internal" href="#">Task</a></li>
+<li class="toctree-l3 current has-children"><a class="reference internal" href="rassine.tools.compare_normalized_output.html">compare_normalized_output</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l4 current current-page"><a class="current reference internal" href="#">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rassine.tools.compare_normalized_output.compute_distance.html">compute_distance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rassine.tools.compare_normalized_output.get_continuum_linear.html">get_continuum_linear</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rassine.tools.compare_normalized_output.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rassine.tools.compare_normalized_output.Task.html">Task</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="rassine.tools.enumerate_table_column_unique_values.html">enumerate_table_column_unique_values</a><input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -441,67 +441,12 @@
           </label>
         </div>
         <article role="main">
-          <section id="task">
-<h1>Task<a class="headerlink" href="#task" title="Permalink to this heading">#</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="rassine.tools.compare_matching_diff_output.Task">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Task</span></span><a class="headerlink" href="#rassine.tools.compare_matching_diff_output.Task" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Config</span></code></p>
-<p>Task(input1: typing_extensions.Annotated[pathlib.Path, Param(help=None, short_flag_name=None, long_flag_name=None, parser=_FromFunctionThatRaises(fun=&lt;class ‘pathlib.Path’&gt;, catch=()), is_config=False, is_root_path=False, collector=&lt;configpile.collector.Collector.keep_last.&lt;locals&gt;._KeepLast object at 0x7fc88fa18760&gt;, default_value=None, name=None, positional=&lt;Positional.ONCE: 1&gt;, config_key_name=&lt;Derived.KEBAB_CASE: 3&gt;, env_var_name=None)], input2: typing_extensions.Annotated[pathlib.Path, Param(help=None, short_flag_name=None, long_flag_name=None, parser=_FromFunctionThatRaises(fun=&lt;class ‘pathlib.Path’&gt;, catch=()), is_config=False, is_root_path=False, collector=&lt;configpile.collector.Collector.keep_last.&lt;locals&gt;._KeepLast object at 0x7fc88fa186a0&gt;, default_value=None, name=None, positional=&lt;Positional.ONCE: 1&gt;, config_key_name=&lt;Derived.KEBAB_CASE: 3&gt;, env_var_name=None)], kind: typing_extensions.Annotated[Literal[‘output’, ‘matching_anchors’, ‘matching_diff’], Param(help=None, short_flag_name=None, long_flag_name=&lt;Derived.KEBAB_CASE: 3&gt;, parser=_Choices(mapping={‘output’: ‘output’, ‘matching_anchors’: ‘matching_anchors’, ‘matching_diff’: ‘matching_diff’}, strip=True, force_case=&lt;ForceCase.NO_CHANGE: 0&gt;, aliases={}), is_config=False, is_root_path=False, collector=&lt;configpile.collector.Collector.keep_last.&lt;locals&gt;._KeepLast object at 0x7fc88febb130&gt;, default_value=None, name=None, positional=None, config_key_name=&lt;Derived.KEBAB_CASE: 3&gt;, env_var_name=None)], threshold: typing_extensions.Annotated[float, Param(help=None, short_flag_name=None, long_flag_name=&lt;Derived.KEBAB_CASE: 3&gt;, parser=_FromFunctionThatRaises(fun=&lt;class ‘float’&gt;, catch=()), is_config=False, is_root_path=False, collector=&lt;configpile.collector.Collector.keep_last.&lt;locals&gt;._KeepLast object at 0x7fc88febbca0&gt;, default_value=’0.005’, name=None, positional=None, config_key_name=&lt;Derived.KEBAB_CASE: 3&gt;, env_var_name=None)])</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="rassine.tools.compare_matching_diff_output.Task.prog_">
-<span class="sig-name descname"><span class="pre">prog_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.ClassVar" title="(in Python v3.11)"><span class="pre">ClassVar</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'compare_matching_diff_output'</span></em><a class="headerlink" href="#rassine.tools.compare_matching_diff_output.Task.prog_" title="Permalink to this definition">#</a></dt>
-<dd><p>Program name</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="rassine.tools.compare_matching_diff_output.Task.ini_strict_sections_">
-<span class="sig-name descname"><span class="pre">ini_strict_sections_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.ClassVar" title="(in Python v3.11)"><span class="pre">ClassVar</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.11)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['compare_matching_diff_output']</span></em><a class="headerlink" href="#rassine.tools.compare_matching_diff_output.Task.ini_strict_sections_" title="Permalink to this definition">#</a></dt>
-<dd><p>Names of additional sections to parse in configuration files, unknown keys error</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="rassine.tools.compare_matching_diff_output.Task.ini_relaxed_sections_">
-<span class="sig-name descname"><span class="pre">ini_relaxed_sections_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.ClassVar" title="(in Python v3.11)"><span class="pre">ClassVar</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.11)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['compare']</span></em><a class="headerlink" href="#rassine.tools.compare_matching_diff_output.Task.ini_relaxed_sections_" title="Permalink to this definition">#</a></dt>
-<dd><p>Names of sections to parse in configuration files, with unknown keys ignored</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="rassine.tools.compare_matching_diff_output.Task.env_prefix_">
-<span class="sig-name descname"><span class="pre">env_prefix_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.ClassVar" title="(in Python v3.11)"><span class="pre">ClassVar</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'RASSINE'</span></em><a class="headerlink" href="#rassine.tools.compare_matching_diff_output.Task.env_prefix_" title="Permalink to this definition">#</a></dt>
-<dd><p>Prefix for automatically derived environment variable names</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="rassine.tools.compare_matching_diff_output.Task.input1">
-<span class="sig-name descname"><span class="pre">input1</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rassine.tools.compare_matching_diff_output.Task.input1" title="Permalink to this definition">#</a></dt>
-<dd><p>First pickle to compare</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="rassine.tools.compare_matching_diff_output.Task.input2">
-<span class="sig-name descname"><span class="pre">input2</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rassine.tools.compare_matching_diff_output.Task.input2" title="Permalink to this definition">#</a></dt>
-<dd><p>Second pickle to compare</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="rassine.tools.compare_matching_diff_output.Task.kind">
-<span class="sig-name descname"><span class="pre">kind</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.11)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'output'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'matching_anchors'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'matching_diff'</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">~</span></span><span class="pre">typing.Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'output'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'matching_anchors'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'matching_diff'</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rassine.tools.compare_matching_diff_output.Task.kind" title="Permalink to this definition">#</a></dt>
-<dd><p>Kind of output to compare</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="rassine.tools.compare_matching_diff_output.Task.threshold">
-<span class="sig-name descname"><span class="pre">threshold</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rassine.tools.compare_matching_diff_output.Task.threshold" title="Permalink to this definition">#</a></dt>
-<dd><p>Threshold for acceptance in normalized units</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="rassine.tools.compare_matching_diff_output.Task.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rassine.tools.compare_matching_diff_output.Task.__init__" title="Permalink to this definition">#</a></dt>
+          <section id="cli">
+<h1>cli<a class="headerlink" href="#cli" title="Permalink to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="rassine.tools.compare_normalized_output.cli">
+<span class="sig-name descname"><span class="pre">cli</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rassine.tools.compare_normalized_output.cli" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
-
-</dd></dl>
 
 </section>
 
@@ -510,23 +455,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="rassine.tools.enumerate_table_column_unique_values.html">
+          <a class="next-page" href="rassine.tools.compare_normalized_output.compute_distance.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">enumerate_table_column_unique_values</div>
+                <div class="title">compute_distance</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="rassine.tools.compare_matching_diff_output.run.html">
+          <a class="prev-page" href="rassine.tools.compare_normalized_output.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">run</div>
+                <div class="title">compare_normalized_output</div>
                 
               </div>
             </a>
@@ -562,19 +507,8 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Task</a><ul>
-<li><a class="reference internal" href="#rassine.tools.compare_matching_diff_output.Task"><code class="docutils literal notranslate"><span class="pre">Task</span></code></a><ul>
-<li><a class="reference internal" href="#rassine.tools.compare_matching_diff_output.Task.prog_"><code class="docutils literal notranslate"><span class="pre">Task.prog_</span></code></a></li>
-<li><a class="reference internal" href="#rassine.tools.compare_matching_diff_output.Task.ini_strict_sections_"><code class="docutils literal notranslate"><span class="pre">Task.ini_strict_sections_</span></code></a></li>
-<li><a class="reference internal" href="#rassine.tools.compare_matching_diff_output.Task.ini_relaxed_sections_"><code class="docutils literal notranslate"><span class="pre">Task.ini_relaxed_sections_</span></code></a></li>
-<li><a class="reference internal" href="#rassine.tools.compare_matching_diff_output.Task.env_prefix_"><code class="docutils literal notranslate"><span class="pre">Task.env_prefix_</span></code></a></li>
-<li><a class="reference internal" href="#rassine.tools.compare_matching_diff_output.Task.input1"><code class="docutils literal notranslate"><span class="pre">Task.input1</span></code></a></li>
-<li><a class="reference internal" href="#rassine.tools.compare_matching_diff_output.Task.input2"><code class="docutils literal notranslate"><span class="pre">Task.input2</span></code></a></li>
-<li><a class="reference internal" href="#rassine.tools.compare_matching_diff_output.Task.kind"><code class="docutils literal notranslate"><span class="pre">Task.kind</span></code></a></li>
-<li><a class="reference internal" href="#rassine.tools.compare_matching_diff_output.Task.threshold"><code class="docutils literal notranslate"><span class="pre">Task.threshold</span></code></a></li>
-<li><a class="reference internal" href="#rassine.tools.compare_matching_diff_output.Task.__init__"><code class="docutils literal notranslate"><span class="pre">Task.__init__()</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">cli</a><ul>
+<li><a class="reference internal" href="#rassine.tools.compare_normalized_output.cli"><code class="docutils literal notranslate"><span class="pre">cli()</span></code></a></li>
 </ul>
 </li>
 </ul>

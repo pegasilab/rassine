@@ -1,7 +1,7 @@
-compare\_matching\_diff\_output
-===============================
+compare\_normalized\_output
+===========================
 
-.. automodule:: rassine.tools.compare_matching_diff_output
+.. automodule:: rassine.tools.compare_normalized_output
    
    
    

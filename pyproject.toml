@@ -110,4 +110,4 @@ load-plugins = [
 py-version = "3.8"
 
 [tool.pyright]
-exclude = [".venv", "test/bats"]
+exclude = [".venv", "test/bats", ".git", "**/__pycache__", "**/node_modules", "**/.*"]

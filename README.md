@@ -18,7 +18,7 @@ git submodule update --init test/bats
 git submodule update --init test/test_helper/bats-assert
 git submodule update --init test/test_helper/bats-support
 
-poetry run test/bats/bin/bats test/HD110315_light_test.bats
+poetry run test/bats/bin/bats test
 ```
 
 ## Outdated

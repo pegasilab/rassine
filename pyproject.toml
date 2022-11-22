@@ -108,3 +108,6 @@ load-plugins = [
   "pylint.extensions.typing",
 ]
 py-version = "3.8"
+
+[tool.pyright]
+exclude = [".venv", "test/bats"]

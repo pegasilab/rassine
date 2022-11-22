@@ -45,6 +45,8 @@ matching_anchors_filter = "rassine.matching.matching_anchors_filter:cli"
 matching_anchors_scan = "rassine.matching.matching_anchors_scan:cli"
 matching_diff = "rassine.matching.matching_diff:cli"
 
+compare_matching_diff_output = "rassine.tools.compare_matching_diff_output:cli"
+
 [tool.poetry.dependencies]
 PyQt5 = "^5.15.6"
 PyQt5-Qt = "^5.15.2"

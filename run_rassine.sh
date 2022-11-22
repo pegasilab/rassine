@@ -261,4 +261,4 @@ if [[ "$STEPS" == *"matching_diff"* ]]; then
   time matching_diff_step
 fi
 
-rm "$RASSINE_ROOT/"*.lock
+rm "$RASSINE_ROOT/"*.lock 2>/dev/null || true

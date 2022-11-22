@@ -79,7 +79,10 @@ def compute_distance(
         data2: RASSINE output data (2nd)
         kind: Kind of output used for comparison
     """
-    return np.std(get_continuum_linear(data1, kind) - get_continuum_linear(data2, kind))
+    return np.std(
+        data1["flux"] / get_continuum_linear(data1, kind)
+        - data2["flux"] / get_continuum_linear(data2, kind)
+    )
 
 
 def run(t: Task):

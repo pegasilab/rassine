@@ -5,7 +5,7 @@ setup_file() {
     cd ..
     python -m venv .venv
     poetry install
-    git submodule init test/HD23249_light
+    git submodule update --init test/HD23249_light
     cd test/HD23249_light
     git reset --hard HEAD
     git clean -fdx

@@ -3,7 +3,7 @@ setup_file() {
     export TEST_DIR
     cd "$TEST_DIR"
     cd ..
-    git submodule init test/HD110315_light
+    git submodule update --init test/HD110315_light
     cd test/HD110315_light
     git reset --hard HEAD
     git clean -fdx

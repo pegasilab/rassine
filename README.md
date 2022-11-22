@@ -14,9 +14,9 @@ python -m venv .venv
 
 poetry install
 
-git submodule init test/bats
-git submodule init test/test_helper/bats-assert
-git submodule init test/test_helper/bats-support
+git submodule update --init test/bats
+git submodule update --init test/test_helper/bats-assert
+git submodule update --init test/test_helper/bats-support
 
 poetry run test/bats/bin/bats test/HD110315_light_test.bats
 ```

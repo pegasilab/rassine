@@ -26,6 +26,8 @@ jobs:
     - name: Install dependencies
       run: |
         poetry install -E docs
+        apt install graphviz
+        
 
     # Build the site
     - name: Build the site

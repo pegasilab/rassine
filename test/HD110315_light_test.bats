@@ -24,15 +24,15 @@ setup_file() {
 
 @test "HD110315_light rassine" {
     ./run_rassine.sh -l WARNING -c harpn.ini test/HD110315_light/data/s1d/HARPN rassine
-    compare_matching_diff_output --kind output test/HD110315_light_RASSINE_Stacked_spectrum_B1.00_D2013-01-16T05\:26\:33.144.p test/HD110315_light/data/s1d/HARPN/STACKED/RASSINE_Stacked_spectrum_B1.00_D2013-01-16T05\:26\:33.144.p
+    compare_normalized_output --kind output test/HD110315_light_RASSINE_Stacked_spectrum_B1.00_D2013-01-16T05\:26\:33.144.p test/HD110315_light/data/s1d/HARPN/STACKED/RASSINE_Stacked_spectrum_B1.00_D2013-01-16T05\:26\:33.144.p
 }
 
 @test "HD110315_light matching_anchors" {
     ./run_rassine.sh -l WARNING -c harpn.ini test/HD110315_light/data/s1d/HARPN matching_anchors
-    compare_matching_diff_output --kind matching_anchors test/HD110315_light_RASSINE_Stacked_spectrum_B1.00_D2013-01-16T05\:26\:33.144.p test/HD110315_light/data/s1d/HARPN/STACKED/RASSINE_Stacked_spectrum_B1.00_D2013-01-16T05\:26\:33.144.p
+    compare_normalized_output --kind matching_anchors test/HD110315_light_RASSINE_Stacked_spectrum_B1.00_D2013-01-16T05\:26\:33.144.p test/HD110315_light/data/s1d/HARPN/STACKED/RASSINE_Stacked_spectrum_B1.00_D2013-01-16T05\:26\:33.144.p
 }
 
 @test "HD110315_light matching_diff" {
     ./run_rassine.sh -l WARNING -c harpn.ini test/HD110315_light/data/s1d/HARPN matching_diff
-    compare_matching_diff_output --kind matching_diff test/HD110315_light_RASSINE_Stacked_spectrum_B1.00_D2013-01-16T05\:26\:33.144.p test/HD110315_light/data/s1d/HARPN/STACKED/RASSINE_Stacked_spectrum_B1.00_D2013-01-16T05\:26\:33.144.p
+    compare_normalized_output --kind matching_diff test/HD110315_light_RASSINE_Stacked_spectrum_B1.00_D2013-01-16T05\:26\:33.144.p test/HD110315_light/data/s1d/HARPN/STACKED/RASSINE_Stacked_spectrum_B1.00_D2013-01-16T05\:26\:33.144.p
 }

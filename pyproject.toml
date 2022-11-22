@@ -45,12 +45,9 @@ matching_anchors_filter = "rassine.matching.matching_anchors_filter:cli"
 matching_anchors_scan = "rassine.matching.matching_anchors_scan:cli"
 matching_diff = "rassine.matching.matching_diff:cli"
 
-compare_matching_diff_output = "rassine.tools.compare_matching_diff_output:cli"
+compare_normalized_output = "rassine.tools.compare_normalized_output:cli"
 
 [tool.poetry.dependencies]
-PyQt5 = "^5.15.6"
-PyQt5-Qt = "^5.15.2"
-PyQt5-sip = "^12.9.1"
 astropy = "^5.0.4"
 configpile = {version = "^10.1.0", extras = ["parsy", "rich"]}
 filelock = "^3.6.0"

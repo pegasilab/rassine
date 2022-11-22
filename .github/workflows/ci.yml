@@ -28,6 +28,10 @@ jobs:
         run: |
           poetry run test/bats/bin/bats --report-formatter junit test/HD110315_light_test.bats
 
+      - name: Run the HD23249 tests
+        run: |
+          poetry run test/bats/bin/bats --report-formatter junit test/HD23249_light_test.bats
+
       - uses: actions/upload-artifact@v2  # upload test results
         if: success() || failure()        # run this step even if previous step failed
         with:

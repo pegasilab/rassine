@@ -24,13 +24,9 @@ jobs:
           git submodule update --init test/test_helper/bats-assert
           git submodule update --init test/test_helper/bats-support
           
-      - name: Run the HD110315 tests
+      - name: Run tests
         run: |
-          poetry run test/bats/bin/bats --report-formatter junit test/HD110315_light_test.bats
-
-      - name: Run the HD23249 tests
-        run: |
-          poetry run test/bats/bin/bats --report-formatter junit test/HD23249_light_test.bats
+          poetry run test/bats/bin/bats --report-formatter junit test
 
       - uses: actions/upload-artifact@v2  # upload test results
         if: success() || failure()        # run this step even if previous step failed

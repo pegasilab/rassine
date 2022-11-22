@@ -3,8 +3,6 @@ setup_file() {
     export RASSINE_DIR
     cd "$RASSINE_DIR"
     cd ..
-    python -m venv .venv
-    poetry install
     git submodule update --init test/HD23249_light
     cd test/HD23249_light
     git reset --hard HEAD
@@ -13,25 +11,28 @@ setup_file() {
 }
 
 @test "HD23249_light import" {
-    poetry run ./run_rassine.sh -l WARNING -c harps03.ini test/HD23249_light/data/s1d/HARPS03 import
+    ./run_rassine.sh -l WARNING -c harps03.ini test/HD23249_light/data/s1d/HARPS03 import
 }
 
 @test "HD23249_light reinterpolate" {
-    poetry run ./run_rassine.sh -l WARNING -c harps03.ini test/HD23249_light/data/s1d/HARPS03 reinterpolate
+    ./run_rassine.sh -l WARNING -c harps03.ini test/HD23249_light/data/s1d/HARPS03 reinterpolate
 }
 
 @test "HD23249_light stacking" {
-    poetry run ./run_rassine.sh -l WARNING -c harps03.ini test/HD23249_light/data/s1d/HARPS03 stacking
+    ./run_rassine.sh -l WARNING -c harps03.ini test/HD23249_light/data/s1d/HARPS03 stacking
 }
 
 @test "HD23249_light rassine" {
-    poetry run ./run_rassine.sh -l WARNING -c harps03.ini test/HD23249_light/data/s1d/HARPS03 rassine
+    ./run_rassine.sh -l WARNING -c harps03.ini test/HD23249_light/data/s1d/HARPS03 rassine
+    compare_matching_diff_output --kind output test/HD23249_light_RASSINE_Stacked_spectrum_B1.00_D2006-03-18T23\:52\:34.403.p test/HD23249_light/data/s1d/HARPS03/STACKED/RASSINE_Stacked_spectrum_B1.00_D2006-03-18T23\:52\:34.403.p
 }
 
 @test "HD23249_light matching_anchors" {
-    poetry run ./run_rassine.sh -l WARNING -c harps03.ini test/HD23249_light/data/s1d/HARPS03 matching_anchors
+    ./run_rassine.sh -l WARNING -c harps03.ini test/HD23249_light/data/s1d/HARPS03 matching_anchors
+    compare_matching_diff_output --kind matching_anchors test/HD23249_light_RASSINE_Stacked_spectrum_B1.00_D2006-03-18T23\:52\:34.403.p test/HD23249_light/data/s1d/HARPS03/STACKED/RASSINE_Stacked_spectrum_B1.00_D2006-03-18T23\:52\:34.403.p
 }
 
 @test "HD23249_light matching_diff" {
-    poetry run ./run_rassine.sh -l WARNING -c harps03.ini test/HD23249_light/data/s1d/HARPS03 matching_diff
+    ./run_rassine.sh -l WARNING -c harps03.ini test/HD23249_light/data/s1d/HARPS03 matching_diff
+    compare_matching_diff_output --kind matching_diff test/HD23249_light_RASSINE_Stacked_spectrum_B1.00_D2006-03-18T23\:52\:34.403.p test/HD23249_light/data/s1d/HARPS03/STACKED/RASSINE_Stacked_spectrum_B1.00_D2006-03-18T23\:52\:34.403.p
 }

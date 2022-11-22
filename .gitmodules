@@ -1,0 +1,21 @@
+[submodule "spectra/HD110315"]
+	path = spectra/HD110315
+	url = https://github.com/pegasilab/HD110315
+[submodule "spectra/HD23249"]
+	path = spectra/HD23249
+	url = https://github.com/pegasilab/HD23249
+[submodule "test/HD23249_light"]
+	path = test/HD23249_light
+	url = https://github.com/pegasilab/HD23249_light
+[submodule "test/HD110315_light"]
+	path = test/HD110315_light
+	url = https://github.com/pegasilab/HD110315_light
+[submodule "test/bats"]
+	path = test/bats
+	url = https://github.com/bats-core/bats-core.git
+[submodule "test/test_helper/bats-support"]
+	path = test/test_helper/bats-support
+	url = https://github.com/bats-core/bats-support.git
+[submodule "test/test_helper/bats-assert"]
+	path = test/test_helper/bats-assert
+	url = https://github.com/bats-core/bats-assert.git

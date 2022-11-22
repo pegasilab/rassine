@@ -26,7 +26,7 @@ jobs:
     - name: Install dependencies
       run: |
         poetry install -E docs
-        apt install graphviz
+        sudo apt install graphviz
         
 
     # Build the site

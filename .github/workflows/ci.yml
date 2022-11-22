@@ -20,6 +20,9 @@ jobs:
       - name: Install dependencies
         run: |
           poetry install
+          git submodule update --init test/bats
+          git submodule update --init test/test_helper/bats-assert
+          git submodule update --init test/test_helper/bats-support
           
       - name: Run the HD110315 tests
         run: |

@@ -2,6 +2,7 @@ Command-line tools
 ==================
 
 .. toctree::
+    :maxdepth: 1
 
     preprocess_import
     preprocess_table

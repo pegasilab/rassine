@@ -132,6 +132,7 @@ class StackedPickle(TypedDict):
 
 @dataclass(frozen=True)
 class MasterRow:
+    """Describes the scalar data associated with the master spectrum"""
     name: str
     SNR_5500: np.float64
     acc_sec: np.float64

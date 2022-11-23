@@ -25,6 +25,11 @@ class DACE:
 
     @staticmethod
     def schema() -> tb.Schema[DACE]:
+        """
+        Returns the tybles Schema for this dataclass
+
+        :meta private:
+        """
         return tb.schema(DACE, order_columns=True, missing_columns="error", extra_columns="drop")
 
     #: Radial velocity
@@ -70,6 +75,11 @@ class IndividualBasicRow:
 
     @staticmethod
     def schema() -> tb.Schema[IndividualBasicRow]:
+        """
+        Returns the tybles Schema for this dataclass
+
+        :meta private:
+        """
         return tb.schema(
             IndividualBasicRow, order_columns=True, missing_columns="error", extra_columns="drop"
         )
@@ -143,6 +153,11 @@ class IndividualReinterpolatedRow:
 
     @staticmethod
     def schema() -> tb.Schema[IndividualReinterpolatedRow]:
+        """
+        Returns the tybles Schema for this dataclass
+
+        :meta private:
+        """
         return tb.schema(
             IndividualReinterpolatedRow,
             order_columns=True,
@@ -298,6 +313,11 @@ class IndividualImportedRow:
 
     @staticmethod
     def schema() -> tb.Schema[IndividualImportedRow]:
+        """
+        Returns the tybles Schema for this dataclass
+
+        :meta private:
+        """
         return tb.schema(
             IndividualImportedRow,
             order_columns=True,

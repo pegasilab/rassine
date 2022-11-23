@@ -39,6 +39,11 @@ class MatchingAnchorsRow:
 
     @staticmethod
     def schema() -> tb.Schema[MatchingAnchorsRow]:
+        """
+        Returns the tybles Schema for this dataclass
+
+        :meta private:
+        """
         return tb.schema(
             MatchingAnchorsRow,
             order_columns=True,

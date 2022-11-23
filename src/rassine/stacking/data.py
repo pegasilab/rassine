@@ -72,6 +72,11 @@ class StackedBasicRow:
 
     @staticmethod
     def schema() -> tb.Schema[StackedBasicRow]:
+        """
+        Returns the tybles Schema for this dataclass
+
+        :meta private:
+        """
         return tb.schema(
             StackedBasicRow,
             order_columns=True,
@@ -143,6 +148,11 @@ class MasterRow:
 
     @staticmethod
     def schema() -> tb.Schema[MasterRow]:
+        """
+        Returns the tybles Schema for this dataclass
+
+        :meta private:
+        """
         return tb.schema(
             MasterRow,
             order_columns=True,
@@ -169,6 +179,11 @@ class IndividualGroupRow:
 
     @staticmethod
     def schema() -> tb.Schema[IndividualGroupRow]:
+        """
+        Returns the tybles Schema for this dataclass
+
+        :meta private:
+        """
         return tb.schema(
             IndividualGroupRow,
             order_columns=True,

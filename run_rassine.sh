@@ -245,7 +245,7 @@ fi
 
 if [[ "$STEPS" == *"rassine"* ]]; then
   echo
-  echo "Step: RASSINE"
+  echo "Step: RASSINE (can be long, inspect the $RASSINE_ROOT/STACKED directory for progress)"
   time rassine_step
 fi
 

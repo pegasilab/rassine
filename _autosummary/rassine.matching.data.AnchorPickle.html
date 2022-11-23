@@ -445,36 +445,36 @@
 <h1>AnchorPickle<a class="headerlink" href="#anchorpickle" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorPickle">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AnchorPickle</span></span><a class="reference external" href="https://github.com/pegasilab/rassine/blob/v0.3.0/src/rassine/matching/data.py#L89-L103"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rassine.matching.data.AnchorPickle" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AnchorPickle</span></span><a class="reference external" href="https://github.com/pegasilab/rassine/blob/v0.3.0/src/rassine/matching/data.py#L98-L112"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rassine.matching.data.AnchorPickle" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorPickle.wave">
 <span class="sig-name descname"><span class="pre">wave</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rassine.matching.data.AnchorPickle.wave" title="Permalink to this definition">#</a></dt>
-<dd><p>Wavelength</p>
+<dd><p>Wavelength of the spectrum</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorPickle.flux">
 <span class="sig-name descname"><span class="pre">flux</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rassine.matching.data.AnchorPickle.flux" title="Permalink to this definition">#</a></dt>
-<dd><p>Initial flux</p>
+<dd><p>Raw flux of the spectrum in photon count units</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorPickle.flux_err">
 <span class="sig-name descname"><span class="pre">flux_err</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rassine.matching.data.AnchorPickle.flux_err" title="Permalink to this definition">#</a></dt>
-<dd><p>Initial flux error, passed through by RASSINE</p>
+<dd><p>Raw flux uncertainties of the spectrum in photon count units</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorPickle.flux_used">
 <span class="sig-name descname"><span class="pre">flux_used</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rassine.matching.data.AnchorPickle.flux_used" title="Permalink to this definition">#</a></dt>
-<dd><p>Smoothed flux</p>
+<dd><p>Smoothed raw spectrum by RASSINE used to fit the continuum. Avoid to fit the upper envelop of the noise.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorPickle.output">
 <span class="sig-name descname"><span class="pre">output</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="rassine.rassine.data.RassineBasicOutput.html#rassine.rassine.data.RassineBasicOutput" title="rassine.rassine.data.RassineBasicOutput"><span class="pre">RassineBasicOutput</span></a></em><a class="headerlink" href="#rassine.matching.data.AnchorPickle.output" title="Permalink to this definition">#</a></dt>
-<dd><p>Rassine output continuum</p>
+<dd><p>Rassine output continuum (individual spectra normalisation)</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -486,7 +486,8 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorPickle.matching_anchors">
 <span class="sig-name descname"><span class="pre">matching_anchors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="rassine.matching.data.AnchorOutput.html#rassine.matching.data.AnchorOutput" title="rassine.matching.data.AnchorOutput"><span class="pre">AnchorOutput</span></a></em><a class="headerlink" href="#rassine.matching.data.AnchorPickle.matching_anchors" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Rassine output continuum (spectra time-series cluster identified)</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorPickle.__new__">

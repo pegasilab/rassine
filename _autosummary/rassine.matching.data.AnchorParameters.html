@@ -445,7 +445,7 @@
 <h1>AnchorParameters<a class="headerlink" href="#anchorparameters" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorParameters">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AnchorParameters</span></span><a class="reference external" href="https://github.com/pegasilab/rassine/blob/v0.3.0/src/rassine/matching/data.py#L70-L78"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rassine.matching.data.AnchorParameters" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AnchorParameters</span></span><a class="reference external" href="https://github.com/pegasilab/rassine/blob/v0.3.0/src/rassine/matching/data.py#L70-L82"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rassine.matching.data.AnchorParameters" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorParameters.master_tool">
@@ -461,12 +461,14 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorParameters.threshold">
 <span class="sig-name descname"><span class="pre">threshold</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></em><a class="headerlink" href="#rassine.matching.data.AnchorParameters.threshold" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Parameters used to define the clusters considered has significant</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorParameters.tolerance">
 <span class="sig-name descname"><span class="pre">tolerance</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></em><a class="headerlink" href="#rassine.matching.data.AnchorParameters.tolerance" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Parameters used to define the clusters considered has significant</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorParameters.fraction">
@@ -476,12 +478,14 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorParameters.nb_copies_master">
 <span class="sig-name descname"><span class="pre">nb_copies_master</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></em><a class="headerlink" href="#rassine.matching.data.AnchorParameters.nb_copies_master" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Number of copies of the master spectra. Such parameter is used to fix the position of the anchors points on the master spectra by overweighting it in the timeseries</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorParameters.sub_dico_used">
 <span class="sig-name descname"><span class="pre">sub_dico_used</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#rassine.matching.data.AnchorParameters.sub_dico_used" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Continuum called. Usually performed on the ‘output’ continua. Used later by YARARA to construct the tree of the reduction.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorParameters.__new__">

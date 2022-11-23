@@ -445,32 +445,37 @@
 <h1>AnchorOutput<a class="headerlink" href="#anchoroutput" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorOutput">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AnchorOutput</span></span><a class="reference external" href="https://github.com/pegasilab/rassine/blob/v0.3.0/src/rassine/matching/data.py#L81-L86"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rassine.matching.data.AnchorOutput" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AnchorOutput</span></span><a class="reference external" href="https://github.com/pegasilab/rassine/blob/v0.3.0/src/rassine/matching/data.py#L85-L95"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rassine.matching.data.AnchorOutput" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorOutput.parameters">
 <span class="sig-name descname"><span class="pre">parameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="rassine.matching.data.AnchorParameters.html#rassine.matching.data.AnchorParameters" title="rassine.matching.data.AnchorParameters"><span class="pre">AnchorParameters</span></a></em><a class="headerlink" href="#rassine.matching.data.AnchorOutput.parameters" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Rassine parameters used to match the anchor points locations</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorOutput.continuum_linear">
 <span class="sig-name descname"><span class="pre">continuum_linear</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rassine.matching.data.AnchorOutput.continuum_linear" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Rassine fitted continuum</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorOutput.anchor_wave">
 <span class="sig-name descname"><span class="pre">anchor_wave</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rassine.matching.data.AnchorOutput.anchor_wave" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Wavelength values of the anchors points used (continuum_linear being a linear interpolation between them)</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorOutput.anchor_flux">
 <span class="sig-name descname"><span class="pre">anchor_flux</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rassine.matching.data.AnchorOutput.anchor_flux" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Flux values of the anchors points used (continuum_linear being a linear interpolation between them)</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorOutput.anchor_index">
 <span class="sig-name descname"><span class="pre">anchor_index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">int64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rassine.matching.data.AnchorOutput.anchor_index" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Index values of the anchors points used (continuum_linear being a linear interpolation between them)</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="rassine.matching.data.AnchorOutput.__new__">

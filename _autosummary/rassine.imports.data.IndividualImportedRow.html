@@ -445,7 +445,7 @@
 <h1>IndividualImportedRow<a class="headerlink" href="#individualimportedrow" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="rassine.imports.data.IndividualImportedRow">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IndividualImportedRow</span></span><a class="reference external" href="https://github.com/pegasilab/rassine/blob/v0.3.0/src/rassine/imports/data.py#L256-L321"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rassine.imports.data.IndividualImportedRow" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IndividualImportedRow</span></span><a class="reference external" href="https://github.com/pegasilab/rassine/blob/v0.3.0/src/rassine/imports/data.py#L256-L328"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rassine.imports.data.IndividualImportedRow" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Scalar values from individual pickles tabulated for ease of computation</p>
 <dl class="py attribute">
@@ -487,54 +487,62 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.imports.data.IndividualImportedRow.jdb">
 <span class="sig-name descname"><span class="pre">jdb</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float64</span></em><a class="headerlink" href="#rassine.imports.data.IndividualImportedRow.jdb" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Observation date/time in JDB</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.imports.data.IndividualImportedRow.berv">
 <span class="sig-name descname"><span class="pre">berv</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float64</span></em><a class="headerlink" href="#rassine.imports.data.IndividualImportedRow.berv" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Barycentric Earth RV in km/s</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.imports.data.IndividualImportedRow.lamp_offset">
 <span class="sig-name descname"><span class="pre">lamp_offset</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float64</span></em><a class="headerlink" href="#rassine.imports.data.IndividualImportedRow.lamp_offset" title="Permalink to this definition">#</a></dt>
-<dd><p>Document</p>
-<p>Sometimes called lamp</p>
+<dd><p>Simultaneous drift measurement of the observation in m/s (no more used since 1D spectra are corrected for it)</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.imports.data.IndividualImportedRow.plx_mas">
 <span class="sig-name descname"><span class="pre">plx_mas</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float64</span></em><a class="headerlink" href="#rassine.imports.data.IndividualImportedRow.plx_mas" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Parralax in milliarcseconds (used for secular acceleration correction)</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.imports.data.IndividualImportedRow.acc_sec">
 <span class="sig-name descname"><span class="pre">acc_sec</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float64</span></em><a class="headerlink" href="#rassine.imports.data.IndividualImportedRow.acc_sec" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>The secular acceleration drift in m/s/year</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.imports.data.IndividualImportedRow.wave_min">
 <span class="sig-name descname"><span class="pre">wave_min</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float64</span></em><a class="headerlink" href="#rassine.imports.data.IndividualImportedRow.wave_min" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Wavelength minima wavelength of the spectrum in Angstrom</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.imports.data.IndividualImportedRow.wave_max">
 <span class="sig-name descname"><span class="pre">wave_max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float64</span></em><a class="headerlink" href="#rassine.imports.data.IndividualImportedRow.wave_max" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Wavelength maxima value of the spectrum in Angstrom</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.imports.data.IndividualImportedRow.dwave">
 <span class="sig-name descname"><span class="pre">dwave</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float64</span></em><a class="headerlink" href="#rassine.imports.data.IndividualImportedRow.dwave" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Wavelength step of the spectrum (spectra being evenly sampled in wavelength)</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.imports.data.IndividualImportedRow.hole_left">
 <span class="sig-name descname"><span class="pre">hole_left</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float64</span></em><a class="headerlink" href="#rassine.imports.data.IndividualImportedRow.hole_left" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Wavelength of the left side border for instrument containing hole (HARPS)</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.imports.data.IndividualImportedRow.hole_right">
 <span class="sig-name descname"><span class="pre">hole_right</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float64</span></em><a class="headerlink" href="#rassine.imports.data.IndividualImportedRow.hole_right" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Wavelength of the right side border for instrument containing hole (HARPS)</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="rassine.imports.data.IndividualImportedRow.vrad">

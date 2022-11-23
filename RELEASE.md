@@ -1,6 +1,33 @@
 How to release a new RASSINE version
 ====================================
 
+All the following commands need to be run in the base folder of the `rassine` repository.
+
+Run tests
+---------
+
+Before releasing RASSINE, if any untested changes were made, verify that all tests pass.
+
+```bash
+poetry run test/bats/bin/bats test
+```
+
+Build the documentation locally
+-------------------------------
+
+It is good practice to verify that the documentation builds successfully.
+
+```bash
+poetry run make -C docs clean html
+```
+
+then open the built website.
+
+```bash
+xdg-open docs/build/html/index.html # Linux
+open docs/build/html/index.htmlxdg-open docs/build/html/index.html # macOS
+```
+
 Release commit and tag
 ----------------------
 
@@ -32,9 +59,23 @@ git commit -m "Bumping $PREV_VERSION -> $CUR_VERSION"
 git tag "v$CUR_VERSION" -a -m "Version $CUR_VERSION"
 ```
 
-If the previous lines ran without error, run:
+If the previous lines ran without error, run the following to push this information to GitHub. If something went wrong, restart from the beginning on a freshly cloned repository.
 
 ```bash
 git push origin master
-git push origin $CUR_VERSION
+git push origin v$CUR_VERSION
 ```
+
+Publish the package on PyPI (username/password)
+-----------------------------------------------
+
+Run the following command to publish this version on PyPI.
+
+```bash
+poetry publish --build --username [YOUR PYPI USERNAME]
+```
+
+Create the release on GitHub (optional)
+---------------------------------------
+
+Go to [https://github.com/pegasilab/rassine/tags](https://github.com/pegasilab/rassine/tags), click on the latest tag, and select "Create release from tag". Fill in the details.

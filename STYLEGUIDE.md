@@ -1,6 +1,3 @@
-
-
-
 ## Floating point types
 
 They should be equivalent on the platforms we run our code on. `float` and `np.float_` and

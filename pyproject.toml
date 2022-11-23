@@ -106,3 +106,6 @@ py-version = "3.8"
 
 [tool.pyright]
 exclude = [".venv", "test/bats", ".git", "**/__pycache__", "**/node_modules", "**/.*"]
+
+[tool.doc8]
+max-line-length = 99

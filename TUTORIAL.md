@@ -42,10 +42,12 @@ unzip master.zip
 Download the default configuration file for HARPN.
 
 ```bash
-curl -L -O https://raw.githubusercontent.com/pegasilab/rassine/harpn.ini
+curl -L -O https://raw.githubusercontent.com/pegasilab/rassine/master/harpn.ini
 ```
 
-Run the pipeline.
+Run the pipeline. You can look at the `HD110315-master/data/s1d/HARPN/STACKED/` directory to
+inspect progress, especially during the "rassine" normalization stage
+
 ```bash
 ./run_rassine.sh -c harpn.ini HD110315-master/data/s1d/HARPN
 ```

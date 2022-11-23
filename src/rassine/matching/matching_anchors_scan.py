@@ -42,7 +42,8 @@ def intersect_all_continuum_sphinx(
         names: List of RASSINE files.
         output_file: Master tool file to write
         master_spectrum: Name of the RASSINE master spectrum file.
-        copies_master: Number of copies of the master.
+        copies_master: Number of copies of the master, to weigh more the master data
+                       during the analysis.
 
                        If 0 value is specified, copies_master is set to 2*N
                        with N the number of RASSINE files.
@@ -51,17 +52,7 @@ def intersect_all_continuum_sphinx(
         tolerance: Parameter of the model between 0 and 1
     """
 
-    # TODO: master_spectrum and copies_master is the addition of the master to
-    # add some importance for the master data to the process
-
     logging.info("Loading of the files, wait ...")
-
-    # removal of other Master_tool in Bash script
-
-    # TOCHECK: removed
-    # previous_files = glob.glob(directory + "Master_tool*.p")
-    # for file_to_delete in previous_files:
-    #     os.system("rm " + file_to_delete)
 
     wave = open_pickle(names[0], RassinePickle)["wave"]
     save: List[NDArray[np.int64]] = [
@@ -85,7 +76,6 @@ def intersect_all_continuum_sphinx(
 
     logging.info("Computation of the intersection of the anchors points, wait ...")
     for j in range(len(names)):
-        # plt.scatter(save[j],j*np.ones(len(save[j])))
         diff = np.min([np.diff(save[j][1:]), np.diff(save[j][0:-1])], axis=0)
         diff = np.array([diff[0]] + list(diff) + [diff[-1]])
         diff = diff * fraction

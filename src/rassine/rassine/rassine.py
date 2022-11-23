@@ -460,12 +460,10 @@ def plot_output(
     plt.subplots_adjust(left=0.07, right=0.96, hspace=0, top=0.95)
     if output_file is not None:
         plt.savefig(output_file)
-    # TODO: remove this
     plt.close()
 
 
 def update_using_anchor_file(task: Task, anchor_file: Path) -> Task:
-    # TODO: update this
     data = open_pickle(anchor_file)
     return replace(
         task,

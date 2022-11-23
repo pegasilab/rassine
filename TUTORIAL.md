@@ -39,56 +39,10 @@ Download and unzip star data
 curl -L -O https://github.com/pegasilab/HD110315/archive/refs/heads/master.zip
 unzip master.zip
 ```
+Download the default configuration file for HARPN.
 
-Create and populate the configuration file `harpn.ini`. See [the latest file on the RASSINE repository](https://raw.githubusercontent.com/pegasilab/rassine/master/harpn.ini) for updates.
-
-```
-[common]
-pickle-protocol = 4
-
-[run_rassine]
-nprocesses=4
-nchunks=10
-nice=18
-
-[preprocess_import]
-instrument = HARPN
-drs-style=new
-plx-mas=0.0
-
-[reinterpolate]
-dlambda = 0.01
-
-[stacking_create_groups]
-bin-length=1.0
-dbin=0.0
-
-[rassine]
-par-stretching=auto_0.5
-par-vicinity=7
-par-smoothing-box=6
-par-smoothing-kernel=savgol
-par-fwhm=auto
-CCF-mask=master
-par-R=auto
-par-Rmax=auto
-par-reg-nu=poly_1.0
-mask-telluric=[[6275,6330],[6470,6577],[6866,8000]]
-synthetic-spectrum=false
-interpolation=cubic
-denoising-dist=5
-count-cut-lim=3
-count-out-lim=1
-random-seed=
-
-[matching_anchors_scan]
-copies-master=0  
-fraction=0.2 
-threshold=0.66 
-tolerance=0.5 
-
-[matching_diff]
-savgol-window=200
+```bash
+curl -L -O https://raw.githubusercontent.com/pegasilab/rassine/harpn.ini
 ```
 
 Run the pipeline.

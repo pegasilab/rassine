@@ -40,7 +40,6 @@ function usage {
   echo "  ./run_rassine.sh -c harpn.ini HD110315/data/s1d/HARPN import reinterpolate stacking"
   echo "    runs the first three steps, which reinterpolates and stacks the spectra"
   echo
-  exit 1
 }
 
 # Processing command line arguments
@@ -57,10 +56,10 @@ function process_command_line_arguments {
 
   while getopts hl:c: opt; do
     case $opt in
-    h) usage ;;
+    h) usage; exit 0 ;;
     l) RASSINE_LOGGING_LEVEL=$OPTARG ;;
     c) RASSINE_CONFIG=$(python -c 'import os, sys; print(os.path.realpath(sys.argv[1]))' "$OPTARG") ;;
-    *) usage ;;
+    *) usage; exit 1 ;;
     esac
   done
 
@@ -68,6 +67,7 @@ function process_command_line_arguments {
     echo "Error: CONFIG_FILE not provided"
     echo
     usage
+    exit 1
   fi
 
   shift "$((OPTIND - 1))"
@@ -78,6 +78,7 @@ function process_command_line_arguments {
   if [ "$#" -lt 1 ]; then
     echo "Error: RASSINE_ROOT not provided"
     usage
+    exit 1
   fi
   RASSINE_ROOT=$(python -c 'import os, sys; print(os.path.realpath(sys.argv[1]))' "$1")
   shift 1

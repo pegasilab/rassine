@@ -1,6 +1,7 @@
 # Pipeline in run_rassine.sh
 
-TODO: All the paths below refer to RASSINE_ROOT, which 
+This graph represents the `run_rassine.sh` steps, and the input/output data for each step.
+The paths below are relative to the `RASSINE_ROOT` folder.
 
 ```{graphviz}
 

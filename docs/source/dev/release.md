@@ -1,41 +1,8 @@
-How to release a new RASSINE version
-====================================
+# How to release a new RASSINE version
 
 All the following commands need to be run in the base folder of the `rassine` repository.
 
-Run tests
----------
-
-Before releasing RASSINE, if any untested changes were made, verify that all tests pass.
-
-```bash
-poetry run test/bats/bin/bats test
-```
-
-Build the documentation locally
--------------------------------
-
-It is good practice to verify that the documentation builds successfully.
-
-To build the documentation, you additionally need the [Graphviz](https://graphviz.org/download/) tool.
-It is provided by standard package managers on Linux. On macOS, it needs to be installed either using
-[MacPorts](https://www.macports.org/) or [Homebrew](https://brew.sh/).
-
-You need 
-
-```bash
-poetry run make -C docs clean html
-```
-
-then open the built website.
-
-```bash
-xdg-open docs/build/html/index.html # Linux
-open docs/build/html/index.htmlxdg-open docs/build/html/index.html # macOS
-```
-
-Release commit and tag
-----------------------
+## Release commit and tag
 
 We first create a commit that describes the canonical version that will be published later. There is a commit and an associated tag, so that the particular release will be referenced in 
 
@@ -72,8 +39,7 @@ git push origin master
 git push origin v$CUR_VERSION
 ```
 
-Publish the package on PyPI (username/password)
------------------------------------------------
+## Publish the package on PyPI (username/password)
 
 Run the following command to publish this version on PyPI.
 
@@ -81,7 +47,6 @@ Run the following command to publish this version on PyPI.
 poetry publish --build --username [YOUR PYPI USERNAME]
 ```
 
-Create the release on GitHub (optional)
----------------------------------------
+## Create the release on GitHub (optional)
 
 Go to [https://github.com/pegasilab/rassine/tags](https://github.com/pegasilab/rassine/tags), click on the latest tag, and select "Create release from tag". Fill in the details.

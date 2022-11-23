@@ -26,3 +26,10 @@ git add pyproject.toml
 git commit -m "Bumping $PREV_VERSION -> $CUR_VERSION"
 git tag "$CUR_VERSION" -a -m "Version $CUR_VERSION"
 ```
+
+If the previous lines ran without error, run:
+
+```bash
+git push origin master
+git push origin $CUR_VERSION
+```

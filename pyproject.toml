@@ -21,7 +21,7 @@ description = "RASSINE astronomy tool"
 license = "BSD-3-Clause"
 name = "rassine"
 readme = "README.md"
-repository = "https://github.com/denisrosset/rassine.git"
+repository = "https://github.com/pegasilab/rassine.git"
 version = "0.3.0"
 
 [tool.poetry.scripts]

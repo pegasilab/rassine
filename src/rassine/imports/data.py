@@ -170,13 +170,13 @@ class PickledIndividualSpectrum(TypedDict):
     Data format of the pickle files produced by the preprocessing step
     """
 
-    #: Wavelength in Angstroms
+    #: Spectrum wavelength in Angstroms
     wave: NDArray[np.float64]
 
-    #: Flux in photon count units, must not have NaNs
+    #: Spectrum flux in photon count units, must not have NaNs
     flux: NDArray[np.float64]
 
-    #: Error on flux, must not have NaNs
+    #: Spectrum flux uncertainties, must not have NaNs
     flux_err: NDArray[np.float64]
 
     #: Instrument name
@@ -188,7 +188,7 @@ class PickledIndividualSpectrum(TypedDict):
     #: Observation time in jdb
     jdb: np.float64
 
-    #: Berv
+    #: Barycentric Earth RV in km/s
     berv: np.float64
 
     #: Simultaneous drift in m/s
@@ -274,27 +274,34 @@ class IndividualImportedRow:
     #: Difference model - rv_mean in km/s
     rv_shift: np.float64
 
+    #: Observation date/time in JDB
     jdb: np.float64
 
+    #: Barycentric Earth RV in km/s
     berv: np.float64
 
-    #: Document
-    #:
-    #: Sometimes called lamp
+    #: Simultaneous drift measurement of the observation in m/s (no more used since 1D spectra are corrected for it)
     lamp_offset: np.float64
 
+    #: Parralax in milliarcseconds (used for secular acceleration correction)
     plx_mas: np.float64
 
+    #: The secular acceleration drift in m/s/year
     acc_sec: np.float64
 
+    #: Wavelength minima wavelength of the spectrum in Angstrom
     wave_min: np.float64
 
+    #: Wavelength maxima value of the spectrum in Angstrom
     wave_max: np.float64
 
+    #: Wavelength step of the spectrum (spectra being evenly sampled in wavelength)
     dwave: np.float64
 
+    #: Wavelength of the left side border for instrument containing hole (HARPS)
     hole_left: np.float64
 
+    #: Wavelength of the right side border for instrument containing hole (HARPS)
     hole_right: np.float64
 
     #: Radial velocity

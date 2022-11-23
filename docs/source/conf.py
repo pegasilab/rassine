@@ -24,6 +24,7 @@ extensions = [
     "myst_nb",
     "sphinx.ext.graphviz",
     "sphinxarg.ext",  # to document command line arguments
+    "sphinxcontrib.programoutput",
 ]
 
 code_url = f"https://github.com/pegasilab/rassine/blob/v{__version__}"

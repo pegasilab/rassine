@@ -1,7 +1,8 @@
-Default run_rassine.sh pipeline
-===============================
+# Pipeline in run_rassine.sh
 
-.. graphviz::
+TODO: All the paths below refer to RASSINE_ROOT, which 
+
+```{graphviz}
 
     digraph process {
         newrank=false
@@ -268,3 +269,4 @@ Default run_rassine.sh pipeline
                 "matching_diff" -> "STACKED/RASSINE_{name}.p (ter)"
         }
     }
+```

@@ -365,13 +365,12 @@ def rassine_process(
         )(log_grid)
 
         if CCF_mask != "master":
-            # TODO: mask_harps should be mask_ccf
-            mask_harps = np.genfromtxt(CCF_mask + ".txt")
-            line_center = doppler_r(0.5 * (mask_harps[:, 0] + mask_harps[:, 1]), RV_sys)[0]
+            mask_ccf = np.genfromtxt(CCF_mask + ".txt")
+            line_center = doppler_r(0.5 * (mask_ccf[:, 0] + mask_ccf[:, 1]), RV_sys)[0]
             distance = np.abs(grid - line_center[:, np.newaxis])
             index_f = np.argmin(distance, axis=1)
             mask = np.zeros(len(spectre))
-            mask[index_f] = mask_harps[:, 2]
+            mask[index_f] = mask_ccf[:, 2]
             log_mask = interp1d(
                 np.log10(grid), mask, kind="linear", bounds_error=False, fill_value="extrapolate"
             )(log_grid)
@@ -612,8 +611,6 @@ def rassine_process(
     big_windows = 100.0  # 100 typical line width scale (large window for the second continuum)
     iteration = 5
     reg = par_reg_nu
-    par_model = reg.name
-    Penalty = False
 
     if par_R_ == "auto":
         par_R: float = float(np.round(10 * par_fwhm, 1))
@@ -632,7 +629,6 @@ def rassine_process(
 
     radius = par_R * np.ones(len(wave)) * law_chromatic
     if (par_Rmax_ != par_R) | (par_Rmax_ == "auto"):
-        Penalty = True
         dx = par_fwhm / np.median(np.diff(grid))
         continuum_small_win = np.ravel(
             pd.DataFrame(spectre).rolling(int(windows * dx), center=True).quantile(1)
@@ -773,7 +769,7 @@ def rassine_process(
         threshold = 0.75
         loop = True
         if par_Rmax_ == "auto":
-            cluster_length = np.zeros(())  # TODO: added
+            cluster_length = np.zeros(())
             largest_cluster = -1
             while (loop) & (threshold > 0.2):
                 difference = (continuum_large_win < continuum_small_win).astype("int")
@@ -846,8 +842,7 @@ def rassine_process(
 
         par_R = np.round(par_R, 1)
         par_Rmax_ = np.round(par_Rmax_, 1)
-        # TODO: par_model role
-        par_model = reg
+
         if isinstance(reg, RegPoly):
             radius = law_chromatic * (
                 par_R + (float(par_Rmax_) - par_R) * penalite_graph ** float(reg.expo)
@@ -858,7 +853,6 @@ def rassine_process(
                 + (float(par_Rmax_) - par_R)
                 * (1 + np.exp(-reg.steepness * (penalite_graph - reg.center))) ** -1
             )
-            par_model = reg
         else:
             assert_never(reg)
 
@@ -929,7 +923,6 @@ def rassine_process(
     logging.info("Edge cutting : LOADING")
 
     count_cut = 0
-    # TODO: remove this
     j = 0
     while count_cut < count_cut_lim:
         flux[0 : j + 1] = flux[j + 1]
@@ -983,12 +976,9 @@ def rassine_process(
     # EQUIDISTANT GRID FORMATION
     # =============================================================================
 
-    # TODO: do we need to?
-    wave_backup = wave.copy()
-    flux_backup = flux.copy()
-    index_backup = index.copy()
+    len_prev_wave = len(wave)
     criterion = 1
-    parameter = np.zeros(())  # TODO: initialize
+    parameter = np.zeros(())
     for j in range(5):
         diff_x = np.log10(
             np.min(np.vstack([abs(np.diff(wave)[1:]), abs(np.diff(wave)[0:-1])]), axis=0)
@@ -1039,7 +1029,7 @@ def rassine_process(
         index = index[mask_final]
 
     logging.info(
-        f"Number of points removed to build a more equidistant grid : {(len(wave_backup) - len(wave))}"
+        f"Number of points removed to build a more equidistant grid : {(len_prev_wave - len(wave))}"
     )
 
     # =============================================================================
@@ -1088,8 +1078,6 @@ def rassine_process(
             continuum_to_produce=(interpol, "undenoised"),
         )
         conti = continuum1
-    else:
-        raise NotImplementedError  # TODO: handle
 
     outputs_interpolation_saved = "linear"
     outputs_denoising_saved = "undenoised"

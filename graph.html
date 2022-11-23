@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Public API" href="api.html" /><link rel="prev" title="matching_diff" href="cli/matching_diff.html" />
 
     <link rel="shortcut icon" href="_static/favicon.png"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
-        <title>File processing - RASSINE</title>
+        <title>Default run_rassine.sh pipeline - RASSINE</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -172,7 +172,7 @@
 <li class="toctree-l2"><a class="reference internal" href="cli/matching_diff.html">matching_diff</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">File processing</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Default run_rassine.sh pipeline</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api.html">Public API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="_autosummary/rassine.imports.html">imports</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="_autosummary/rassine.imports.data.html">data</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -441,151 +441,272 @@
           </label>
         </div>
         <article role="main">
-          <section id="file-processing">
-<h1>File processing<a class="headerlink" href="#file-processing" title="Permalink to this heading">#</a></h1>
-<div class="graphviz"><object data="_images/graphviz-2759dc06abc6a0b250308370e6e8bfc9a45c8402.svg" type="image/svg+xml" class="graphviz">
+          <section id="default-run-rassine-sh-pipeline">
+<h1>Default run_rassine.sh pipeline<a class="headerlink" href="#default-run-rassine-sh-pipeline" title="Permalink to this heading">#</a></h1>
+<div class="graphviz"><object data="_images/graphviz-1636521afeff9e8f86dc84ae1337ac0213b0e67d.svg" type="image/svg+xml" class="graphviz">
 <p class="warning">digraph process {
     newrank=false
+
+    // declare nodes, needs to be done before
+
     subgraph cluster_input_data {
-    label=&lt;&lt;i&gt;input data&lt;/i&gt;&gt;
-    peripheries=0
-    &quot;RAW/{name}.fits&quot; [shape=none]
-    &quot;DACE_TABLE/Dace_extracted_table.csv&quot; [shape=none, label=&lt;DACE_TABLE/Dace_extracted_table.csv&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.imports.types.DACE&lt;/font&gt;&gt;, href=&quot;../_autosummary/rassine.imports.types.DACE.html#rassine.imports.types.DACE&quot;, target=&quot;_top&quot;]
+        label=&lt;&lt;i&gt;input data&lt;/i&gt;&gt;
+        peripheries=0
+
+        &quot;RAW/{name}.fits&quot; [shape=none]
+        &quot;DACE_TABLE/Dace_extracted_table.csv&quot; [
+            shape=none,
+            label=&lt;DACE_TABLE/Dace_extracted_table.csv&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.imports.data.DACE&lt;/font&gt;&gt;,
+            href=&quot;../_autosummary/rassine.imports.data.DACE.html#rassine.imports.data.DACE&quot;,
+            target=&quot;_top&quot;
+        ]
     }
 
     subgraph cluster_data0 {
-    peripheries=0
-    &quot;PREPROCESSED/{name}.p (bis)&quot; [shape=&quot;none&quot;, label=&quot;PREPROCESSED/{name}.p&quot;]
+        peripheries=0
 
-    &quot;individual_reinterpolated.csv&quot; [shape=&quot;none&quot;]
+        &quot;PREPROCESSED/{name}.p (bis)&quot; [
+            shape=none
+            label=&lt;PREPROCESSED/{name}.p&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.imports.data.ReinterpolatedSpectrumPickle&lt;/font&gt;&gt;,
+            href=&quot;../_autosummary/rassine.imports.data.ReinterpolatedSpectrumPickle.html&quot;,
+            target=&quot;_top&quot;
+        ]
+
+        &quot;individual_reinterpolated.csv&quot; [
+            shape=none,
+            label=&lt;individual_reinterpolated.csv&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.imports.data.IndividualReinterpolatedRow&lt;/font&gt;&gt;,
+            href=&quot;../_autosummary/rassine.imports.data.IndividualReinterpolatedRow.html&quot;,
+            target=&quot;_top&quot;
+        ]
     }
-    subgraph cluster_data1        {
-    peripheries=0
-    &quot;stacked_basic.csv&quot; [shape=&quot;none&quot;]
-    &quot;STACKED/{name}.p&quot; [shape=&quot;none&quot;]
-    &quot;MASTER/Master_spectrum_{tag}.p&quot; [shape=none]
+
+    subgraph cluster_data1 {
+        peripheries=0
+
+        &quot;stacked_basic.csv&quot; [
+            shape=none,
+            label=&lt;stacked_basic.csv&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.stacking.data.StackedBasicRow&lt;/font&gt;&gt;,
+            href=&quot;../_autosummary/rassine.stacking.data.StackedBasicRow.html&quot;,
+            target=&quot;_top&quot;
+        ]
+        &quot;master_spectrum.csv&quot; [
+            shape=none,
+            label=&lt;master_spectrum.csv&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.stacking.data.MasterRow&lt;/font&gt;&gt;,
+            href=&quot;../_autosummary/rassine.stacking.data.MasterRow.html&quot;,
+            target=&quot;_top&quot;
+        ]
+        &quot;STACKED/{name}.p&quot; [
+            shape=none,
+            label=&lt;STACKED/{name}.p&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.stacking.data.StackedPickle&lt;/font&gt;&gt;,
+            href=&quot;../_autosummary/rassine.stacking.data.StackedPickle.html&quot;,
+            target=&quot;_top&quot;
+        ]
+        &quot;MASTER/Master_spectrum_{tag}.p&quot; [
+            shape=none,
+            label=&lt;MASTER/Master_spectrum_{tag}.p&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.stacking.data.MasterPickle&lt;/font&gt;&gt;,
+            href=&quot;../_autosummary/rassine.stacking.data.MasterPickle.html&quot;,
+            target=&quot;_top&quot;
+        ]
     }
+
     subgraph cluster_data2         {
-    peripheries=0
-    &quot;MASTER/RASSINE_Master_spectrum_{tag}.p&quot; [shape=none]
-    &quot;STACKED/RASSINE_{name}.p&quot; [shape=none]
+        peripheries=0
+
+        &quot;MASTER/RASSINE_Master_spectrum_{tag}.p&quot; [
+            shape=none,
+            label=&lt;MASTER/RASSINE_Master_spectrum_{tag}.p&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.rassine.data.RassinePickle&lt;/font&gt;&gt;,
+            href=&quot;../_autosummary/rassine.rassine.data.RassinePickle.html&quot;,
+            target=&quot;_top&quot;
+        ]
+        &quot;STACKED/RASSINE_{name}.p&quot; [
+            shape=none,
+            label=&lt;STACKED/RASSINE_{name}.p&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.rassine.data.RassinePickle&lt;/font&gt;&gt;,
+            href=&quot;../_autosummary/rassine.rassine.data.RassinePickle.html&quot;,
+            target=&quot;_top&quot;
+        ]
     }
 
     subgraph cluster_output_data {
-    label=&lt;&lt;i&gt;output data&lt;/i&gt;&gt;
-    peripheries=0
-    &quot;STACKED/RASSINE_{name}.p (ter)&quot; [shape=none,label=&quot;STACKED/RASSINE_{name}.p&quot;]
+        label=&lt;&lt;i&gt;output data&lt;/i&gt;&gt;
+        peripheries=0
+
+        &quot;STACKED/RASSINE_{name}.p (ter)&quot; [
+            shape=none,
+            label=&lt;STACKED/RASSINE_{name}.p&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.matching.data.MatchingPickle&lt;/font&gt;&gt;,
+            href=&quot;../_autosummary/rassine.matching.data.MatchingPickle.html&quot;,
+            target=&quot;_top&quot;
+        ]
     }
+
+    // now we go from top to bottom
+
     subgraph cluster_import {
         label=&lt;&lt;i&gt;import&lt;/i&gt;&gt;
+
+        // data
+
+        &quot;individual_basic.csv&quot; [
+            shape=none,
+            label=&lt;individual_basic.csv&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.imports.data.IndividualBasicRow&lt;/font&gt;&gt;,
+            href=&quot;../_autosummary/rassine.imports.data.IndividualBasicRow.html&quot;,
+            target=&quot;_top&quot;
+        ]
+
+        &quot;PREPROCESSED/{name}.p&quot; [
+            shape=none
+            label=&lt;PREPROCESSED/{name}.p&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.imports.data.PickledIndividualSpectrum&lt;/font&gt;&gt;,
+            href=&quot;../_autosummary/rassine.imports.data.PickledIndividualSpectrum.html&quot;,
+            target=&quot;_top&quot;
+        ]
+
+        &quot;individual_imported.csv&quot; [
+            shape=none,
+            label=&lt;individual_imported.csv&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.imports.data.IndividualImportedRow&lt;/font&gt;&gt;,
+            href=&quot;../_autosummary/rassine.imports.data.IndividualImportedRow.html&quot;,
+            target=&quot;_top&quot;
+        ]
+
+        // CLI tools and edges
+
         &quot;preprocess_table&quot; [shape=box, href=&quot;../cli/preprocess_table.html&quot;, target=&quot;_top&quot;]
             &quot;RAW/{name}.fits&quot; -&gt; &quot;preprocess_table&quot; [style=&quot;dashed&quot;]
             &quot;DACE_TABLE/Dace_extracted_table.csv&quot; -&gt; &quot;preprocess_table&quot;
             &quot;preprocess_table&quot; -&gt; &quot;individual_basic.csv&quot;
 
         &quot;preprocess_import&quot; [shape=box, href=&quot;../cli/preprocess_import.html&quot;, target=&quot;_top&quot;]
-        &quot;individual_basic.csv&quot; -&gt; &quot;preprocess_import&quot;
-        &quot;RAW/{name}.fits&quot; -&gt; &quot;preprocess_import&quot;
-
-        &quot;individual_basic.csv&quot; [shape=none, label=&lt;individual_basic.csv&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.imports.types.IndividualBasicRow&lt;/font&gt;&gt;, href=&quot;../_autosummary/rassine.imports.types.IndividualBasicRow.html&quot;, target=&quot;_top&quot;]
-
-        &quot;preprocess_import&quot; -&gt; &quot;PREPROCESSED/{name}.p&quot;
-        &quot;preprocess_import&quot; -&gt; &quot;individual_imported.csv&quot;
-
-        &quot;PREPROCESSED/{name}.p&quot; [shape=none]
-
-        &quot;individual_imported.csv&quot; [shape=none]
-
-        &quot;individual_imported.csv&quot; -&gt; &quot;reinterpolate&quot;
-        &quot;PREPROCESSED/{name}.p&quot; -&gt; &quot;reinterpolate&quot;
+            &quot;individual_basic.csv&quot; -&gt; &quot;preprocess_import&quot;
+            &quot;RAW/{name}.fits&quot; -&gt; &quot;preprocess_import&quot;
+            &quot;preprocess_import&quot; -&gt; &quot;PREPROCESSED/{name}.p&quot;
+            &quot;preprocess_import&quot; -&gt; &quot;individual_imported.csv&quot;
 
         &quot;reinterpolate&quot;  [shape=box, href=&quot;../cli/reinterpolate.html&quot;, target=&quot;_top&quot;]
-        &quot;reinterpolate&quot; -&gt; &quot;PREPROCESSED/{name}.p (bis)&quot;
-        &quot;reinterpolate&quot; -&gt; &quot;individual_reinterpolated.csv&quot;
-
+            &quot;individual_imported.csv&quot; -&gt; &quot;reinterpolate&quot;
+            &quot;PREPROCESSED/{name}.p&quot; -&gt; &quot;reinterpolate&quot;
+            &quot;reinterpolate&quot; -&gt; &quot;PREPROCESSED/{name}.p (bis)&quot;
+            &quot;reinterpolate&quot; -&gt; &quot;individual_reinterpolated.csv&quot;
     }
+
     subgraph cluster_stacking1 {
         label=&lt;&lt;i&gt;stacking&lt;/i&gt;&gt;
-        &quot;stacking_create_groups&quot; [shape=&quot;box&quot;, href=&quot;../cli/stacking_create_groups.html&quot;, target=&quot;_top&quot;]
-        &quot;individual_reinterpolated.csv&quot; -&gt; &quot;stacking_create_groups&quot;
-        &quot;stacking_create_groups&quot; -&gt; &quot;individual_group.csv&quot;
 
-        &quot;individual_group.csv&quot; [shape=&quot;none&quot;]
+        // data
+
+        &quot;individual_group.csv&quot; [
+            shape=none,
+            label=&lt;individual_group.csv&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.stacking.data.IndividualGroupRow&lt;/font&gt;&gt;,
+            href=&quot;../_autosummary/rassine.stacking.data.IndividualGroupRow.html&quot;,
+            target=&quot;_top&quot;
+        ]
+
+        // CLI tools and edges
+
+        &quot;stacking_create_groups&quot; [shape=&quot;box&quot;, href=&quot;../cli/stacking_create_groups.html&quot;, target=&quot;_top&quot;]
+            &quot;individual_reinterpolated.csv&quot; -&gt; &quot;stacking_create_groups&quot;
+            &quot;stacking_create_groups&quot; -&gt; &quot;individual_group.csv&quot;
+
 
         &quot;stacking_stack&quot; [shape=&quot;box&quot;, href=&quot;../cli/stacking_stack.html&quot;, target=&quot;_top&quot;]
-
-        &quot;individual_group.csv&quot; -&gt; &quot;stacking_stack&quot;
-        &quot;individual_reinterpolated.csv&quot; -&gt; &quot;stacking_stack&quot;
-        &quot;PREPROCESSED/{name}.p (bis)&quot; -&gt; &quot;stacking_stack&quot;
-        &quot;stacking_stack&quot; -&gt; &quot;stacked_basic.csv&quot;
-        &quot;stacking_stack&quot; -&gt; &quot;STACKED/{name}.p&quot;
-
-
-
+            &quot;individual_group.csv&quot; -&gt; &quot;stacking_stack&quot;
+            &quot;individual_reinterpolated.csv&quot; -&gt; &quot;stacking_stack&quot;
+            &quot;PREPROCESSED/{name}.p (bis)&quot; -&gt; &quot;stacking_stack&quot;
+            &quot;stacking_stack&quot; -&gt; &quot;stacked_basic.csv&quot;
+            &quot;stacking_stack&quot; -&gt; &quot;STACKED/{name}.p&quot;
     }
+
     subgraph cluster_stacking2 {
         label=&lt;&lt;i&gt;stacking&lt;/i&gt;&gt;
+
+        // CLI tools and edges
+
         &quot;stacking_master_spectrum&quot; [shape=&quot;box&quot;, href=&quot;../cli/stacking_master_spectrum.html&quot;, target=&quot;_top&quot;]
-        &quot;STACKED/{name}.p&quot; -&gt; &quot;stacking_master_spectrum&quot;
-        &quot;stacked_basic.csv&quot; -&gt; &quot;stacking_master_spectrum&quot;
-        &quot;stacking_master_spectrum&quot; -&gt; &quot;MASTER/Master_spectrum_{tag}.p&quot;
+            &quot;STACKED/{name}.p&quot; -&gt; &quot;stacking_master_spectrum&quot;
+            &quot;stacked_basic.csv&quot; -&gt; &quot;stacking_master_spectrum&quot;
+            &quot;stacking_master_spectrum&quot; -&gt; &quot;MASTER/Master_spectrum_{tag}.p&quot;
+            &quot;stacking_master_spectrum&quot; -&gt; &quot;master_spectrum.csv&quot;
     }
+
     subgraph cluster_rassine {
         label=&lt;&lt;i&gt;rassine&lt;/i&gt;&gt;
+
+        // data
+
+        &quot;anchor_Master_spectrum_{tag}.ini&quot; [
+            shape=none,
+            label=&lt;anchor_Master_spectrum_{tag}.ini&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;Config INI for rassine CLI tool&lt;/font&gt;&gt;,
+            href=&quot;../cli/rassine.html&quot;,
+            target=&quot;_top&quot;
+        ]
+
+        // CLI tools and edges
+
         &quot;rassine1&quot; [label=&quot;rassine&quot;, shape=&quot;box&quot;, href=&quot;../cli/rassine.html&quot;, target=&quot;_top&quot;]
+            &quot;MASTER/Master_spectrum_{tag}.p&quot; -&gt; &quot;rassine1&quot;
+            &quot;rassine1&quot; -&gt; &quot;anchor_Master_spectrum_{tag}.ini&quot;
+            &quot;rassine1&quot; -&gt; &quot;MASTER/RASSINE_Master_spectrum_{tag}.p&quot;
+
         &quot;rassine2&quot; [label=&quot;rassine&quot;, shape=&quot;box&quot;, href=&quot;../cli/rassine.html&quot;, target=&quot;_top&quot;]
-
-        &quot;MASTER/Master_spectrum_{tag}.p&quot; -&gt; &quot;rassine1&quot;
-        &quot;rassine1&quot; -&gt; &quot;anchor_Master_spectrum_{tag}.ini&quot;
-        &quot;rassine1&quot; -&gt; &quot;MASTER/RASSINE_Master_spectrum_{tag}.p&quot;
-
-
-        &quot;anchor_Master_spectrum_{tag}.ini&quot; [shape=none]
-
-        &quot;STACKED/{name}.p&quot; -&gt; &quot;rassine2&quot;
-        &quot;anchor_Master_spectrum_{tag}.ini&quot; -&gt; &quot;rassine2&quot;
-        &quot;stacked_basic.csv&quot; -&gt; &quot;rassine2&quot;
-        &quot;rassine2&quot; -&gt; &quot;STACKED/RASSINE_{name}.p&quot;
-
+            &quot;STACKED/{name}.p&quot; -&gt; &quot;rassine2&quot;
+            &quot;anchor_Master_spectrum_{tag}.ini&quot; -&gt; &quot;rassine2&quot;
+            &quot;stacked_basic.csv&quot; -&gt; &quot;rassine2&quot;
+            &quot;rassine2&quot; -&gt; &quot;STACKED/RASSINE_{name}.p&quot;
     }
+
     subgraph cluster_matching {
         label=&lt;&lt;i&gt;matching&lt;/i&gt;&gt;
-        &quot;stacked_basic.csv&quot; -&gt; &quot;matching_anchors_scan&quot;
-        &quot;STACKED/RASSINE_{name}.p&quot; -&gt; &quot;matching_anchors_scan&quot;
-        &quot;MASTER/RASSINE_Master_spectrum_{tag}.p&quot; -&gt; &quot;matching_anchors_scan&quot; [style=&quot;dashed&quot;]
-        &quot;matching_anchors_scan&quot; -&gt; &quot;MASTER/Master_tool_{tag}.p&quot;
+
+        // data
+
+        &quot;MASTER/Master_tool_{tag}.p&quot; [
+            shape=none,
+            label=&lt;MASTER/Master_tool_{tag}.p&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.matching.data.MasterToolPickle&lt;/font&gt;&gt;,
+            href=&quot;../_autosummary/rassine.matching.data.MasterToolPickle.html&quot;,
+            target=&quot;_top&quot;
+        ]
+        &quot;MASTER/RASSINE_Master_spectrum_{tag}.p (bis)&quot; [
+            shape=none,
+            label=&lt;MASTER/RASSINE_Master_spectrum_{tag}.p&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.matching.data.AnchorPickle&lt;/font&gt;&gt;,
+            href=&quot;../_autosummary/rassine.matching.data.AnchorPickle.html&quot;,
+            target=&quot;_top&quot;
+        ]
+        &quot;STACKED/RASSINE_{name}.p (bis)&quot; [
+            shape=none,
+            label=&lt;STACKED/RASSINE_{name}.p&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.matching.data.AnchorPickle&lt;/font&gt;&gt;,
+            href=&quot;../_autosummary/rassine.matching.data.AnchorPickle.html&quot;,
+            target=&quot;_top&quot;
+        ]
+        &quot;matching_anchors.csv&quot; [
+            shape=none,
+            label=&lt;matching_anchors.csv&lt;br/&gt;&lt;font color=&quot;#444444&quot;&gt;rassine.matching.data.MatchingAnchorsRow&lt;/font&gt;&gt;,
+            href=&quot;../_autosummary/rassine.matching.data.MatchingAnchorsRow.html&quot;,
+            target=&quot;_top&quot;
+        ]
+
+        // CLI tools and edges
 
         &quot;matching_anchors_scan&quot; [shape=box, href=&quot;../cli/matching_anchors_scan.html&quot;, target=&quot;_top&quot;]
-
-        &quot;MASTER/Master_tool_{tag}.p&quot; [shape=none]
+            &quot;stacked_basic.csv&quot; -&gt; &quot;matching_anchors_scan&quot;
+            &quot;STACKED/RASSINE_{name}.p&quot; -&gt; &quot;matching_anchors_scan&quot;
+            &quot;MASTER/RASSINE_Master_spectrum_{tag}.p&quot; -&gt; &quot;matching_anchors_scan&quot; [style=&quot;dashed&quot;]
+            &quot;matching_anchors_scan&quot; -&gt; &quot;MASTER/Master_tool_{tag}.p&quot;
 
         &quot;matching_anchors_filter1&quot; [label=&quot;matching_anchors_filter&quot;, shape=box, href=&quot;../cli/matching_anchors_filter.html&quot;, target=&quot;_top&quot;]
-
-        &quot;stacked_basic.csv&quot; -&gt; &quot;matching_anchors_filter1&quot;
-        &quot;STACKED/RASSINE_{name}.p&quot; -&gt; &quot;matching_anchors_filter1&quot;
-        &quot;MASTER/Master_tool_{tag}.p&quot; -&gt; &quot;matching_anchors_filter1&quot;
-        &quot;matching_anchors_filter1&quot; -&gt; &quot;STACKED/RASSINE_{name}.p (bis)&quot;
-        &quot;matching_anchors_filter1&quot; -&gt; &quot;matching_anchors.csv&quot;
+            &quot;stacked_basic.csv&quot; -&gt; &quot;matching_anchors_filter1&quot;
+            &quot;STACKED/RASSINE_{name}.p&quot; -&gt; &quot;matching_anchors_filter1&quot;
+            &quot;MASTER/Master_tool_{tag}.p&quot; -&gt; &quot;matching_anchors_filter1&quot;
+            &quot;matching_anchors_filter1&quot; -&gt; &quot;STACKED/RASSINE_{name}.p (bis)&quot;
+            &quot;matching_anchors_filter1&quot; -&gt; &quot;matching_anchors.csv&quot;
 
         &quot;matching_anchors_filter2&quot; [label=&quot;matching_anchors_filter&quot;, shape=box, href=&quot;../cli/matching_anchors_filter.html&quot;, target=&quot;_top&quot;]
-        &quot;MASTER/RASSINE_Master_spectrum_{tag}.p&quot; -&gt; &quot;matching_anchors_filter2&quot;
-        &quot;MASTER/Master_tool_{tag}.p&quot; -&gt; &quot;matching_anchors_filter2&quot;
-        &quot;matching_anchors_filter2&quot; -&gt; &quot;MASTER/RASSINE_Master_spectrum_{tag}.p (bis)&quot;
-        &quot;matching_anchors_filter2&quot; -&gt; &quot;matching_anchors.csv&quot;
-
-        &quot;MASTER/RASSINE_Master_spectrum_{tag}.p (bis)&quot; [shape=none, label=&quot;MASTER/RASSINE_Master_spectrum_{tag}.p&quot;]
-
-        &quot;STACKED/RASSINE_{name}.p (bis)&quot; [shape=none,label=&quot;STACKED/RASSINE_{name}.p&quot;]
-        &quot;matching_anchors.csv&quot; [shape=none]
-
+            &quot;MASTER/RASSINE_Master_spectrum_{tag}.p&quot; -&gt; &quot;matching_anchors_filter2&quot;
+            &quot;MASTER/Master_tool_{tag}.p&quot; -&gt; &quot;matching_anchors_filter2&quot;
+            &quot;matching_anchors_filter2&quot; -&gt; &quot;MASTER/RASSINE_Master_spectrum_{tag}.p (bis)&quot;
+            &quot;matching_anchors_filter2&quot; -&gt; &quot;matching_anchors.csv&quot;
 
         &quot;matching_diff&quot; [shape=box, href=&quot;../cli/matching_diff.html&quot;, target=&quot;_top&quot;]
-
-        &quot;matching_diff&quot; [shape=box]
-        &quot;MASTER/RASSINE_Master_spectrum_{tag}.p (bis)&quot; -&gt; &quot;matching_diff&quot;
-        &quot;stacked_basic.csv&quot; -&gt; &quot;matching_diff&quot;
-        &quot;STACKED/RASSINE_{name}.p (bis)&quot; -&gt; &quot;matching_diff&quot;
-        &quot;matching_diff&quot; -&gt; &quot;STACKED/RASSINE_{name}.p (ter)&quot;
+            &quot;MASTER/RASSINE_Master_spectrum_{tag}.p (bis)&quot; -&gt; &quot;matching_diff&quot;
+            &quot;stacked_basic.csv&quot; -&gt; &quot;matching_diff&quot;
+            &quot;STACKED/RASSINE_{name}.p (bis)&quot; -&gt; &quot;matching_diff&quot;
+            &quot;matching_diff&quot; -&gt; &quot;STACKED/RASSINE_{name}.p (ter)&quot;
     }
 }</p></object></div>
 </section>

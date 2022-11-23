@@ -9,8 +9,26 @@ programname=$0
 
 # Help message
 function usage {
-  echo "usage: $programname [-h] [-l LOGGING_LEVEL] [-c CONFIG_FILE] [path to root folder]"
-  echo "LOGGING_LEVEL can be ERROR,WARNING,INFO,DEBUG, default WARNING"
+  echo "Runs the RASSINE pipeline using standardized folder/file names"
+  echo
+  echo "The pipeline will be run according to https://pegasilab.github.io/rassine/pipeline.html"
+  echo "with all the paths in this data graph relative to the provided RASSINE_ROOT"
+  echo "parameter. The RASSINE_ROOT can be a relative path, in which case it will be resolved"
+  echo "using the current working directory."
+  echo
+  echo "Note that the parallelization parameters (number of threads, size of chunks, nice level)"
+  echo "are set according to the provided configuration file."
+  echo
+  echo "usage: $programname [-h] [-l {ERROR|WARNING|INFO|DEBUG}] [-c CONFIG_FILE] [RASSINE_ROOT]"
+  echo "  options:"
+  echo "    -h               Display usage information"
+  echo "    -l LOGGING_LEVEL Set the logging level (optional, default: WARNING)"
+  echo "    -c CONFIG_FILE   Sets the configuration (required)"
+  echo "                     In doubt, use harpn.ini or harps03.ini from"
+  echo "                     https://github.com/pegasilab/rassine"
+  echo
+  echo "Example: ./run_rassine.sh -c harpn.ini HD110315/data/s1d/HARPN"
+  echo
   exit 1
 }
 
@@ -33,7 +51,7 @@ function process_command_line_arguments {
     esac
   done
 
-  if [ -z "$RASSINE_CONFIG" ]; then
+  if [[ ! -v RASSINE_CONFIG ]]; then
     usage
   fi
 
@@ -155,8 +173,6 @@ function stacking_step {
 
   sort_csv --column group stacked_basic.csv
   if [ $? -ne 0 ]; then exit 1; fi
-  #mkdir -p /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/MASTER
-  #python rassine_stacking.py --input_directory /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/PREPROCESSED
 
   stacking_master_spectrum -I stacked_basic.csv -O master_spectrum.csv -i STACKED -o "MASTER/$MASTER"
   if [ $? -ne 0 ]; then exit 1; fi
@@ -166,8 +182,6 @@ function stacking_step {
 ## RASSINE normalization
 # First we process the Master file to obtain the RASSINE_Master* file
 # This computes the parameters of the model
-
-# TODO: -> rassine.py
 
 ##
 ## RASSINE main processing on master file

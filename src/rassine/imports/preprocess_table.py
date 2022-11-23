@@ -107,7 +107,10 @@ def run(t: Task) -> None:
     dace = DACE.schema().read_csv(dace_path)
     if t.verify_sorted:
         filenames: List[str] = dace["fileroot"].to_list()
-        assert filenames == sorted(filenames)
+        if filenames != sorted(filenames):
+            logging.error("The DACE table is not ordered by filenames")
+            logging.error("(ote that the names contain the timestamps)")
+            sys.exit(1)
 
     rows = tb.tyble(dace, DACE.schema())
     logging.info(f"{len(dace)} rows found")
@@ -115,11 +118,11 @@ def run(t: Task) -> None:
     tb_files: Set[str] = {Path(r.fileroot).name for r in rows}
     fs_files: Set[str] = {f.name for f in (t.root / t.input_folder).glob(t.glob_pattern)}
     if (t.strict and tb_files != fs_files) or (tb_files - fs_files):
-        print("Error: mismatch between filenames in master table and on filesystem")
+        logging.error("Mismatch between filenames in master table and on filesystem")
         for f in tb_files - fs_files:
-            print(f"{f} is in the table but not in {t.root / t.input_folder}")
+            logging.error(f"{f} is in the table but not in {t.root / t.input_folder}")
         for f in fs_files - tb_files:
-            print(f"{f} is on the filesystem but not in the master table")
+            logging.error(f"{f} is on the filesystem but not in the master table")
         sys.exit(1)
 
     # compute rv_mean

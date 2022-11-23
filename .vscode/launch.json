@@ -12,53 +12,5 @@
             "console": "integratedTerminal",
             "justMyCode": true
         },
-        {
-            "name": "HD110315:preprocess",
-            "type": "python",
-            "request": "launch",
-            "program": ".venv/bin/preprocess_import",
-            "console": "integratedTerminal",
-            "justMyCode": true,
-            "env": {
-                "RASSINE_CONFIG": "harpn.ini",
-                "RASSINE_ROOT": "${workspaceFolder}/spectra_library/HD110315/data/s1d/HARPN",
-            },
-            "args": [
-                "--drs-style",
-                "new",
-                "-i",
-                "RAW",
-                "-o",
-                "PREPROCESSED/{name}.p",
-                "-I",
-                "individual_basic.csv",
-                "-O",
-                "individual_imported.csv",
-                "0",
-            ]
-        },
-        {
-            "name": "HD23249:reinterpolate",
-            "type": "python",
-            "request": "launch",
-            "program": ".venv/bin/reinterpolate",
-            "console": "integratedTerminal",
-            "justMyCode": true,
-            "env": {
-                "RASSINE_CONFIG": "${workspaceFolder}/harps03.ini",
-                "RASSINE_ROOT": "${workspaceFolder}/spectra_library/HD23249/data/s1d/HARPS03",
-            },
-            "args": [
-                "-i",
-                "PREPROCESSED",
-                "-o",
-                "PREPROCESSED",
-                "-I",
-                "individual_imported.csv",
-                "-O",
-                "individual_reinterpolated.csv",
-                "50",
-            ]
-        },
     ]
 }

@@ -19,7 +19,12 @@ function usage {
   echo "Note that the parallelization parameters (number of threads, size of chunks, nice level)"
   echo "are set according to the provided configuration file."
   echo
-  echo "usage: $programname [-h] [-l {ERROR|WARNING|INFO|DEBUG}] [-c CONFIG_FILE] [RASSINE_ROOT]"
+  echo "The parameters [STEP1 STEP2 ...] must be taken from the list:"
+  echo "  import reinterpolate stacking rassine matching_anchors matching_diff"
+  echo
+  echo "The order can be arbitrary, the pipeline always runs in the set order."
+  echo
+  echo "usage: $programname [-h] [-l {ERROR|WARNING|INFO|DEBUG}] [-c CONFIG_FILE] [RASSINE_ROOT] [STEP1 STEP2 ...]"
   echo "  options:"
   echo "    -h               Display usage information"
   echo "    -l LOGGING_LEVEL Set the logging level (optional, default: WARNING)"
@@ -27,9 +32,14 @@ function usage {
   echo "                     In doubt, use harpn.ini or harps03.ini from"
   echo "                     https://github.com/pegasilab/rassine"
   echo
-  echo "Example: ./run_rassine.sh -c harpn.ini HD110315/data/s1d/HARPN"
+  echo "Examples:"
   echo
-  exit 1
+  echo "  ./run_rassine.sh -c harpn.ini HD110315/data/s1d/HARPN"
+  echo "    runs the whole pipeline for the data in the given folder using the harpn.ini config file"
+  echo
+  echo "  ./run_rassine.sh -c harpn.ini HD110315/data/s1d/HARPN import reinterpolate stacking"
+  echo "    runs the first three steps, which reinterpolates and stacks the spectra"
+  echo
 }
 
 # Processing command line arguments
@@ -46,10 +56,10 @@ function process_command_line_arguments {
 
   while getopts hl:c: opt; do
     case $opt in
-    h) usage ;;
+    h) usage; exit 0 ;;
     l) RASSINE_LOGGING_LEVEL=$OPTARG ;;
     c) RASSINE_CONFIG=$(python -c 'import os, sys; print(os.path.realpath(sys.argv[1]))' "$OPTARG") ;;
-    *) usage ;;
+    *) usage; exit 1 ;;
     esac
   done
 
@@ -57,6 +67,7 @@ function process_command_line_arguments {
     echo "Error: CONFIG_FILE not provided"
     echo
     usage
+    exit 1
   fi
 
   shift "$((OPTIND - 1))"
@@ -67,11 +78,12 @@ function process_command_line_arguments {
   if [ "$#" -lt 1 ]; then
     echo "Error: RASSINE_ROOT not provided"
     usage
+    exit 1
   fi
   RASSINE_ROOT=$(python -c 'import os, sys; print(os.path.realpath(sys.argv[1]))' "$1")
   shift 1
 
-  # Steps
+  # Steps to run. If no argument provided, run all steps.
   if [ "$#" -eq 0 ]; then
     STEPS="import reinterpolate stacking rassine matching_anchors matching_diff"
   else
@@ -93,8 +105,8 @@ function process_command_line_arguments {
   export RASSINE_ROOT
 }
 
+# Create a tag, used later for the master spectrum filename
 function create_or_read_tag_and_set_master_filename {
-  # Create a tag, used later for the master spectrum filename
 
   if [ ! -d "$RASSINE_ROOT" ]; then
     echo Error: root directory "$RASSINE_ROOT" does not exist
@@ -120,7 +132,7 @@ function import_step {
 
   # Preprocess the DACE table to extract a few key parameters in a CSV file
   preprocess_table -I DACE_TABLE/Dace_extracted_table.csv -i RAW -O individual_basic.csv
-  # exit if the previous command exited with an error
+  # exit if the previous command exited with an error (we will do this repeatedly in this script)
   if [ $? -ne 0 ]; then exit 1; fi
 
   # Now process individual spectra. The processing is done in parallel, and each step appends to
@@ -159,10 +171,12 @@ function reinterpolate_step {
   if [ $? -ne 0 ]; then exit 1; fi
 }
 
-## Stacking
-# Step 3
-# this is a temporal summation to reduce the noise; sum instead of average as to keep the error estimation
-# this creates the MASTER file which sums all the spectra
+# Stacking
+#
+# Temporal summation to reduce the noise; sum instead of average as to keep the error estimation
+#
+# This also creates the MASTER file which sums all the spectra
+#
 # The output files are written in /STACKED
 function stacking_step {
 
@@ -184,38 +198,34 @@ function stacking_step {
 
 }
 
-## RASSINE normalization
+# RASSINE normalization
+#
 # First we process the Master file to obtain the RASSINE_Master* file
-# This computes the parameters of the model
-
-##
-## RASSINE main processing on master file
-##
-# RASSINE_Master has additional stuff
-##
-##
-##
-# Step 4B Normalisation frame, done in parallel
+#
+# This computes the parameters of the model, which are written in a "anchor INI file".
+#
+# This anchor INI file is provided during the (parallel) processing of the stacked spectra.
 function rassine_step {
-  rassine --input-spectrum "$MASTER" --input-folder MASTER --output-folder MASTER --output-plot-folder MASTER --output-anchor-ini "anchor_Master_spectrum_$TAG.ini"
+  rassine --input-spectrum "$MASTER" --input-folder MASTER --output-folder MASTER \
+    --output-plot-folder MASTER --output-anchor-ini "anchor_Master_spectrum_$TAG.ini"
   if [ $? -ne 0 ]; then exit 1; fi
 
   enumerate_table_rows stacked_basic.csv | ./parallel "${PARALLEL_OPTIONS[@]}" \
-    rassine --input-table stacked_basic.csv --input-folder STACKED --output-folder STACKED --config "$RASSINE_ROOT/anchor_Master_spectrum_$TAG.ini" --output-folder STACKED --output-plot-folder STACKED
+    rassine --input-table stacked_basic.csv --input-folder STACKED --output-folder STACKED \
+    --config "$RASSINE_ROOT/anchor_Master_spectrum_$TAG.ini" --output-folder STACKED --output-plot-folder STACKED
   if [ $? -ne 0 ]; then exit 1; fi
 }
 
+# Matching anchors step
 function matching_anchors_step {
 
-  # Step 5A: computation of the parameters
-  # See Fig D7
-
-  # rm /home/denis/w/rassine1/spectra_library/HD23249/data/s1d/HARPS03/STACKED
-  matching_anchors_scan --input-table stacked_basic.csv --input-pattern 'STACKED/RASSINE_{name}.p' --output-file "MASTER/Master_tool_$TAG.p" --no-master-spectrum
+  # We first compute the parameters and create the master tool file.
+  # See Fig D7 of the paper
+  matching_anchors_scan --input-table stacked_basic.csv --input-pattern 'STACKED/RASSINE_{name}.p' \
+    --output-file "MASTER/Master_tool_$TAG.p" --no-master-spectrum
   if [ $? -ne 0 ]; then exit 1; fi
 
-  # Step 5B: application in parallel
-  # Done in place
+  # Then we apply the master tool in parallel. The files are modified in place.
 
   anchors_table=$RASSINE_ROOT/matching_anchors.csv
   [ -f "$anchors_table" ] && rm "$anchors_table"
@@ -227,15 +237,14 @@ function matching_anchors_step {
   reorder_csv --column name --reference stacked_basic.csv matching_anchors.csv
   if [ $? -ne 0 ]; then exit 1; fi
 
-  # process master last
+  # We process the master spectrum last
   matching_anchors_filter --master-tool "MASTER/Master_tool_$TAG.p" --process-master "MASTER/RASSINE_$MASTER" --output-table matching_anchors.csv
   if [ $? -ne 0 ]; then exit 1; fi
 }
 
+# Matching diff step
 function matching_diff_step {
-
-  # Step 6B done in parallel
-  # "matching_diff"
+  # step done in parallel
   enumerate_table_rows stacked_basic.csv | ./parallel "${PARALLEL_OPTIONS[@]}" \
     matching_diff --anchor-file "MASTER/RASSINE_$MASTER" --process-table stacked_basic.csv --process-pattern 'STACKED/RASSINE_{name}.p'
   touch "$RASSINE_ROOT/rassine_finished.txt"

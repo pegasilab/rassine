@@ -24,6 +24,7 @@ extensions = [
     "myst_nb",
     "sphinx.ext.graphviz",
     "sphinxarg.ext",  # to document command line arguments
+    "sphinxcontrib.programoutput",
 ]
 
 code_url = f"https://github.com/pegasilab/rassine/blob/v{__version__}"
@@ -125,4 +126,3 @@ html_favicon = "_static/favicon.png"
 html_static_path = ["_static"]
 nb_execution_mode = "off"
 nb_execution_timeout = -1
-html_extra_path = ["robots.txt"]

@@ -1,3 +1,7 @@
+# Styleguide
+
+We format the code using [Black](https://github.com/psf/black).
+
 ## Floating point types
 
 They should be equivalent on the platforms we run our code on. `float` and `np.float_` and

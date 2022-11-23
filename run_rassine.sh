@@ -53,6 +53,8 @@ function process_command_line_arguments {
   local nchunks
   local nice
 
+  RASSINE_CONFIG=
+
   while getopts hl:c: opt; do
     case $opt in
     h) usage ;;
@@ -62,7 +64,9 @@ function process_command_line_arguments {
     esac
   done
 
-  if [[ ! -v RASSINE_CONFIG ]]; then
+  if [ -z "$RASSINE_CONFIG" ]; then
+    echo "Error: CONFIG_FILE not provided"
+    echo
     usage
   fi
 
@@ -72,6 +76,7 @@ function process_command_line_arguments {
 
   # Rassine root folder
   if [ "$#" -lt 1 ]; then
+    echo "Error: RASSINE_ROOT not provided"
     usage
   fi
   RASSINE_ROOT=$(python -c 'import os, sys; print(os.path.realpath(sys.argv[1]))' "$1")

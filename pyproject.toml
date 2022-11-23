@@ -80,6 +80,7 @@ docs = [
   "sphinx-autodoc-typehints",
   "furo",
   "sphinxcontrib-bibtex",
+  "sphinxcontrib-programoutput",
 ]
 
 [tool.poetry.dev-dependencies]

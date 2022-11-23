@@ -26,7 +26,7 @@ extensions = [
     "sphinxarg.ext",  # to document command line arguments
 ]
 
-code_url = f"https://github.com/pegasilab/rassine/blob/{__version__}"
+code_url = f"https://github.com/pegasilab/rassine/blob/v{__version__}"
 
 
 def linkcode_resolve(domain, info):

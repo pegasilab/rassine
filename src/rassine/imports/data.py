@@ -85,7 +85,6 @@ class IndividualBasicRow:
         )
 
 
-# TODO: rename to Reinterpolated
 @dataclass(frozen=True)
 class IndividualReinterpolatedRow:
     """
@@ -253,10 +252,6 @@ class ReinterpolatedSpectrumPickle(TypedDict):
     dwave: np.float64
 
 
-# TODO: DACE -> metatable
-# TODO: remove the mjd patch
-
-# TODO: rename to Imported
 @dataclass(frozen=True)
 class IndividualImportedRow:
     """Scalar values from individual pickles tabulated for ease of computation"""

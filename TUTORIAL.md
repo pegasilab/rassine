@@ -21,7 +21,7 @@ source .venv/bin/activate
 Install RASSINE
 
 ```bash
-pip install RASSINE
+pip install rassine
 ```
 
 Get the scripts needed to run the RASSINE pipeline steps in parallel, and set the executable flag. You can skip the first two lines if GNU Parallel is already installed on your computer.

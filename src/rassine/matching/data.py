@@ -71,35 +71,44 @@ class AnchorParameters(TypedDict):
     #: Master tool file used to compute the matching anchors
     master_tool: str
     master_filename: Optional[str]
+    #: Parameters used to define the clusters considered has significant
     threshold: float
+    #: Parameters used to define the clusters considered has significant
     tolerance: float
     fraction: float
+    #: Number of copies of the master spectra. Such parameter is used to fix the position of the anchors points on the master spectra by overweighting it in the timeseries
     nb_copies_master: int
+    #: Continuum called. Usually performed on the 'output' continua. Used later by YARARA to construct the tree of the reduction.
     sub_dico_used: str
 
 
 class AnchorOutput(TypedDict):
+    #: Rassine parameters used to match the anchor points locations
     parameters: AnchorParameters
+    #: Rassine fitted continuum
     continuum_linear: NDArray[np.float64]
+    #: Wavelength values of the anchors points used (continuum_linear being a linear interpolation between them)
     anchor_wave: NDArray[np.float64]
+    #: Flux values of the anchors points used (continuum_linear being a linear interpolation between them)
     anchor_flux: NDArray[np.float64]
+    #: Index values of the anchors points used (continuum_linear being a linear interpolation between them)
     anchor_index: NDArray[np.int64]
 
 
 class AnchorPickle(TypedDict):
-    #: Wavelength
+    #: Wavelength of the spectrum
     wave: NDArray[np.float64]
-    #: Initial flux
+    #: Raw flux of the spectrum in photon count units
     flux: NDArray[np.float64]
-    #: Initial flux error, passed through by RASSINE
+    #: Raw flux uncertainties of the spectrum in photon count units
     flux_err: Optional[NDArray[np.float64]]
-    #: Smoothed flux
+    #: Smoothed raw spectrum by RASSINE used to fit the continuum. Avoid to fit the upper envelop of the noise.
     flux_used: NDArray[np.float64]
-    #: Rassine output continuum
+    #: Rassine output continuum (individual spectra normalisation)
     output: RassineBasicOutput
     #: Rassine derived parameters
     parameters: RassineParameters
-
+    #: Rassine output continuum (spectra time-series cluster identified)
     matching_anchors: AnchorOutput
 
 
@@ -116,18 +125,19 @@ class MatchingDiffOutput(TypedDict):
 
 
 class MatchingPickle(TypedDict):
-    #: Wavelength
+    #: Wavelength of the spectrum
     wave: NDArray[np.float64]
-    #: Initial flux
+    #: Raw flux of the spectrum in photon count units
     flux: NDArray[np.float64]
-    #: Initial flux error, passed through by RASSINE
+    #: Raw flux uncertainties of the spectrum in photon count units
     flux_err: Optional[NDArray[np.float64]]
-    #: Smoothed flux
+    #: RASSINE smoothed flux of the spectrum used to fit the continuum (in order to avoid fitting the upper envelop of the noise).
     flux_used: NDArray[np.float64]
-    #: Rassine output continuum
+    #: Rassine output continuum (individual spectra normalisation)
     output: RassineBasicOutput
     #: Rassine derived parameters
     parameters: RassineParameters
-
+    #: Rassine output continuum (spectra time-series cluster identified)
     matching_anchors: AnchorOutput
+    #: Rassine output continuum (spectra time-series cluster identified + low-pass filtering)
     matching_diff: MatchingDiffOutput

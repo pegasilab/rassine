@@ -231,7 +231,9 @@ class Task(cp.Config):
         cp.Param.store(cp.parsers.str_parser.empty_means_none(), default_value="{}_output.png"),
     ]
 
-    #: stretch the x and y axes ratio ('auto' available)
+    #: Scaling of the flux axis compared to the wavelength axis. 
+    #: The format of the automatic mode is'auto x' with x a 1 decimal positive float number. 
+    #: x = 0.0 means high tension, whereas x = 1.0 mean low tension.
     #:
     #: PARAMETER 1
     par_stretching: Annotated[
@@ -248,7 +250,7 @@ class Task(cp.Config):
                 return cp.Err.make("the par_stretching fixed value cannot be negative")
         return None
 
-    #: half-window to find a local maxima
+    #: half-window size to find a local maxima
     par_vicinity: Annotated[int, cp.Param.store(cp.parsers.int_parser, default_value="7")]
 
     #: half-window of the box used to smooth (1 => no smoothing, 'auto' available)
@@ -257,10 +259,9 @@ class Task(cp.Config):
     par_smoothing_box: Annotated[
         Union[Literal["auto"], int], cp.Param.store(auto_int_parser, default_value="6")
     ]
-    #: Smoothing kernel, can take the values:
-    #:
-    #: 'rectangular','gaussian','savgol' if a value is specified in smoothing box
-    #: 'erf','hat_exp' if 'auto' is given in smoothing box
+    #: To use the automatic mode which apply a Fourier filtering use 'erf ' or 'hat exp' kernel and 'auto' in par smoothing box. 
+    #: Else, use 'rectangular', 'gaussian', 'savgol'. 
+    #: Developers advise the 'savgol' kernel except if the user is dealing with spectra spanning low and high SNR range.
     par_smoothing_kernel: Annotated[
         Literal["rectangular", "gaussian", "savgol", "erf", "hat_exp"],
         cp.Param.store(
@@ -282,17 +283,19 @@ class Task(cp.Config):
                 )
         return None
 
-    #: FWHM of the CCF in km/s ('auto' available)
+    #: FWHM of the CCF of the spectrum in km/s. The user can let 'auto' to let RASSINE determine this value by itself.
     #:
     #: PARAMETER 3
     par_fwhm: Annotated[
         Union[Literal["auto"], float], cp.Param.store(auto_float_parser, default_value="auto")
     ]
 
-    #: only needed if par_fwhm is in 'auto'
+    #: CCF mask used to determine the FWHM. RASSINE construct its own mask by default. 
+    #: The user can specify its own mask which should be placed in the CCF MASK directory. 
+    #: Only needed if par_fwhm is in 'auto'
     CCF_mask: Annotated[str, cp.Param.store(cp.parsers.str_parser, default_value="master")]
 
-    #: Minimum radius of the rolling pin in angstrom ('auto' available)
+    #: Minimum radius of the rolling pin in angstrom and in the extreme blue ('auto' available)
     #:
     #: PARAMETER 4
     par_R: Annotated[
@@ -300,7 +303,7 @@ class Task(cp.Config):
         cp.Param.store(auto_float_parser, default_value="auto", short_flag_name="-r"),
     ]
 
-    #: Maximum radius of the rolling pin in angstrom ('auto' available)
+    #: Maximum radius of the rolling pin in angstrom in the extreme blue ('auto' available)
     #:
     #: PARAMETER 5
     par_Rmax: Annotated[
@@ -325,7 +328,7 @@ class Task(cp.Config):
         ),
     ]
 
-    #: True if working with a noisy-free synthetic spectra
+    #: True if working with a noisy-free synthetic spectra in order to inject a small noise for numerical stability
     synthetic_spectrum: Annotated[
         bool, cp.Param.store(cp.parsers.bool_parser, default_value="false")
     ]

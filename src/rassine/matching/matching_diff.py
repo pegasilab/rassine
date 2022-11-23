@@ -170,7 +170,7 @@ class Task(cp.Config):
     #: Processed master spectrum / Anchor file
     anchor_file: Annotated[Path, cp.Param.store(cp.parsers.path_parser)]
 
-    #: TODO: document
+    #: Recenter to the mean value
     zero_point: Annotated[bool, cp.Param.store(cp.parsers.bool_parser, default_value="false")]
 
 

@@ -1,17 +1,14 @@
 # -*- coding: utf-8 -*-
+import importlib
+import importlib.metadata
+import inspect
 import os
 import sys
+import traceback
 
 import rassine
 
-__version__ = rassine.__version__
-
-# from pkg_resources import DistributionNotFound, get_distribution
-#
-# try:
-#     __version__ = get_distribution("emcee").version
-# except DistributionNotFound:
-#     __version__ = "unknown version"
+__version__ = importlib.metadata.version("rassine")
 
 
 # General stuff
@@ -22,11 +19,60 @@ extensions = [
     "sphinx_autodoc_typehints",
     "sphinx.ext.autosummary",
     "sphinx.ext.intersphinx",
+    "sphinx.ext.linkcode",
     "sphinx.ext.mathjax",
     "myst_nb",
     "sphinx.ext.graphviz",
     "sphinxarg.ext",  # to document command line arguments
 ]
+
+code_url = f"https://github.com/pegasilab/rassine/blob/{__version__}"
+
+
+def linkcode_resolve(domain, info):
+    # Non-linkable objects from the starter kit in the tutorial.
+    if domain != "py":
+        return None
+    if not info["module"]:
+        return None
+    mod = importlib.import_module(info["module"])
+    if "." in info["fullname"]:
+        objname, attrname = info["fullname"].split(".")
+        obj = getattr(mod, objname)
+        try:
+            # object is a method of a class
+            obj = getattr(obj, attrname)
+        except AttributeError:
+            # object is an attribute of a class
+            return None
+    else:
+        obj = getattr(mod, info["fullname"])
+    from sphinx.util import logging
+
+    try:
+        file = inspect.getsourcefile(obj)
+        lines = inspect.getsourcelines(obj)
+    except TypeError:
+        # e.g. object is a typing.Union
+        return None
+    except OSError:
+        return None
+    except Exception as e:
+        traceback.print_exc()
+        print(obj)
+        print(e)
+        raise e
+
+    assert file is not None
+
+    file = os.path.relpath(file, os.path.abspath(".."))
+    if not file.startswith("src/rassine"):
+        # e.g. object is a typing.NewType
+        return None
+    start, end = lines[1], lines[1] + len(lines[0]) - 1
+
+    return f"{code_url}/{file}#L{start}-L{end}"
+
 
 graphviz_output_format = "svg"
 
@@ -50,7 +96,6 @@ simplify_optional_unions = False
 napoleon_include_init_with_doc = True
 napoleon_use_rtype = False
 napoleon_use_admonition_for_examples = True
-# napoleon_preprocess_types = True
 napoleon_use_admonition_for_notes = True
 napoleon_use_admonition_for_references = True
 

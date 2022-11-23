@@ -1,7 +1,9 @@
-Default run_rassine.sh pipeline
-===============================
+# Pipeline in run_rassine.sh
 
-.. graphviz::
+This graph represents the `run_rassine.sh` steps, and the input/output data for each step.
+The paths below are relative to the `RASSINE_ROOT` folder.
+
+```{graphviz}
 
     digraph process {
         newrank=false
@@ -268,3 +270,4 @@ Default run_rassine.sh pipeline
                 "matching_diff" -> "STACKED/RASSINE_{name}.p (ter)"
         }
     }
+```

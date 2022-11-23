@@ -528,11 +528,13 @@ If not provided, then input_spectrum must be provided</p>
 <p>The “{}” part will be replaced by the input filename stem</p>
 </dd>
 <dt><kbd>-p, --par-stretching</kbd></dt>
-<dd><p>stretch the x and y axes ratio (‘auto’ available)</p>
+<dd><p>Scaling of the flux axis compared to the wavelength axis.
+The format of the automatic mode is’auto x’ with x a 1 decimal positive float number.
+x = 0.0 means high tension, whereas x = 1.0 mean low tension.</p>
 <p>PARAMETER 1</p>
 </dd>
 <dt><kbd>--par-vicinity</kbd></dt>
-<dd><p>half-window to find a local maxima</p>
+<dd><p>half-window size to find a local maxima</p>
 </dd>
 <dt><kbd>--par-smoothing-box</kbd></dt>
 <dd><p>half-window of the box used to smooth (1 =&gt; no smoothing, ‘auto’ available)</p>
@@ -540,23 +542,25 @@ If not provided, then input_spectrum must be provided</p>
 </dd>
 <dt><kbd>--par-smoothing-kernel</kbd></dt>
 <dd><p>Possible choices: rectangular, gaussian, savgol, erf, hat_exp</p>
-<p>Smoothing kernel, can take the values:</p>
-<p>‘rectangular’,’gaussian’,’savgol’ if a value is specified in smoothing box
-‘erf’,’hat_exp’ if ‘auto’ is given in smoothing box</p>
+<p>To use the automatic mode which apply a Fourier filtering use ‘erf ‘ or ‘hat exp’ kernel and ‘auto’ in par smoothing box.
+Else, use ‘rectangular’, ‘gaussian’, ‘savgol’.
+Developers advise the ‘savgol’ kernel except if the user is dealing with spectra spanning low and high SNR range.</p>
 </dd>
 <dt><kbd>--par-fwhm</kbd></dt>
-<dd><p>FWHM of the CCF in km/s (‘auto’ available)</p>
+<dd><p>FWHM of the CCF of the spectrum in km/s. The user can let ‘auto’ to let RASSINE determine this value by itself.</p>
 <p>PARAMETER 3</p>
 </dd>
 <dt><kbd>--CCF-mask</kbd></dt>
-<dd><p>only needed if par_fwhm is in ‘auto’</p>
+<dd><p>CCF mask used to determine the FWHM. RASSINE construct its own mask by default.
+The user can specify its own mask which should be placed in the CCF MASK directory.
+Only needed if par_fwhm is in ‘auto’</p>
 </dd>
 <dt><kbd>-r, --par-R</kbd></dt>
-<dd><p>Minimum radius of the rolling pin in angstrom (‘auto’ available)</p>
+<dd><p>Minimum radius of the rolling pin in angstrom and in the extreme blue (‘auto’ available)</p>
 <p>PARAMETER 4</p>
 </dd>
 <dt><kbd>-R, --par-Rmax</kbd></dt>
-<dd><p>Maximum radius of the rolling pin in angstrom (‘auto’ available)</p>
+<dd><p>Maximum radius of the rolling pin in angstrom in the extreme blue (‘auto’ available)</p>
 <p>PARAMETER 5</p>
 </dd>
 <dt><kbd>--par-reg-nu</kbd></dt>
@@ -571,7 +575,7 @@ only if CCF = ‘master’ and par_fwhm = ‘auto’</p>
 </dd>
 <dt><kbd>--synthetic-spectrum</kbd></dt>
 <dd><p>Possible choices: true, false</p>
-<p>True if working with a noisy-free synthetic spectra</p>
+<p>True if working with a noisy-free synthetic spectra in order to inject a small noise for numerical stability</p>
 </dd>
 <dt><kbd>--interpolation</kbd></dt>
 <dd><p>Possible choices: cubic, literal</p>

@@ -73,11 +73,11 @@ sphinxcontrib-programoutput = {version = "^0.17", optional = true}
 
 [tool.poetry.extras]
 docs = [
+  "esbonio",
   "myst-nb",
   "sphinx",
   "sphinx-argparse",
   "sphinx-autodoc-typehints",
-  "furo",
   "sphinxcontrib-bibtex",
   "sphinxcontrib-programoutput",
 ]
@@ -85,6 +85,7 @@ docs = [
 [tool.poetry.dev-dependencies]
 black = "^22.10.0"
 doc8 = "^1.0.0"
+esbonio = "^0.14.3"
 isort = "^5.10.1"
 pandas-stubs = "^1.5.2"
 pytest = "^7.1.1"

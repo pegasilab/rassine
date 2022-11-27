@@ -12,6 +12,7 @@ from typing_extensions import Annotated
 
 @dataclass(frozen=True)
 class Task(cp.Config):
+    """Compares pickle files using recursive_diff"""
 
     #
     # Common information

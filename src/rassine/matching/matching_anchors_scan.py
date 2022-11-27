@@ -215,8 +215,7 @@ def intersect_all_continuum_sphinx(
 
 @dataclass(frozen=True)
 class Task(cp.Config):
-    """
-    Intersection tool
+    """Intersection tool
 
     Searches for the intersection of all the anchors points in a list of filenames and updates
     the selection of anchor points in the same files.

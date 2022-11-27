@@ -13,8 +13,7 @@ from ..lib.util import log_task_name_and_time
 
 @dataclass(frozen=True)
 class Task(cp.Config):
-    """
-    Enumerates the row indices of a CSV table, one per row, into the standard output
+    """Enumerates the row indices of a CSV table, one per row, into the standard output
 
     Specifically, this prints the integers 0 to n-1 included, where n is the number of rows
     in the CSV file.

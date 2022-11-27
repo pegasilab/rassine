@@ -14,9 +14,7 @@ from ..lib.util import log_task_name_and_time
 
 @dataclass(frozen=True)
 class Task(cp.Config):
-    """
-    Sorts the rows of a CSV file according to a specified column
-    """
+    """Sorts the rows of a CSV file according to a specified column"""
 
     #
     # Common information

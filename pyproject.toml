@@ -49,7 +49,7 @@ compare_normalized_output = "rassine.tools.compare_normalized_output:cli"
 
 [tool.poetry.dependencies]
 astropy = "^5.0.4"
-configpile = {version = "^10.1.0", extras = ["parsy", "rich"]}
+configpile = {version = "^10.1.1", extras = ["parsy", "rich"]}
 filelock = "^3.6.0"
 matplotlib = "^3.3.4"
 nptyping = "^1.4.4"

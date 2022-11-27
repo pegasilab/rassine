@@ -22,8 +22,7 @@ from .data import DACE, IndividualBasicRow
 
 @dataclass(frozen=True)
 class Task(cp.Config):
-    """
-    Creates the individual spectrum table from the DACE table
+    """Creates the individual spectrum table from the DACE table
 
     We assume that all raw files are in the same directory. We take the filenames from the DACE
     table but ignore the path information in the same DACE table.

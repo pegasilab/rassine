@@ -273,9 +273,8 @@ def intersect_all_continuum_single(
 
 @dataclass(frozen=True)
 class Task(cp.Config):
-    """
-    Intersection tool, 2nd step
-
+    """Intersection tool, 2nd step
+    
     Perform the intersection of the RASSINE files by using the anchor location saved in the master RASSINE spectrum.
     """
 

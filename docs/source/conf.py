@@ -117,7 +117,7 @@ release = __version__
 exclude_patterns = ["_build"]
 
 # HTML theme
-html_theme = "furo"
+html_theme = "sphinx_book_theme"
 html_copy_source = True
 html_show_sourcelink = True
 html_sourcelink_suffix = ""
@@ -126,3 +126,13 @@ html_favicon = "_static/favicon.png"
 html_static_path = ["_static"]
 nb_execution_mode = "off"
 nb_execution_timeout = -1
+
+html_theme_options = {
+    "path_to_docs": "docs",
+    "repository_url": "https://github.com/pegasilab/rassine",  # TODO: move to collaboration
+    "repository_branch": "main",
+    "use_edit_page_button": True,
+    "use_issues_button": True,
+    "use_repository_button": True,
+    "use_download_button": True,
+}

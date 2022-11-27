@@ -83,13 +83,12 @@ docs = [
 ]
 
 [tool.poetry.dev-dependencies]
-black = "^22.1.0"
-doc8 = "^0.10.1"
-esbonio = "^0.13.0"
+black = "^22.10.0"
+doc8 = "^1.0.0"
 isort = "^5.10.1"
-pandas-stubs = "^1.2.0.43"
-pytest = "^7.0.1"
-rstcheck = "^3.3.1"
+pandas-stubs = "^1.5.2"
+pytest = "^7.1.1"
+rstcheck = "^6.1.1"
 
 [tool.pytest.ini_options]
 addopts = [

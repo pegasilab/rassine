@@ -86,3 +86,10 @@ git submodule update --init spectra/HD110315
 poetry run ./run_rassine.sh -l INFO -c harpn.ini spectra/HD110315/data/s1d/HARPN
 poetry run ./run_rassine.sh -l INFO -c harps03.ini spectra/HD23249/data/s1d/HARPS03
 ```
+
+## How to contribute
+
+Pull requests are preferred: create a branch for your modification, push it to this repository
+and then use the GitHub interface to merge, after all tests have passed.
+
+https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests

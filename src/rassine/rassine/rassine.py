@@ -43,8 +43,7 @@ from .process import rassine_process
 
 @dataclass(frozen=True)
 class Task(cp.Config):
-    """
-    Rolling Alpha Shape for a Spectral Improved Normalisation Estimator (RASSINE)
+    """Rolling Alpha Shape for a Spectral Improved Normalisation Estimator (RASSINE)
 
     ::
     
@@ -231,8 +230,8 @@ class Task(cp.Config):
         cp.Param.store(cp.parsers.str_parser.empty_means_none(), default_value="{}_output.png"),
     ]
 
-    #: Scaling of the flux axis compared to the wavelength axis. 
-    #: The format of the automatic mode is'auto x' with x a 1 decimal positive float number. 
+    #: Scaling of the flux axis compared to the wavelength axis.
+    #: The format of the automatic mode is'auto x' with x a 1 decimal positive float number.
     #: x = 0.0 means high tension, whereas x = 1.0 mean low tension.
     #:
     #: PARAMETER 1
@@ -259,8 +258,8 @@ class Task(cp.Config):
     par_smoothing_box: Annotated[
         Union[Literal["auto"], int], cp.Param.store(auto_int_parser, default_value="6")
     ]
-    #: To use the automatic mode which apply a Fourier filtering use 'erf ' or 'hat exp' kernel and 'auto' in par smoothing box. 
-    #: Else, use 'rectangular', 'gaussian', 'savgol'. 
+    #: To use the automatic mode which apply a Fourier filtering use 'erf ' or 'hat exp' kernel and 'auto' in par smoothing box.
+    #: Else, use 'rectangular', 'gaussian', 'savgol'.
     #: Developers advise the 'savgol' kernel except if the user is dealing with spectra spanning low and high SNR range.
     par_smoothing_kernel: Annotated[
         Literal["rectangular", "gaussian", "savgol", "erf", "hat_exp"],
@@ -290,8 +289,8 @@ class Task(cp.Config):
         Union[Literal["auto"], float], cp.Param.store(auto_float_parser, default_value="auto")
     ]
 
-    #: CCF mask used to determine the FWHM. RASSINE construct its own mask by default. 
-    #: The user can specify its own mask which should be placed in the CCF MASK directory. 
+    #: CCF mask used to determine the FWHM. RASSINE construct its own mask by default.
+    #: The user can specify its own mask which should be placed in the CCF MASK directory.
     #: Only needed if par_fwhm is in 'auto'
     CCF_mask: Annotated[str, cp.Param.store(cp.parsers.str_parser, default_value="master")]
 

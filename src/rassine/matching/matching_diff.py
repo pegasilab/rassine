@@ -88,8 +88,7 @@ def matching_diff_continuum(
 
 @dataclass(frozen=True)
 class Task(cp.Config):
-    """
-    SAVGOL step
+    """SAVGOL step
 
     Match the continuum of individual spectra to a reference spectrum
     with a savgol filtering on the spectra difference.

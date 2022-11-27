@@ -14,6 +14,9 @@ from ..matching.data import MatchingPickle
 
 @dataclass(frozen=True)
 class Task(cp.Config):
+    """Compares output from the RASSINE pipeline
+
+    Used in tests for validation purposes"""
 
     #
     # Common information

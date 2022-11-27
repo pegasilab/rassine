@@ -21,9 +21,7 @@ from .data import IndividualGroupRow
 
 @dataclass(frozen=True)
 class Task(cp.Config):
-    """
-    Stacking: preparation of the groups
-    """
+    """Stacking: preparation of the groups"""
 
     #
     # Common information

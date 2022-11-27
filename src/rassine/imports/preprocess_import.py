@@ -25,9 +25,7 @@ from .data import IndividualBasicRow, IndividualImportedRow, PickledIndividualSp
 
 @dataclass(frozen=True)
 class Task(cp.Config):
-    """
-    Import FITS files into pickle files that can be processed by RASSINE
-    """
+    """Import FITS files into pickle files that can be processed by RASSINE"""
 
     #
     # Common information

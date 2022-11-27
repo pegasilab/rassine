@@ -14,8 +14,7 @@ from ..lib.util import log_task_name_and_time
 
 @dataclass(frozen=True)
 class Task(cp.Config):
-    """
-    Orders the rows of a CSV file according to the order given by a reference file
+    """Orders the rows of a CSV file according to the order given by a reference file
 
     Both files must have the same number of rows, and both must have a column of a given
     name with the same values, possibly ordered differently.
